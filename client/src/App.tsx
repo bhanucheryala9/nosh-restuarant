@@ -9,6 +9,7 @@ import Loader from "./components/common/Loader";
 import ForgotPassword from "./components/login-singup/ForgotPassword";
 import Employee from './components/admin/employee/Employee';
 import Inventory from './components/admin/inventory/Inventory';
+import Rewards from './components/admin/rewards/Rewards';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
                   <Route path="/" element={<LoginPage />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/employee" element={<Employee />} />
+                  <Route path="/rewards" element={<Rewards />} />
                   <Route path="/add-inventory" element={<Inventory />} />
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/resetPassword" element={<ForgotPassword />} />
