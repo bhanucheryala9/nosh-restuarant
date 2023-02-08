@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
+
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case "set_name":
+      return { ...state, name: action.payload };
+    case "set_email":
+      return { ...state, email: action.payload };
+    case "set_message":
+      return { ...state, message: action.payload };
+    case "reset":
+      return { name: "", email: "", message: "" };
+    default:
+      return state;
+  }
+};
 
 function Form() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [state, dispatch] = useReducer(formReducer, {
+    name: "",
+    email: "",
+    message: "",
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Do something with the form data
+    dispatch({ type: "reset" });
   };
 
   return (
@@ -16,23 +34,29 @@ function Form() {
         Name:
         <input
           type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
+          value={state.name}
+          onChange={(event) =>
+            dispatch({ type: "set_name", payload: event.target.value })
+          }
         />
       </label>
       <label>
         Email:
         <input
           type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          value={state.email}
+          onChange={(event) =>
+            dispatch({ type: "set_email", payload: event.target.value })
+          }
         />
       </label>
       <label>
         Message:
         <textarea
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
+          value={state.message}
+          onChange={(event) =>
+            dispatch({ type: "set_message", payload: event.target.value })
+          }
         />
       </label>
       <button type="submit">Submit</button>
