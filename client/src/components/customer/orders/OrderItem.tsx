@@ -13,6 +13,10 @@ import {
   Image,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import Biryani from "../../../assets/biryani.jpg";
+import { useCart } from "../../../contexts/CartContext";
+import CornerRibbon from "react-corner-ribbon";
+
 interface OrderItemsProps {
   id: string;
   productName: string;
@@ -65,7 +69,38 @@ const OrderItem = (props: OrderItemsProps) => {
 
     fetchImage();
   }, []);
-
+  // const { cartData, setCartData } = useCart();
+  const onItemClicked = () => {
+    const cart = JSON.parse(localStorage.getItem("orders") || "");
+    const filterData =
+      cart.length > 0
+        ? cart.findIndex((item: any) => item.productName === productName) !== -1
+          ? cart.map((item: any) =>
+              item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+            )
+          : [
+              ...cart,
+              {
+                id: id,
+                productName: productName,
+                category: category,
+                price: price,
+                quantity: 1,
+                url: url,
+              },
+            ]
+        : [
+            {
+              id: id,
+              productName: productName,
+              category: category,
+              price: price,
+              quantity: 1,
+              url: url,
+            },
+          ];
+    localStorage.setItem("orders", JSON.stringify(filterData));
+    // setCartData(filterData);
   };
   return (
     <Card maxW={"72"} key={id}>
