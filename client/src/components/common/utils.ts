@@ -51,7 +51,7 @@ export const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Sales",
         subLabel: "View the sales details.",
-        href: "#",
+        href: "/sales",
       },
     ],
   },

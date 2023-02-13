@@ -1,3 +1,4 @@
+import { ChatIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   Code,
@@ -6,69 +7,104 @@ import {
   FormLabel,
   Grid,
   GridItem,
+  HStack,
+  Icon,
   IconButton,
   Input,
   Select,
+  Stat,
+  StatLabel,
+  StatNumber,
   Text,
   Textarea,
 } from "@chakra-ui/react";
 import Table, { ColumnsType } from "antd/es/table";
-import React, { useState } from "react";
-import Header from "../../header/Header";
+import React, { useEffect, useState } from "react";
 import { AiFillCodeSandboxSquare } from "react-icons/ai";
-interface DataType {
+import { Line, LineChart, XAxis, YAxis } from "recharts";
+import {
+  RewardsTestData,
+  statsChartData,
+} from "../../../test-data/admin/rewards";
+import CreateReward from "./CreateReward";
+export interface DataType {
   key: React.Key;
-  name: string;
-  age: number;
-  address: string;
+  id: string;
+  code: string;
+  category: string;
+  discoundPercentage: string;
+  minOrder: string;
+  maxDiscountAmount: string;
 }
 const Rewards = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
+  const [rewardsData, setRewardsData] = useState<DataType[]>([]);
+  const [showCreateRewardModal, setShowCreateRewardModal] =
+    useState<boolean>(false);
   const columns: ColumnsType<DataType> = [
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Reward ID",
+      dataIndex: "id",
       render: (text: string) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
+      title: "Reward Code",
+      dataIndex: "code",
     },
     {
-      title: "Address",
-      dataIndex: "address",
+      title: "Category",
+      dataIndex: "category",
+    },
+    {
+      title: "Discount %",
+      dataIndex: "discoundPercentage",
+    },
+    {
+      title: "Min Order",
+      dataIndex: "minOrder",
+    },
+    {
+      title: "Max Discount Amount",
+      dataIndex: "maxDiscountAmount",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <IconButton
+            aria-label="Search database"
+            icon={<DeleteIcon />}
+            size="sm"
+          />
+          <IconButton
+            aria-label="Search database"
+            icon={<EditIcon />}
+            size="sm"
+          />
+        </HStack>
+      ),
     },
   ];
 
-  const data: DataType[] = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-    },
-    {
-      key: "4",
-      name: "Disabled User",
-      age: 99,
-      address: "Sidney No. 1 Lake Park",
-    },
-  ];
+  useEffect(() => {
+    const formattedData = RewardsTestData.reduce(
+      (accumulator: any, currentValue) => {
+        return [
+          ...accumulator,
+          {
+            key: currentValue.id,
+            ...currentValue,
+          },
+        ];
+      },
+      []
+    );
+    setRewardsData(formattedData);
+  }, []);
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -76,33 +112,77 @@ const Rewards = () => {
     onChange: onSelectChange,
   };
 
+  const gradientColor = [
+    "linear-gradient(to top, #30c7ec 47%, #46aef7 70%)",
+    "linear-gradient(to top, #2b5876 -30%, #4e4376 70%)",
+    "linear-gradient(to top, #0ba360 0%, #3cba92 40%)",
+    "linear-gradient(to top, #ff0844 -30%, #ffb199 90%)",
+  ];
   const getStatusComponent = () => {
-    return (
-      <Flex bg="white" shadow="sm" px="8" py="5" rounded="md" alignItems={"center"}>
-        <Flex>
-          <IconButton
-            bg={"orange.200"}
-            color="orange.600"
-            aria-label="Send email"
-            icon={<AiFillCodeSandboxSquare />}
-          />
-        </Flex>
-        <Flex direction={"column"} mx="6">
-          <Text fontSize={"xl"} fontWeight="bold">Total</Text>
-          <Text fontSize={"md"} color="gray.700" fontWeight={"semibold"}>56</Text>
-        </Flex>
-      </Flex>
-    );
+    return [1, 2, 3, 4].map((item, index) => {
+      return (
+        <GridItem colSpan={1} rowSpan={1}>
+          <Flex
+            bg="white"
+            shadow="sm"
+            px="8"
+            py="5"
+            rounded="md"
+            alignItems={"center"}
+            bgGradient={gradientColor[index]}
+            textColor={"white"}
+            minH="36"
+            position={"relative"}
+            backdropFilter='brightness(10%)'
+          >
+            <LineChart
+              width={380}
+              height={150}
+              data={statsChartData}
+              margin={{ top: 5, bottom: 5 }}
+            >
+              <XAxis dataKey="name" hide={true} />
+              <YAxis hide={true} />
+              <Line
+                type="monotone"
+                dataKey="pv"
+                stroke="#cccdc6"
+                strokeWidth={2}
+                strokeOpacity={0.3}
+                dot={{ r: 2 }}
+                opacity={50}
+              />
+            </LineChart>
+            <HStack position={"absolute"} mx={10} gap={3}>
+              <Icon as={ChatIcon} boxSize={10} textShadow="0 0 10px black" />
+              <Stat>
+                <StatLabel fontSize={"md"} textShadow="0 0 10px black">
+                  Collected Fees
+                </StatLabel>
+                <StatNumber fontSize={"3xl"} textShadow="0 0 10px black">
+                  £0.00
+                </StatNumber>
+              </Stat>
+            </HStack>
+          </Flex>
+        </GridItem>
+      );
+    });
   };
   return (
     <React.Fragment>
-      <Header />
       <Flex mx="10" my="6" direction={"column"}>
         <Flex justifyContent={"space-between"}>
           <Text fontSize={"xl"} fontWeight="bold">
             Offers and Rewards
           </Text>
-          <Button colorScheme={"orange"}> Create Coupons</Button>
+          <Button
+            colorScheme={"orange"}
+            onClick={() => setShowCreateRewardModal(true)}
+          >
+            {" "}
+            Create Coupons
+          </Button>
         </Flex>
 
         <Grid
@@ -111,23 +191,30 @@ const Rewards = () => {
           templateColumns="repeat(4, 1fr)"
           gap={4}
         >
-          {[1, 2, 3, 4].map((item) => {
-            return <GridItem colSpan={1} rowSpan={1}>
-                {getStatusComponent()}
-            </GridItem>;
-          })}
+          {getStatusComponent()}
         </Grid>
 
-        <Flex>
+        <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm">
           <Table
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  // setUserProfile(record);
+                },
+              };
+            }}
             style={{ width: "100%" }}
             size="large"
             rowSelection={rowSelection as any}
             columns={columns}
-            dataSource={data}
+            dataSource={rewardsData}
           />
         </Flex>
       </Flex>
+      <CreateReward
+        isModalOpen={showCreateRewardModal}
+        setIsModalOpen={setShowCreateRewardModal}
+      />
     </React.Fragment>
   );
 };
