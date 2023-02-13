@@ -111,4 +111,22 @@ function Inventory() {
           <h3>Add Item</h3>
           <label>
             Name:
-            <
+            
+            <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
+          </label>
+          <label>
+            Price:
+            <input type="number" value={price} onChange={(event) => setPrice(event.target.value)} />
+          </label>
+          <label>
+            Quantity:
+            <input type="number" value={quantity} onChange={(event) => setQuantity(event.target.value)} />
+          </label>
+          <button type="submit">Add</button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default Inventory;
