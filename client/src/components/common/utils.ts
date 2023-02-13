@@ -44,9 +44,14 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "/add-inventory",
       },
       {
+        label: "Offers",
+        subLabel: "Create Offers and Rewards",
+        href: "/rewards",
+      },
+      {
         label: "Sales",
         subLabel: "View the sales details.",
-        href: "#",
+        href: "/sales",
       },
     ],
   },

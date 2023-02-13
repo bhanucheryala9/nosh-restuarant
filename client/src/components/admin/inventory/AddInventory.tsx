@@ -18,12 +18,14 @@ import {
   Input,
   Textarea,
   Select,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
 
-const Inventory = () => {
+const AddInventory = () => {
   const props: UploadProps = {
     name: "file",
     multiple: true,
@@ -45,9 +47,8 @@ const Inventory = () => {
   };
   return (
     <React.Fragment>
-      <Header />
       <Flex mx="10" my="6" direction={"column"}>
-        <Flex justifyContent={"space-between"} >
+        <Flex justifyContent={"space-between"}>
           <Text fontSize={"xl"} fontWeight="bold">
             Add Inventory
           </Text>
@@ -55,7 +56,7 @@ const Inventory = () => {
         </Flex>
 
         <Grid
-          mt="4"
+          my={4}
           templateRows="repeat(2, 1fr)"
           templateColumns="repeat(7, 1fr)"
           gap={4}
@@ -63,7 +64,9 @@ const Inventory = () => {
           <GridItem colSpan={4} rowSpan={2}>
             <Flex
               bg="white"
-              p="6"
+              pt="4"
+              pb="10"
+              px="6"
               borderRadius={"md"}
               w="100%"
               direction={"column"}
@@ -81,24 +84,33 @@ const Inventory = () => {
                   <FormLabel fontSize={"xs"}>Product Name</FormLabel>
                   <Input type="Enter product name" />
                 </FormControl>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Reference</FormLabel>
-                  <Input type="Enter refernce" />
-                </FormControl>
+
                 <FormControl mt="4">
                   <FormLabel fontSize={"xs"}>Description</FormLabel>
                   <Textarea placeholder="Here is a sample placeholder" />
                 </FormControl>
                 <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Country</FormLabel>
-                  <Select placeholder="Select country">
-                    <option>United Arab Emirates</option>
-                    <option>Nigeria</option>
-                  </Select>
+                  <FormLabel fontSize={"xs"}>Price</FormLabel>
+                  <InputGroup>
+                    <InputLeftElement
+                      pointerEvents="none"
+                      color="gray.300"
+                      fontSize="1.2em"
+                      children="$"
+                    />
+                    <Input placeholder="Enter amount" />
+                  </InputGroup>
                 </FormControl>
                 <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Amount</FormLabel>
-                  <Input type="Enter Amount" />
+                  <FormLabel fontSize={"xs"}>Discount</FormLabel>
+                  <Input type="Enter discount" />
+                </FormControl>
+                <FormControl mt="4">
+                  <FormLabel fontSize={"xs"}>Available</FormLabel>
+                  <Select placeholder="Change Availablity Status">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </Select>
                 </FormControl>
               </form>
             </Flex>
@@ -137,17 +149,16 @@ const Inventory = () => {
                 p="2"
                 width={"99%"}
                 mx="4"
-                my="4"
               />
 
               <Flex direction="column" p="4" width={"100%"}>
                 <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Product Name</FormLabel>
-                  <Input type="Enter product name" />
+                  <FormLabel fontSize={"xs"}>Product Category</FormLabel>
+                  <Input type="Enter Category" />
                 </FormControl>
                 <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Reference</FormLabel>
-                  <Input type="Enter refernce" />
+                  <FormLabel fontSize={"xs"}>Tax Percentage</FormLabel>
+                  <Input type="Enter tax percentage" />
                 </FormControl>
               </Flex>
             </Flex>
@@ -158,4 +169,4 @@ const Inventory = () => {
   );
 };
 
-export default Inventory;
+export default AddInventory;

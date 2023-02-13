@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Cbhanu12dec/my-restuarant/issues"
   },
-  "homepage": "https://github.com/Cbhanu12dec/my-restuarant#readme"
+  "homepage": "https://github.com/Cbhanu12dec/my-restuarant#readme",
+  "dependencies": {
+    "recharts": "^2.4.0"
+  }
 }
