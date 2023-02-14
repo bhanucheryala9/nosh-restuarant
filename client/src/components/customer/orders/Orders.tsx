@@ -1,72 +1,79 @@
 import {
   Flex,
   Grid,
+  GridItem,
   Image,
+  Input,
+  Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
 import { Orders_Catergory } from "../../common/utils";
 import _ from "lodash";
+import ReactPaginate from "react-paginate";
 import axios from "axios";
 
 const Orders = () => {
 
+  };
 
-  useEffect(() => {
-    setData(data.slice(0, 8));
-    axios
-      .get("http://localhost:5000/api/admin/v1/get-items")
-      .then((response) => {
-        setData(response.data.items);
-        setItemsData(response.data.items);
-        localStorage.setItem("orders",JSON.stringify([]))
-      })
-      .catch((error) => {
-        console.log("Error while retreiveing items: ", error);
-      });
-  }, []);
+
 
 
   return (
     <div>
       <Flex direction={"column"}>
-        <Flex>
-          <Image />
+        <Flex
+          justifyContent={"center"}
+          direction="column"
+          alignItems={"center"}
+        >
+          <Image src={order} filter="auto" brightness={"50%"} />
           <Flex>
-            <Text>
+            <Text
+            >
               Order Section
             </Text>
           </Flex>
         </Flex>
-        <Tabs>
+        <Tabs
+
+            );
+          }}
+        >
           <TabList>
           </TabList>
-          <TabPanels >
-            {Orders_Catergory.map((index, item) => {
+          <TabPanels my="8" rounded={"lg"} shadow="base">
               return (
-                <TabPanel >
-                  <Flex >
+                <TabPanel bg={"white"} key={index}>
+                  <Flex justifyContent="space-between" alignItems="center">
                     <Text>
                       Menu
                     </Text>
-              
+             
                   </Flex>
 
-                  <Grid
-                
+                  <Grid>
                  
+                          return (
+                            <GridItem >
+                              <OrderItem {...(orders as any)} />
+                            </GridItem>
+                          );
+                        })}
                   </Grid>
                 </TabPanel>
               );
             })}
           </TabPanels>
         </Tabs>
-      
+     
       </Flex>
     </div>
   );
