@@ -64,67 +64,61 @@ function Inventory() {
         <tbody>
           {items.map((item) => (
             <tr key={item.id}>
-              {editingItemId === item.id ? (
-                <>
-                  <td>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={price}
-                      onChange={(event) => setPrice(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={quantity}
-                      onChange={(event) => setQuantity(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <button onClick={handleSaveItem}>Save</button>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td>{item.name}</td>
-                  <td>{item.price}</td>
-                  <td>{item.quantity}</td>
-                  <td>
-                    <button onClick={() => handleEditItem(item.id)}>Edit</button>
-                    <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
-                  </td>
-                </>
-              )}
+              <td>{item.name}</td>
+              <td>{item.price}</td>
+              <td>{item.quantity}</td>
+              <td>
+                <button onClick={() => handleEditItem(item.id)}>Edit</button>
+                <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+              </td>
             </tr>
           ))}
+          {editingItemId !== null && (
+            <tr>
+              <td>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  value={price}
+                  onChange={(event) => setPrice(event.target.value)}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={(event) => setQuantity(event.target.value)}
+                />
+              </td>
+              <td>
+                <button onClick={handleSaveItem}>Save</button>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
-      {!editingItemId && (
-        <form onSubmit={handleAddItem}>
-          <h3>Add Item</h3>
-          <label>
-            Name:
-            
-            <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
-          </label>
-          <label>
-            Price:
-            <input type="number" value={price} onChange={(event) => setPrice(event.target.value)} />
-          </label>
-          <label>
-            Quantity:
-            <input type="number" value={quantity} onChange={(event) => setQuantity(event.target.value)} />
-          </label>
-          <button type="submit">Add</button>
-        </form>
-      )}
+      <form onSubmit={handleAddItem}>
+        <h3>Add Item</h3>
+        <label>
+          Name:
+          <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
+        </label>
+        <label>
+          Price:
+          <input type="number" value={price} onChange={(event) => setPrice(event.target.value)} />
+        </label>
+        <label>
+          Quantity:
+          <input type="number" value={quantity} onChange={(event) => setQuantity(event.target.value)} />
+        </label>
+        <button type="submit">Add</button>
+      </form>
     </div>
   );
 }
