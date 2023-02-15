@@ -20,8 +20,35 @@ import ReactPaginate from "react-paginate";
 import axios from "axios";
 
 const Orders = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [seachfood, setSearchFood] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [data, setData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
+  const PER_PAGE = 10;
+  const pageCount = Math.ceil(data.length / PER_PAGE);
+
+  const handlePageClick = (selected: any) => {
+    const offset = currentPage * PER_PAGE;
+    const currentPageData = data.slice(offset, offset + PER_PAGE);
+    setData(currentPageData);
+    setCurrentPage(selected);
+  };
+
+  useEffect(() => {
+    setData(data.slice(0, 8));
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setData(response.data.items);
+        setItemsData(response.data.items);
+        localStorage.setItem("orders",JSON.stringify([]))
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
+  }, []);
+
 
   return (
     <div>
