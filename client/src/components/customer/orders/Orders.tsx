@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import OrdersBanner from "../../../assets/orders.jpg";
+import Cart from "../cart/Cart";
 import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
 
@@ -22,13 +23,13 @@ const Orders = () => {
       <Flex direction={"column"}>
         <Flex justifyContent={"center"} direction="column" alignItems={"center"}>
           <Image src={order} filter="auto" brightness={"50%"} />
-          <Flex bg={"white"} rounded="lg"  zIndex={10} shadow="base">
+          <Flex bg={"white"} rounded="lg" py="4" px="28" mt="-10" zIndex={10} shadow="base">
             <Text fontSize={"2xl"} fontWeight="semibold"  fontFamily={"'Nunito', sans-serif"}>
               Order Section
             </Text>
           </Flex>
         </Flex>
-        <Tabs variant="soft-rounded" colorScheme="orange" >
+        <Tabs variant="soft-rounded" colorScheme="orange" mt="8" mx="10">
           <TabList>
             <Tab>All</Tab>
             <Tab>Staters</Tab>
@@ -38,6 +39,8 @@ const Orders = () => {
           <TabPanels mt="8" rounded={"lg"} shadow="base">
             <TabPanel bg={"white"}>
               <Text
+                fontSize={"2xl"}
+                fontWeight="semibold"
                 textColor={"orange.500"}
                 mx="4"
                 my="4"
