@@ -16,10 +16,12 @@ import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
 import { Orders_Catergory } from "../../common/utils";
 import _ from "lodash";
+import ReactPaginate from "react-paginate";
+import axios from "axios";
+
 const Orders = () => {
   const [data, setData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
-
 
   return (
     <div>
