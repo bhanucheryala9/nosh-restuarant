@@ -28,10 +28,9 @@ const OrderItem = () => {
           borderRadius="lg"
         />
         <Stack mt="6" spacing="3">
-          <Heading size="md">Living room Sofa</Heading>
+          <Heading size="md">Food item</Heading>
           <Text>
-            This sofa is perfect for modern tropical spaces, baroque inspired
-            spaces.
+            description of food
           </Text>
         </Stack>
       </CardBody>
