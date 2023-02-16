@@ -8,12 +8,12 @@ const CartItem = () => {
       <Flex>
         <Image src={biryani} maxH={14} maxW={14} borderRadius="lg" />
       </Flex>
-      <Flex mx="4" direction={"column"} >
+      <Flex mx="4" direction={"column"} width="100%">
         <HStack justifyContent={"space-between"}>
-          <Text >
+          <Text fontSize={"lg"} fontWeight="semibold">
             Biryani
           </Text>
-          <Text  textColor="orange.600" >
+          <Text fontSize={"lg"} textColor="orange.600" fontWeight={"semibold"}>
             $11
           </Text>
         </HStack>
@@ -22,7 +22,7 @@ const CartItem = () => {
           <Text>
             <InputGroup size="sm" colorScheme={"orange"} borderColor="orange.500">
               <InputLeftAddon children="-" />
-              <Input  />
+              <Input placeholder="0" defaultValue={0} w={10} />
               <InputRightAddon children="+" />
             </InputGroup>
           </Text>
