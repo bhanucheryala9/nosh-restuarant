@@ -54,6 +54,20 @@ const Employee=()=>{
 
   type DataIndex = keyof EmployeeDatatype;
 
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
 
   const columns: ColumnsType<EmployeeDatatype> = [
     {
@@ -66,6 +80,22 @@ const Employee=()=>{
       sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps("name"),
       render: (text: string) => {
+        useEffect(() => {
+            axios
+              .get("http://34.235.166.147:5000/api/admin/v1/get-employee-details")
+              .then((response: any) => {
+                setunformattedEmployeeData(response.data.employees);
+                setEmployeeData(prepareData(response.data.employees));
+              })
+              .catch(() => {
+                setShowNotification({
+                  status: NotificationStatus.ERROR,
+                  alertMessage: "Failed to retreive employees information..!",
+                  showAlert: true,
+                });
+              });
+          }, [addEmployeeModal]);
+        
         return (
           <HStack>
             <Avatar
@@ -270,6 +300,14 @@ const Employee=()=>{
           </GridItem>
           </Grid>
           </Flex>
+          <AddEmployee
+        isModalOpen={addEmployeeModal}
+        setIsModalOpen={setAddEmployeeModal}
+        defaultData={initialFormData}
+        isUpdate={forUpdate}
+        setIsUpdate={setForUpdate}
+      />
+    </React.Fragment>
 
 );
 };
