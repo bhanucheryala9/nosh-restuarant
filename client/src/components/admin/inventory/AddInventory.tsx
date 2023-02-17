@@ -1,67 +1,78 @@
-import React, { useReducer } from "react";
+import React, { useState } from "react";
 
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case "set_name":
-      return { ...state, name: action.payload };
-    case "set_email":
-      return { ...state, email: action.payload };
-    case "set_message":
-      return { ...state, message: action.payload };
-    case "reset":
-      return { name: "", email: "", message: "" };
-    default:
-      return state;
-  }
-};
+function InventoryPage() {
+  const [items, setItems] = useState([
+    { id: 1, name: "Chicken Breast", quantity: 10 },
+    { id: 2, name: "Beef Patties", quantity: 20 },
+    { id: 3, name: "Lettuce", quantity: 5 },
+    { id: 4, name: "Tomatoes", quantity: 10 },
+    { id: 5, name: "Cheese", quantity: 15 },
+    { id: 6, name: "Bread", quantity: 25 },
+    { id: 7, name: "Oil", quantity: 2 },
+  ]);
+  const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState("");
 
-function Form() {
-  const [state, dispatch] = useReducer(formReducer, {
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleSubmit = (event) => {
+  const handleAddItem = (event) => {
     event.preventDefault();
-    // Do something with the form data
-    dispatch({ type: "reset" });
+    const newItem = { id: items.length + 1, name, quantity };
+    setItems([...items, newItem]);
+    setName("");
+    setQuantity("");
+  };
+
+  const handleRemoveItem = (id) => {
+    const updatedItems = items.filter((item) => item.id !== id);
+    setItems(updatedItems);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input
-          type="text"
-          value={state.name}
-          onChange={(event) =>
-            dispatch({ type: "set_name", payload: event.target.value })
-          }
-        />
-      </label>
-      <label>
-        Email:
-        <input
-          type="email"
-          value={state.email}
-          onChange={(event) =>
-            dispatch({ type: "set_email", payload: event.target.value })
-          }
-        />
-      </label>
-      <label>
-        Message:
-        <textarea
-          value={state.message}
-          onChange={(event) =>
-            dispatch({ type: "set_message", payload: event.target.value })
-          }
-        />
-      </label>
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <h2>Inventory Management</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.id}>
+              <td>{item.name}</td>
+              <td>{item.quantity}</td>
+              <td>
+                <button onClick={() => handleRemoveItem(item.id)}>
+                  Remove
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <form onSubmit={handleAddItem}>
+        <h3>Add Item</h3>
+        <label>
+          Item:
+          <input
+            type="text"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </label>
+        <label>
+          Quantity:
+          <input
+            type="number"
+            value={quantity}
+            onChange={(event) => setQuantity(event.target.value)}
+          />
+        </label>
+        <button type="submit">Add</button>
+      </form>
+    </div>
   );
 }
 
-export default Form;
+export default InventoryPage;
