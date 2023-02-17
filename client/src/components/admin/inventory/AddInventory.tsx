@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useNotification } from "../../../contexts/Notification";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../../../contexts/AppStoreContext";
+import Dropzone from "react-dropzone";
+
 function InventoryPage() {
   const [items, setItems] = useState([
     { id: 1, name: "Chicken Breast", quantity: 10 },
