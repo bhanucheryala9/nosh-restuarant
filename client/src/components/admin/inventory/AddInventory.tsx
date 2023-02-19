@@ -33,6 +33,26 @@ function InventoryPage() {
     setItems(updatedItems);
   };
 
+  const AddInventory = (props: AddInventoryProps) => {
+  const [formData, setFormData] = useState<InventoryRequestPayload>();
+  const [defaultValues, setDefaultValues] = useState({});
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [productURI, setProductURI] = useState<string>("");
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+  const navigate = useNavigate();
+  const { setShowNotification } = useNotification();
+  const { AppStoreData } = useAppStore();
+
+  useEffect(() => {
+    setDefaultValues(AppStoreData?.inventoryData?.inventoryUpdateData);
+    setForUpdate(AppStoreData?.inventoryData?.forUpdate);
+  }, []);
+
   return (
     <div>
       <h2>Inventory Management</h2>
