@@ -20,6 +20,8 @@ import AppLayout from "./components/common/AppLayout";
 import Orders from "./components/customer/orders/Orders";
 import Cart from "./components/customer/cart/Cart";
 import CartProvider from "./contexts/CartContext";
+import PurchaseHistory from "./components/customer/purchase-history/PurchaseHistory";
+import Payments from "./components/customer/payments/Payments";
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -42,7 +44,11 @@ function App() {
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/sales" element={<SalesDashboard />} />
-                  <Route path="/cart" element={<Cart />} />
+                  <Route
+                    path="/purchase-history"
+                    element={<PurchaseHistory />}
+                  />
+                  <Route path="/payment" element={<Payments />} />
                   <Route path="/resetPassword" element={<ForgotPassword />} />
                 </Routes>
               </Loader>

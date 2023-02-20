@@ -79,9 +79,14 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "/orders",
       },
       {
-        label: "Cart",
-        subLabel: "Check your cart",
-        href: "/cart",
+        label: "Purchase History",
+        subLabel: "Check your purchase history",
+        href: "/purchase-history",
+      },
+      {
+        label: "Payment",
+        subLabel: "Check your payment section",
+        href: "/payment",
       },
     ],
   },
