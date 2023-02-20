@@ -12,30 +12,60 @@ import {
   Text,
   Image,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Biryani from "../../../assets/biryani.jpg";
+interface OrderItemsProps {
+  ItemId: string;
+  ItemName: string;
+  ItemDescription: string;
+  category: string;
+  price: string;
+  isVeg: boolean;
+  isAvailable: boolean;
+  Mappingkey: string;
+}
+const OrderItem = (props: OrderItemsProps) => {
+  const { ItemName, ItemDescription, category, price, Mappingkey } = props;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+  const [image, setImage] = useState();
 
-const OrderItem = () => {
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await import(`../../../assets/orders/${Mappingkey}`); // change relative path to suit your needs
+        setImage(response.default);
+      } catch (err) {
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImage();
+  }, [Mappingkey]);
   return (
     <Card maxW="sm">
       <CardBody>
         <Image
           filter="auto"
           brightness="70%"
-          maxHeight={"lg"}
-          src={Biryani}
-          alt="Green double couch with wooden legs"
+          maxHeight={"56"}
+          minW="xs"
+          src={image}
+          alt="alt"
           borderRadius="lg"
         />
         <Stack mt="6" spacing="3">
-          <Heading size="md">Food item</Heading>
+          <Heading size="md">{ItemName}</Heading>
           <Text>
-            description of food
+            ItemDescription
           </Text>
         </Stack>
       </CardBody>
       <CardFooter justifyContent="space-between" alignItems={"center"}>
-        <Text fontSize={"lg"} fontWeight="semibold">$22</Text>
+        <Text fontSize={"lg"} fontWeight="semibold">
+          {price}
+        </Text>
         <Button variant={"solid"} colorScheme="orange" rounded={"full"}>
           Add to cart
         </Button>
