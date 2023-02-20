@@ -28,10 +28,9 @@ const OrderItem = () => {
           borderRadius="lg"
         />
         <Stack mt="6" spacing="3">
-          <Heading size="md">Living room Sofa</Heading>
+          <Heading size="md">Chicken Biryani</Heading>
           <Text>
-            This sofa is perfect for modern tropical spaces, baroque inspired
-            spaces.
+            This is special chicken biryani which is made with multiple spicies.
           </Text>
         </Stack>
       </CardBody>

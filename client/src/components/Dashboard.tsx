@@ -208,12 +208,16 @@ const Dashboard = () => {
           </GridItem>
         </Grid>
       </Flex>
-      <Flex>
-        <Box filter="auto" brightness="80%">
+      <Flex direction={"column"} position="relative">
+        <Flex direction={"column"} position="absolute" top="40%" left="10%" zIndex={1000}>
+          <Text fontSize={"xl"} textShadow="0 2px 5px black">Enjoy Great Recipe</Text>
+          <Text fontSize={"4xl"} fontWeight="semibold" textColor={"orange.500"} textShadow="0 2px 7px black">Simple And Delicious Food</Text>
+        </Flex>
+        <Box filter="auto" brightness="70%">
           <img
             src={section3}
             alt="welcome screen"
-            style={{ minWidth: "126.3%" }}
+            style={{ minWidth: "100%" }}
           />
         </Box>
       </Flex>
