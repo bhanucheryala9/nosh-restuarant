@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
+import Cart from "../customer/cart/Cart";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
 
@@ -13,6 +14,7 @@ const AppLayout = (props: AppLayoutProp) => {
       <Header />
       <Box minH={"85vh"}>{children}</Box> 
       <Footer />
+      <Cart />
     </React.Fragment>
   );
 };

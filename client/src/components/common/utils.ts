@@ -76,12 +76,12 @@ export const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Orders Now",
         subLabel: "Find items to order",
-        href: "#",
+        href: "/orders",
       },
       {
         label: "Cart",
         subLabel: "Check your cart",
-        href: "#",
+        href: "/cart",
       },
     ],
   },
