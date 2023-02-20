@@ -36,6 +36,7 @@ const OrderItem = (props: OrderItemsProps) => {
         const response = await import(`../../../assets/orders/${Mappingkey}`); // change relative path to suit your needs
         setImage(response.default);
       } catch (err) {
+        console.log("jehwghje")
       } finally {
         setLoading(false);
       }
@@ -52,13 +53,13 @@ const OrderItem = (props: OrderItemsProps) => {
           maxHeight={"56"}
           minW="xs"
           src={image}
-          alt="alt"
+          alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
         <Stack mt="6" spacing="3">
           <Heading size="md">{ItemName}</Heading>
           <Text>
-            ItemDescription
+            This is special chicken biryani which is made with multiple spicies.
           </Text>
         </Stack>
       </CardBody>
