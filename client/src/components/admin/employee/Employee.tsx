@@ -68,6 +68,133 @@ const Employee=()=>{
     clearFilters();
     setSearchText("");
   };
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<EmployeeDatatype> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            colorScheme="orange"
+            size="sm"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+          >
+            Search
+          </Button>
+          <Button
+            colorScheme="gray"
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+            size="sm"
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <AiOutlineSearch style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record: any) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
+
+  const prepareData = (data: any) => {
+    const formattedData = data
+      .filter((item: any) => item.type === "employee")
+      .reduce((accumulator: any, currentValue: any) => {
+        return [
+          ...accumulator,
+          {
+            key: currentValue.id,
+            id: currentValue.id.toUpperCase(),
+            name: currentValue.lastName + " " + currentValue.firstName,
+            email: currentValue.email,
+            phoneNumber: currentValue.phoneNumber,
+            employeeType: currentValue.subtype,
+            about: currentValue.about,
+            address:
+              currentValue.address.addressLine1 +
+              ", " +
+              currentValue.address.city +
+              ", " +
+              currentValue.address.state,
+            salary: currentValue.salary,
+            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
+          },
+        ];
+      }, []);
+    setUserProfile(formattedData[0]);
+    return formattedData;
+  };
+  const onDeleteClicked = (data: EmployeeDatatype) => {
+    axios
+      .delete("http://34.235.166.147:5000/api/admin/v1/delete-employee/", {
+        params: {
+          id: data.id.toLowerCase(),
+        },
+      })
+      .then((response: any) => {
+        setEmployeeData(prepareData(response.data.employees));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Employee info deleted successfully..!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive employees information..!",
+          showAlert: true,
+        });
+      });
+  };
+
+  const getActualData = (data: any) => {
+    const userData = unformattedEmployeeData.filter(
+      (item: any) => item.id.toLowerCase() === data.id.toLowerCase()
+    );
+    return userData[0];
+  };
+  const onUpdateClicked = (data: EmployeeDatatype) => {
+    setInitialFormData(getActualData(data) as any);
+    setForUpdate(true);
+    setAddEmployeeModal(true);
+  };
 
   const columns: ColumnsType<EmployeeDatatype> = [
     {
