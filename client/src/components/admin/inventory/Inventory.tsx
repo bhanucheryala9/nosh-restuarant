@@ -20,6 +20,32 @@ function Inventory() {
     setQuantity('');
   };
 
+  const Inventory = () => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [inventoryData, setInventoryData] = useState<InventoryColumns[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [toUpdateData, setToUpdateData] = useState();
+
+  const { setShowNotification } = useNotification();
+  const navigate = useNavigate();
+  const { AppStoreData, setAppStoreData } = useAppStore();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
+
+  type DataIndex = keyof InventoryColumns;
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
   const handleEditItem = (id) => {
     const itemToEdit = items.find((item) => item.id === id);
     setName(itemToEdit.name);
