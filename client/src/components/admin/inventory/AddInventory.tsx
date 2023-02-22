@@ -53,9 +53,45 @@ function InventoryPage() {
     setForUpdate(AppStoreData?.inventoryData?.forUpdate);
   }, []);
 
+
+   const handleFilesDropped = async (files: any) => {
+    const formData1 = new FormData();
+    formData1.append("file", files[0]);
+    formData1.append("upload_preset", "iu8dkp2y");
+    formData1.append("folder", "nosh");
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dh4anygjz/image/upload", formData1)
+      .then((res) => {
+        setProductURI(res.data.url);
+      })
+      .catch((error) => {
+        console.log("failed to upload in cloudnary");
+        window.alert("Failed to upload image in cloud..!");
+      });
+  };
+
   return (
     <div>
       <h2>Inventory Management</h2>
+      <form onSubmit={handleSubmit(onSubmitClicked)}>
+        <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
+          <Flex justifyContent={"space-between"}>
+            <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
+              Add Inventory
+            </Text>
+            <Button
+              colorScheme={"orange"}
+              size={{ base: "sm", lg: "md" }}
+              type="submit"
+              // onClick={onSubmitClicked}
+            >
+              {" "}
+              Add Product
+            </Button>
+          </Flex>
+          </Flex>
+          </form>
+          
       <table>
         <thead>
           <tr>
