@@ -45,13 +45,13 @@ const OrderItem = (props: OrderItemsProps) => {
     fetchImage();
   }, [Mappingkey]);
   return (
-    <Card maxW="sm">
+    <Card maxW={{base:"full",lg:"sm"}}>
       <CardBody>
         <Image
           filter="auto"
           brightness="70%"
           maxHeight={"56"}
-          minW="xs"
+          minW={{base:"full",lg:"xs"}}
           src={image}
           alt="Green double couch with wooden legs"
           borderRadius="lg"

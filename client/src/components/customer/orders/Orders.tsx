@@ -51,13 +51,13 @@ const Orders = () => {
             bg={"white"}
             rounded="lg"
             py="4"
-            px="28"
+            px={{base:"16",lg:"28"}}
             mt="-10"
             zIndex={10}
             shadow="base"
           >
             <Text
-              fontSize={"2xl"}
+              fontSize={{sm:"md",lg:"2xl"}}
               fontWeight="semibold"
               fontFamily={"'Nunito', sans-serif"}
             >
@@ -68,8 +68,9 @@ const Orders = () => {
         <Tabs
           variant="soft-rounded"
           colorScheme="orange"
-          mt="8"
-          mx="10"
+          mt={{base:"4",lg:"8"}}
+          mx={{base:"4",lg:"10"}}
+          size={{base:"sm", lg:"lg"}}
           onChange={(index) => {
             setSelectedCategory(Orders_Catergory[index]);
             const redata = orders_items.filter(
@@ -100,9 +101,9 @@ const Orders = () => {
                   </Text>
                   <Grid
                     mt="4"
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(4, 1fr)"
-                    gap={8}
+                    templateRows={{base:"repeat(8, 1fr)",lg:"repeat(2, 1fr)"}}
+                    templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(4, 1fr)"}}
+                    gap={{base:3,lg:8}}
                   >
                     {data.map((orders, index) => {
                       return (
