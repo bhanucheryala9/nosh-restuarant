@@ -11,69 +11,129 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import OrdersBanner from "../../../assets/orders.jpg";
 import Cart from "../cart/Cart";
 import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
-
+import { Orders_Catergory } from "../../common/utils";
+import _ from "lodash";
+import ReactPaginate from "react-paginate";
+import { orders_items } from "../../../test-data/customer/orders";
 const Orders = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [data, setData] = useState(orders_items);
+  const PER_PAGE = 10;
+  const pageCount = Math.ceil(data.length / PER_PAGE);
+
+  const handlePageClick = (selected: any) => {
+    const offset = currentPage * PER_PAGE;
+    const currentPageData = data.slice(offset, offset + PER_PAGE);
+    setData(currentPageData);
+    setCurrentPage(selected);
+  };
+
+  useEffect(() => {
+    setData(orders_items.slice(0, 8));
+  }, []);
+
   return (
     <div>
       <Flex direction={"column"}>
-        <Flex justifyContent={"center"} direction="column" alignItems={"center"}>
+        <Flex
+          justifyContent={"center"}
+          direction="column"
+          alignItems={"center"}
+        >
           <Image src={order} filter="auto" brightness={"50%"} />
-          <Flex bg={"white"} rounded="lg" py="4" px="28" mt="-10" zIndex={10} shadow="base">
-            <Text fontSize={"2xl"} fontWeight="semibold"  fontFamily={"'Nunito', sans-serif"}>
+          <Flex
+            bg={"white"}
+            rounded="lg"
+            py="4"
+            px="28"
+            mt="-10"
+            zIndex={10}
+            shadow="base"
+          >
+            <Text
+              fontSize={"2xl"}
+              fontWeight="semibold"
+              fontFamily={"'Nunito', sans-serif"}
+            >
               Order Section
             </Text>
           </Flex>
         </Flex>
-        <Tabs variant="soft-rounded" colorScheme="orange" mt="8" mx="10">
+        <Tabs
+          variant="soft-rounded"
+          colorScheme="orange"
+          mt="8"
+          mx="10"
+          onChange={(index) => {
+            setSelectedCategory(Orders_Catergory[index]);
+            const redata = orders_items.filter(
+              (item) => item.category === Orders_Catergory[index]
+            );
+            setData(
+              Orders_Catergory[index] === "all" ? orders_items.slice(0, 8) : redata.slice(0, 8)
+            );
+          }}
+        >
           <TabList>
-            <Tab>All</Tab>
-            <Tab>Staters</Tab>
-            <Tab>Main Course</Tab>
-            <Tab>Deserts</Tab>
+            {Orders_Catergory.map((item) => {
+              return <Tab>{_.capitalize(item)}</Tab>;
+            })}
           </TabList>
-          <TabPanels mt="8" rounded={"lg"} shadow="base">
-            <TabPanel bg={"white"}>
-              <Text
-                fontSize={"2xl"}
-                fontWeight="semibold"
-                textColor={"orange.500"}
-                mx="4"
-                my="4"
-              >
-                Menu
-              </Text>
-              <Grid
-                mt="4"
-                templateRows="repeat(2, 1fr)"
-                templateColumns="repeat(5, 1fr)"
-                gap={8}
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
-                  return (
-                    <GridItem
-                      colSpan={1}
-                      rowSpan={1}
-                      display="flex"
-                      alignItems={"center"}
-                      justifyContent="end"
-                    >
-                      <OrderItem />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
-            </TabPanel>
-            <TabPanel>
-              <p>two!</p>
-            </TabPanel>
+          <TabPanels my="8" rounded={"lg"} shadow="base">
+            {Orders_Catergory.map((item) => {
+              return (
+                <TabPanel bg={"white"}>
+                  <Text
+                    fontSize={"2xl"}
+                    fontWeight="semibold"
+                    textColor={"orange.500"}
+                    mx="4"
+                    my="4"
+                  >
+                    Menu
+                  </Text>
+                  <Grid
+                    mt="4"
+                    templateRows="repeat(2, 1fr)"
+                    templateColumns="repeat(4, 1fr)"
+                    gap={8}
+                  >
+                    {data.map((orders, index) => {
+                      return (
+                        <GridItem
+                          colSpan={1}
+                          rowSpan={1}
+                          display="flex"
+                          alignItems={"center"}
+                          justifyContent="end"
+                        >
+                          <OrderItem {...(orders as any)} />
+                        </GridItem>
+                      );
+                    })}
+                  </Grid>
+                </TabPanel>
+              );
+            })}
           </TabPanels>
         </Tabs>
-        <Flex mt="4"></Flex>
+        {/* <ReactPaginate
+          previousLabel={"← Previous"}
+          nextLabel={"Next →"}
+          pageCount={pageCount}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          previousLinkClassName={"pagination__link"}
+          nextLinkClassName={"pagination__link"}
+          disabledClassName={"pagination__link--disabled"}
+          activeClassName={"pagination__link--active"}
+        /> */}
       </Flex>
     </div>
   );

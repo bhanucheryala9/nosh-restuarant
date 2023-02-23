@@ -112,6 +112,29 @@ const Rewards = () => {
     onChange: onSelectChange,
   };
 
+  const StatusProps= [
+    {
+    name:"Total",
+    quantity: 15,
+
+  },
+  {
+    name:"Active",
+    quantity: 14,
+
+  },
+  {
+    name:"In Active",
+    quantity: 1,
+
+  },
+  {
+    name:"Scheduled",
+    quantity: 3,
+
+  },
+]
+
   const gradientColor = [
     "linear-gradient(to top, #30c7ec 47%, #46aef7 70%)",
     "linear-gradient(to top, #2b5876 -30%, #4e4376 70%)",
@@ -119,7 +142,7 @@ const Rewards = () => {
     "linear-gradient(to top, #ff0844 -30%, #ffb199 90%)",
   ];
   const getStatusComponent = () => {
-    return [1, 2, 3, 4].map((item, index) => {
+    return StatusProps.map((item, index) => {
       return (
         <GridItem colSpan={1} rowSpan={1}>
           <Flex
@@ -154,13 +177,13 @@ const Rewards = () => {
               />
             </LineChart>
             <HStack position={"absolute"} mx={10} gap={3}>
-              <Icon as={ChatIcon} boxSize={10} textShadow="0 0 10px black" />
+              <Icon as={ChatIcon} boxSize={14} textShadow="0 0 10px black" />
               <Stat>
-                <StatLabel fontSize={"md"} textShadow="0 0 10px black">
-                  Collected Fees
+                <StatLabel fontSize={"xl"} textShadow="0 0 10px black">
+                  {item.name}
                 </StatLabel>
-                <StatNumber fontSize={"3xl"} textShadow="0 0 10px black">
-                  £0.00
+                <StatNumber fontSize={"4xl"} textShadow="0 0 10px black">
+                  {item.quantity}
                 </StatNumber>
               </Stat>
             </HStack>

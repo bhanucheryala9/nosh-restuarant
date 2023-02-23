@@ -1,12 +1,13 @@
 import { Flex, HStack, Text, Image, InputGroup, InputLeftAddon, Input, InputRightAddon } from "@chakra-ui/react";
 import React from "react";
 import biryani from "../../../assets/biryani.jpg";
+import { faker } from "@faker-js/faker";
 
 const CartItem = () => {
   return (
     <Flex my="4">
       <Flex>
-        <Image src={biryani} maxH={14} maxW={14} borderRadius="lg" />
+        <Image src={faker.image.food()} maxH={14} maxW={14} borderRadius="lg" />
       </Flex>
       <Flex mx="4" direction={"column"} width="100%">
         <HStack justifyContent={"space-between"}>

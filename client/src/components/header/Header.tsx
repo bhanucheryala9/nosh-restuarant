@@ -26,6 +26,7 @@ import MobileHeader from "./MobileNav";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import React from "react";
 import { useCart } from "../../contexts/CartContext";
+import { faker } from "@faker-js/faker";
 
 const Header = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -103,14 +104,18 @@ const Header = () => {
               cursor={"pointer"}
               minW={0}
             >
-              <Avatar size="sm" bg="gray.200">
+              <Avatar
+                size="sm"
+                bg="gray.200"
+                src={faker.image.avatar()}
+              >
                 <AvatarBadge boxSize="1.25em" bg="green.500" />
               </Avatar>
             </MenuButton>
             <MenuList alignItems={"center"}>
               <br />
               <Center>
-                <Avatar size={"xl"} name="Bhanu Cheryala" bg="orange.50" />
+                <Avatar size={"lg"} name="Bhanu Cheryala" bg="orange.50" />
               </Center>
               <br />
               <Center>

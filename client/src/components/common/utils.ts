@@ -25,6 +25,9 @@ export interface NavItem {
   href?: string;
 }
 
+
+export const Orders_Catergory = ["all","appetizers","biryani","soups","indo-chinese",'main-course','beverages']
+
 export const NAV_ITEMS: Array<NavItem> = [
   {
     label:"Dashboard",
@@ -55,21 +58,7 @@ export const NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
-  {
-    label: "Employee",
-    children: [
-      {
-        label: "Orders",
-        subLabel: "Find your orders",
-        href: "#",
-      },
-      {
-        label: "Create Order",
-        subLabel: "Create new order for Customer",
-        href: "#",
-      },
-    ],
-  },
+
   {
     label: "Customer",
     children: [
@@ -92,3 +81,20 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 
 ];
+
+
+// {
+//   label: "Employee",
+//   children: [
+//     {
+//       label: "Orders",
+//       subLabel: "Find your orders",
+//       href: "#",
+//     },
+//     {
+//       label: "Create Order",
+//       subLabel: "Create new order for Customer",
+//       href: "#",
+//     },
+//   ],
+// },

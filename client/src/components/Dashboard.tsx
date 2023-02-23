@@ -21,10 +21,20 @@ import section2 from "../assets/section-2.jpg";
 import section3 from "../assets/section-3.jpg";
 import "./dashboard.css";
 import Cart from "./customer/cart/Cart";
+import Loader from "./common/Loader";
+import { CSSProperties, useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(true)
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <Flex direction={"column"}>
+      {!isLoading && <Loader/>}
       <Flex style={{ background: "rgba(0, 0, 0, 0.5)" }} position="relative">
         <Box filter="auto" brightness="35%" overflow={"hidden"}>
           <img

@@ -22,6 +22,7 @@ import Cart from "./components/customer/cart/Cart";
 import CartProvider from "./contexts/CartContext";
 import PurchaseHistory from "./components/customer/purchase-history/PurchaseHistory";
 import Payments from "./components/customer/payments/Payments";
+import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -33,8 +34,9 @@ function App() {
       <Router>
         <AuthProvider>
           <CartProvider>
-            <AppLayout>
-              <Loader>
+            {/* <Loader> */}
+              <AppLayout>
+                {/* <ErrorBoundary> */}
                 <Routes>
                   <Route path="/" element={<LoginPage />} />
                   <Route path="/dashboard" element={<Dashboard />} />
@@ -51,8 +53,9 @@ function App() {
                   <Route path="/payment" element={<Payments />} />
                   <Route path="/resetPassword" element={<ForgotPassword />} />
                 </Routes>
-              </Loader>
-            </AppLayout>
+                {/* </ErrorBoundary> */}
+              </AppLayout>
+            {/* </Loader> */}
           </CartProvider>
         </AuthProvider>
       </Router>

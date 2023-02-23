@@ -23,6 +23,7 @@ import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { EmployeeTestData } from "../../../test-data/admin/employee";
 import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
+import {faker }from '@faker-js/faker';
 
 interface EmployeeDatatype {
   key: React.Key;
@@ -55,8 +56,15 @@ const Employee = () => {
       render: (text: string) => {
         return (
           <HStack>
-            <Avatar size={"sm"} name="Ryan Florence" src="https://bit.ly/ryan-florence" />
-            <Text textColor="gray.600" fontWeight={"semibold"}>{text}</Text>,
+            <Avatar
+              size={"sm"}
+              name="Ryan Florence"
+              src={faker.image.avatar()}
+            />
+            <Text textColor="gray.600" fontWeight={"semibold"}>
+              {text}
+            </Text>
+            ,
           </HStack>
         );
       },
@@ -298,6 +306,7 @@ const Employee = () => {
           </GridItem>
         </Grid>
       </Flex>
+
       <AddEmployee
         isModalOpen={addEmployeeModal}
         setIsModalOpen={setAddEmployeeModal}

@@ -27,8 +27,15 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { RewardsTestData } from "../../../test-data/admin/rewards";
-import { DataType } from "../rewards/Rewards";
+import { admin_orders } from "../../../test-data/admin/aorder";
+
+export interface DataType {
+  key: React.Key;
+  orderID: string;
+  customer_name: string;
+  order_status: string;
+  amount: string;
+}
 const SalesDashboard = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [rewardsData, setRewardsData] = useState<DataType[]>([]);
@@ -37,28 +44,20 @@ const SalesDashboard = () => {
   const columns: ColumnsType<DataType> = [
     {
       title: "Reward ID",
-      dataIndex: "id",
+      dataIndex: "orderID",
       render: (text: string) => <a>{text}</a>,
     },
     {
       title: "Reward Code",
-      dataIndex: "code",
+      dataIndex: "customer_name",
     },
     {
       title: "Category",
-      dataIndex: "category",
+      dataIndex: "order_status",
     },
     {
       title: "Discount %",
-      dataIndex: "discoundPercentage",
-    },
-    {
-      title: "Min Order",
-      dataIndex: "minOrder",
-    },
-    {
-      title: "Max Discount Amount",
-      dataIndex: "maxDiscountAmount",
+      dataIndex: "amount",
     },
     {
       title: "Action",
@@ -82,12 +81,12 @@ const SalesDashboard = () => {
   ];
 
   useEffect(() => {
-    const formattedData = RewardsTestData.reduce(
+    const formattedData = admin_orders.reduce(
       (accumulator: any, currentValue) => {
         return [
           ...accumulator,
           {
-            key: currentValue.id,
+            key: currentValue.orderID,
             ...currentValue,
           },
         ];
@@ -146,8 +145,27 @@ const SalesDashboard = () => {
 
   const colors = ["red", "green", "yellow", "blue"];
 
+  const orderStats = [
+    {
+      name: "Total",
+      quantity: "20",
+    },
+    {
+      name: "Processing",
+      quantity: "10",
+    },
+    {
+      name: "Preparing",
+      quantity: "5",
+    },
+    {
+      name: "Ready for Pickup",
+      quantity: "5",
+    },
+  ];
+
   const getStatusComponent = () => {
-    return [1, 2, 3, 4].map((item, index) => {
+    return orderStats.map((item, index) => {
       return (
         <GridItem colSpan={1} rowSpan={1}>
           <Flex
@@ -166,9 +184,9 @@ const SalesDashboard = () => {
                 boxSize="12"
               />
               <Stat>
-                <StatLabel fontSize={"md"}>Collected Fees</StatLabel>
+                <StatLabel fontSize={"md"}>{item.name}</StatLabel>
                 <StatNumber textColor={`${colors[index]}.600`} fontSize={"3xl"}>
-                  £0.00
+                  {item.quantity}
                 </StatNumber>
               </Stat>
             </HStack>
@@ -206,31 +224,31 @@ const SalesDashboard = () => {
             <Text fontSize={"xl"} fontWeight="semibold">
               Sales Charts
             </Text>
-              <ResponsiveContainer height={179}>
-                <AreaChart
-                  width={730}
-                  height={250}
-                  data={data}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                  <defs>
-                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="3%" stopColor="#ED8936" stopOpacity={0.8} />
-                      <stop offset="97%" stopColor="#FBD38D" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="Procuct B"
-                    stroke="#C05621"
-                    fillOpacity={1}
-                    fill="url(#colorPv)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>{" "}
+            <ResponsiveContainer height={179}>
+              <AreaChart
+                width={730}
+                height={250}
+                data={data}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="3%" stopColor="#ED8936" stopOpacity={0.8} />
+                    <stop offset="97%" stopColor="#FBD38D" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="Procuct B"
+                  stroke="#C05621"
+                  fillOpacity={1}
+                  fill="url(#colorPv)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>{" "}
           </VStack>
         </GridItem>
         <GridItem
