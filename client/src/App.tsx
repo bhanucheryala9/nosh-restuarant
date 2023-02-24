@@ -23,6 +23,7 @@ import CartProvider from "./contexts/CartContext";
 import PurchaseHistory from "./components/customer/purchase-history/PurchaseHistory";
 import Payments from "./components/customer/payments/Payments";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
+import NotificationProvider from "./contexts/Notification";
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -34,6 +35,7 @@ function App() {
       <Router>
         <AuthProvider>
           <CartProvider>
+            <NotificationProvider>
             {/* <Loader> */}
             <AppLayout>
               {/* <ErrorBoundary> */}
@@ -54,6 +56,7 @@ function App() {
               {/* </ErrorBoundary> */}
             </AppLayout>
             {/* </Loader> */}
+            </NotificationProvider>
           </CartProvider>
         </AuthProvider>
       </Router>

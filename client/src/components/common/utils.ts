@@ -12,6 +12,19 @@ export interface AlertMessageProps {
   showAlert?: boolean;
 }
 
+export enum NotificationStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+  WARNING = "warning",
+  DEFAULT ="default"
+
+}
+
+export interface NotificationProps {
+  status?: NotificationStatus;
+  alertMessage?: string;
+  showAlert?: boolean;
+}
 export interface LoaderProps {
   loadingMessage?: string;
   isLoading?: boolean;

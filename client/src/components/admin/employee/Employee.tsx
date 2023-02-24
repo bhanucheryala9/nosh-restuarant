@@ -23,9 +23,10 @@ import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { EmployeeTestData } from "../../../test-data/admin/employee";
 import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
-import {faker }from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import { useNotification } from "../../../contexts/Notification";
+import { NotificationStatus } from "../../common/utils";
 
 interface EmployeeDatatype {
   key: React.Key;
@@ -129,6 +130,7 @@ const Employee = () => {
     },
   ];
 
+  const { setShowNotification } = useNotification();
 
   useEffect(() => {
     const formattedData = EmployeeTestData.reduce(
@@ -157,10 +159,15 @@ const Employee = () => {
     );
     setEmployeeData(formattedData);
     setUserProfile(formattedData[0]);
-
-    axios.get("http://localhost:5000/api/admin/employee-details").then((response)=>{
-      const notify = () => toast("Wow so easy !");
-    })
+    axios
+      .get("http://localhost:5000/api/admin/employee-details")
+      .then((response) => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "This is sample alert..!",
+          showAlert: true,
+        });
+      });
   }, []);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -171,22 +178,20 @@ const Employee = () => {
     onChange: onSelectChange,
   };
 
-
-
-  
   return (
     <React.Fragment>
-      <Flex mx={{base:"4",lg:"10"}} my="6" direction={"column"}>
+      {/* <Notifications /> */}
+      <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
         <Text fontSize={"xl"} fontWeight="bold">
           Employees List
         </Text>
         <Grid
           mt="4"
-          templateRows={{base:"repeat(2, 1fr)",lg:"repeat(1, 1fr)"}}
-          templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(6, 1fr)"}}
-          gap={{base:2,lg:4}}
+          templateRows={{ base: "repeat(2, 1fr)", lg: "repeat(1, 1fr)" }}
+          templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(6, 1fr)" }}
+          gap={{ base: 2, lg: 4 }}
         >
-          <GridItem colSpan={{base:1, lg:4}}>
+          <GridItem colSpan={{ base: 1, lg: 4 }}>
             <Flex
               bg="white"
               p="6"
@@ -200,10 +205,14 @@ const Employee = () => {
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
                   />
-                  <Input variant="filled" placeholder="Search.."  size={{base:"sm"}}/>
+                  <Input
+                    variant="filled"
+                    placeholder="Search.."
+                    size={{ base: "sm" }}
+                  />
                 </InputGroup>
                 <Button
-                  size={{base:"sm", lg:"md"}}
+                  size={{ base: "sm", lg: "md" }}
                   colorScheme="orange"
                   onClick={() => setAddEmployeeModal(true)}
                 >
@@ -218,7 +227,7 @@ const Employee = () => {
                     },
                   };
                 }}
-                scroll={{x:400}}
+                scroll={{ x: 400 }}
                 style={{ width: "100%" }}
                 size="large"
                 rowSelection={rowSelection as any}
