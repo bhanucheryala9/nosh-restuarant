@@ -20,6 +20,7 @@ import { Orders_Catergory } from "../../common/utils";
 import _ from "lodash";
 import ReactPaginate from "react-paginate";
 import { orders_items } from "../../../test-data/customer/orders";
+
 const Orders = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -82,14 +83,14 @@ const Orders = () => {
           }}
         >
           <TabList>
-            {Orders_Catergory.map((item) => {
-              return <Tab>{_.capitalize(item)}</Tab>;
+            {Orders_Catergory.map((item, index) => {
+              return <Tab key={index}>{_.capitalize(item)}</Tab>;
             })}
           </TabList>
           <TabPanels my="8" rounded={"lg"} shadow="base">
-            {Orders_Catergory.map((item) => {
+            {Orders_Catergory.map((index, item) => {
               return (
-                <TabPanel bg={"white"}>
+                <TabPanel bg={"white"} key={index}>
                   <Text
                     fontSize={"2xl"}
                     fontWeight="semibold"
@@ -113,6 +114,7 @@ const Orders = () => {
                           display="flex"
                           alignItems={"center"}
                           justifyContent="end"
+                          key={index}
                         >
                           <OrderItem {...(orders as any)} />
                         </GridItem>
