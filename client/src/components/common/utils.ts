@@ -25,13 +25,20 @@ export interface NavItem {
   href?: string;
 }
 
-
-export const Orders_Catergory = ["all","appetizers","biryani","soups","indo-chinese",'main-course','beverages']
+export const Orders_Catergory = [
+  "all",
+  "appetizers",
+  "biryani",
+  "soups",
+  "indo-chinese",
+  "main-course",
+  "beverages",
+];
 
 export const NAV_ITEMS: Array<NavItem> = [
   {
-    label:"Dashboard",
-    href:"dashboard"
+    label: "Dashboard",
+    href: "/dashboard",
   },
   {
     label: "Admin",
@@ -39,7 +46,7 @@ export const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Create Employee",
         subLabel: "you can create and manage employees",
-        href: "employee",
+        href: "/employee",
       },
       {
         label: "Inventory",
@@ -79,9 +86,50 @@ export const NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
-
 ];
 
+/**  Api response structures */
+export interface EmployeeRequestPayload {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  joinedDate: Date;
+  type: string;
+  phoneNumber: number;
+  subtype: string;
+  salary: number;
+  about?:string;
+  address: {
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    zipcode: string;
+  };
+}
+export interface InventoryRequestPayload {
+  id: string;
+  productName: string;
+  category: string;
+  description: string;
+  price:number;
+  discount:number;
+  isAvailable:boolean;
+  tax:number;
+}
+
+
+export interface RewardsRequestPayload {
+  id: string;
+  rewardType: string;
+  code: string;
+  discountPercentage: number;
+  maxDiscountAmount:number;
+  minOrderPrice:number;
+  appliesTo:string;
+  appliedCategory:string[] |string;
+}
 
 // {
 //   label: "Employee",

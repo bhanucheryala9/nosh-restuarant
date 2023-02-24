@@ -21,8 +21,10 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import axios from "axios";
+import React, { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
+import { EmployeeRequestPayload } from "../../common/utils";
 
 interface AddEmployeeProps {
   isModalOpen: boolean;
@@ -31,17 +33,39 @@ interface AddEmployeeProps {
 }
 const AddEmployee = (props: AddEmployeeProps) => {
   const { isModalOpen, setIsModalOpen } = props;
+  const [formData, setFormData] = useState<EmployeeRequestPayload>();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
 
-  const onSubmitClicked = () => {
-    console.log("checking employtee form data:");
+  const onSubmitClicked = (data: any) => {
+    let formattedData = formData;
+    formattedData = {
+      ...formattedData,
+      id:
+        formattedData &&
+        formattedData?.firstName[0] +
+          formattedData?.lastName[0] +
+          Math.floor(Math.random() * 90000) +
+          10000,
+      joinedDate: Date.now(),
+      address: {
+        ...formattedData?.address,
+        zipcode: "12208",
+      },
+    } as any;
+
+    axios
+      .post("http://localhost:5000/api/admin/add-employee", formattedData)
+      .then((response) => {
+      })
+      .catch((error) => {
+      });
+
   };
 
-  console.log("errors in employe form:", errors);
   return (
     <React.Fragment>
       <Modal
@@ -77,6 +101,13 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("firstName", {
                         required: "First Name is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          firstName: e.target.value,
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["firstName"]?.message as string}
@@ -93,9 +124,17 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       Last Name:
                     </FormLabel>
                     <Input
+                      type={"text"}
                       {...register("lastName", {
                         required: "Last Name is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          lastName: e.target.value,
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["lastName"]?.message as string}
@@ -112,9 +151,17 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       Email:
                     </FormLabel>
                     <Input
+                      type={"email"}
                       {...register("email", {
                         required: "Email is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          email: e.target.value,
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["email"]?.message as string}
@@ -131,9 +178,17 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       Mobile Number:
                     </FormLabel>
                     <Input
+                      type={"number"}
                       {...register("phone", {
                         required: "Mobile Number is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          phoneNumber: e.target.value,
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["phone"]?.message as string}
@@ -154,6 +209,14 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("employeeType", {
                         required: "Employee is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          type: "employee",
+                          subtype: e.target.value,
+                        };
+                        setFormData(userData as any);
+                      }}
                     >
                       <option value="manager" style={{ padding: "0 10px" }}>
                         Manager
@@ -185,6 +248,13 @@ const AddEmployee = (props: AddEmployeeProps) => {
                         {...register("salary", {
                           required: "Salary is required",
                         })}
+                        onChange={(e) => {
+                          const userData = {
+                            ...formData,
+                            salary: e.target.value,
+                          };
+                          setFormData(userData as any);
+                        }}
                       />
                     </InputGroup>
                     <FormErrorMessage>
@@ -205,6 +275,16 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("addressLine1", {
                         required: "Address Line1 is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          address: {
+                            ...formData?.address,
+                            addressLine1: e.target.value,
+                          },
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["addressLine1"]?.message as string}
@@ -220,7 +300,19 @@ const AddEmployee = (props: AddEmployeeProps) => {
                     >
                       Address Line 2:
                     </FormLabel>
-                    <Input {...register("addressLine2")} />
+                    <Input
+                      {...register("addressLine2")}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          address: {
+                            ...formData?.address,
+                            addressLine2: e.target.value,
+                          },
+                        };
+                        setFormData(userData as any);
+                      }}
+                    />
                   </FormControl>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={1}>
@@ -236,6 +328,16 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("city", {
                         required: "City is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          address: {
+                            ...formData?.address,
+                            city: e.target.value,
+                          },
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["city"]?.message as string}
@@ -255,6 +357,16 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("state", {
                         required: "State is required",
                       })}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          address: {
+                            ...formData?.address,
+                            state: e.target.value,
+                          },
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                     <FormErrorMessage>
                       {errors["state"]?.message as string}
@@ -273,6 +385,13 @@ const AddEmployee = (props: AddEmployeeProps) => {
                     <Textarea
                       placeholder="write short discription about you.."
                       {...register("about")}
+                      onChange={(e) => {
+                        const userData = {
+                          ...formData,
+                          about: e.target.value,
+                        };
+                        setFormData(userData as any);
+                      }}
                     />
                   </FormControl>
                 </GridItem>

@@ -197,19 +197,19 @@ const SalesDashboard = () => {
   };
   return (
     <>
-      <Flex mx="10" my="6" direction={"column"}>
+      <Flex mx={{base:"4",lg:"10"}} my="6" direction={"column"}>
         <Flex justifyContent={"space-between"}>
-          <Text fontSize={"xl"} fontWeight="bold">
+          <Text fontSize={{base:"lg",lg:"xl"}} fontWeight="bold">
             Dashbord
           </Text>
-          <Button colorScheme={"orange"}> Create Coupons</Button>
+          <Button colorScheme={"orange"} size={{base:"sm", lg:"lg"}}> Create Coupons</Button>
         </Flex>
 
         <Grid
           my="4"
-          templateRows="repeat(1, 1fr)"
-          templateColumns="repeat(4, 1fr)"
-          gap={4}
+          templateRows={{base:"repeat(4, 1fr)",lg:"repeat(1, 1fr)"}}
+          templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(4, 1fr)"}}
+          gap={{base:2,lg:4}}
         >
           {getStatusComponent()}
         </Grid>
@@ -275,6 +275,7 @@ const SalesDashboard = () => {
               }}
               style={{ width: "100%" }}
               size="large"
+              scroll={{x:400}}
               columns={columns}
               dataSource={rewardsData}
             />

@@ -24,6 +24,8 @@ import AddEmployee from "./AddEmployee";
 import { EmployeeTestData } from "../../../test-data/admin/employee";
 import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
 import {faker }from '@faker-js/faker';
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 
 interface EmployeeDatatype {
   key: React.Key;
@@ -127,7 +129,6 @@ const Employee = () => {
     },
   ];
 
-  console.log("test user profile data", userProfile);
 
   useEffect(() => {
     const formattedData = EmployeeTestData.reduce(
@@ -156,29 +157,36 @@ const Employee = () => {
     );
     setEmployeeData(formattedData);
     setUserProfile(formattedData[0]);
+
+    axios.get("http://localhost:5000/api/admin/employee-details").then((response)=>{
+      const notify = () => toast("Wow so easy !");
+    })
   }, []);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
+
+
+  
   return (
     <React.Fragment>
-      <Flex mx="10" my="6" direction={"column"}>
+      <Flex mx={{base:"4",lg:"10"}} my="6" direction={"column"}>
         <Text fontSize={"xl"} fontWeight="bold">
           Employees List
         </Text>
         <Grid
           mt="4"
-          templateRows="repeat(1, 1fr)"
-          templateColumns="repeat(6, 1fr)"
-          gap={4}
+          templateRows={{base:"repeat(2, 1fr)",lg:"repeat(1, 1fr)"}}
+          templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(6, 1fr)"}}
+          gap={{base:2,lg:4}}
         >
-          <GridItem colSpan={4}>
+          <GridItem colSpan={{base:1, lg:4}}>
             <Flex
               bg="white"
               p="6"
@@ -187,14 +195,15 @@ const Employee = () => {
               direction={"column"}
             >
               <Flex justifyContent={"space-between"} mb="4">
-                <InputGroup maxW="44" alignItems={"center"}>
+                <InputGroup maxW="44" alignItems={"center"} rounded="md">
                   <InputLeftElement
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
                   />
-                  <Input variant="filled" placeholder="Search.." />
+                  <Input variant="filled" placeholder="Search.."  size={{base:"sm"}}/>
                 </InputGroup>
                 <Button
+                  size={{base:"sm", lg:"md"}}
                   colorScheme="orange"
                   onClick={() => setAddEmployeeModal(true)}
                 >
@@ -209,6 +218,7 @@ const Employee = () => {
                     },
                   };
                 }}
+                scroll={{x:400}}
                 style={{ width: "100%" }}
                 size="large"
                 rowSelection={rowSelection as any}

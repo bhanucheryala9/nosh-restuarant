@@ -35,26 +35,24 @@ function App() {
         <AuthProvider>
           <CartProvider>
             {/* <Loader> */}
-              <AppLayout>
-                {/* <ErrorBoundary> */}
-                <Routes>
-                  <Route path="/" element={<LoginPage />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/employee" element={<Employee />} />
-                  <Route path="/rewards" element={<Rewards />} />
-                  <Route path="/add-inventory" element={<Inventory />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="/sales" element={<SalesDashboard />} />
-                  <Route
-                    path="/purchase-history"
-                    element={<PurchaseHistory />}
-                  />
-                  <Route path="/payment" element={<Payments />} />
-                  <Route path="/resetPassword" element={<ForgotPassword />} />
-                </Routes>
-                {/* </ErrorBoundary> */}
-              </AppLayout>
+            <AppLayout>
+              {/* <ErrorBoundary> */}
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/employee" element={<Employee />} />
+                <Route path="/rewards" element={<Rewards />} />
+                <Route path="/add-inventory" element={<Inventory />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/sales" element={<SalesDashboard />} />
+                <Route path="/purchase-history" element={<PurchaseHistory />} />
+                <Route path="/payment" element={<Payments />} />
+                <Route path="/resetPassword" element={<ForgotPassword />} />
+              </Routes>
+              {/* </ErrorBoundary> */}
+            </AppLayout>
             {/* </Loader> */}
           </CartProvider>
         </AuthProvider>

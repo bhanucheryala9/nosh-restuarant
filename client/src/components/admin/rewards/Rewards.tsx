@@ -144,7 +144,7 @@ const Rewards = () => {
   const getStatusComponent = () => {
     return StatusProps.map((item, index) => {
       return (
-        <GridItem colSpan={1} rowSpan={1}>
+        <GridItem colSpan={1} rowSpan={1} key={index}>
           <Flex
             bg="white"
             shadow="sm"
@@ -155,11 +155,12 @@ const Rewards = () => {
             bgGradient={gradientColor[index]}
             textColor={"white"}
             minH="36"
+            maxW={{base:"full"}}
             position={"relative"}
             backdropFilter='brightness(10%)'
           >
             <LineChart
-              width={380}
+              width={280}
               height={150}
               data={statsChartData}
               margin={{ top: 5, bottom: 5 }}
@@ -194,12 +195,13 @@ const Rewards = () => {
   };
   return (
     <React.Fragment>
-      <Flex mx="10" my="6" direction={"column"}>
+      <Flex mx={{base:"4",lg:"10"}} my="6" direction={"column"}>
         <Flex justifyContent={"space-between"}>
-          <Text fontSize={"xl"} fontWeight="bold">
+          <Text fontSize={{base:"lg",lg:"xl"}} fontWeight="bold">
             Offers and Rewards
           </Text>
           <Button
+            size={{base:"sm", lg:"lg"}}
             colorScheme={"orange"}
             onClick={() => setShowCreateRewardModal(true)}
           >
@@ -210,9 +212,9 @@ const Rewards = () => {
 
         <Grid
           my="4"
-          templateRows="repeat(1, 1fr)"
-          templateColumns="repeat(4, 1fr)"
-          gap={4}
+          templateRows={{base:"repeat(4, 1fr)",lg:"repeat(1, 1fr)"}}
+          templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(4, 1fr)"}}
+          gap={{base:3,lg:4}}
         >
           {getStatusComponent()}
         </Grid>
@@ -227,6 +229,7 @@ const Rewards = () => {
               };
             }}
             style={{ width: "100%" }}
+            scroll={{x:400}}
             size="large"
             rowSelection={rowSelection as any}
             columns={columns}

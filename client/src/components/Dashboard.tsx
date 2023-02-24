@@ -47,57 +47,59 @@ const Dashboard = () => {
             }}
           />
         </Box>
-        <Box position="absolute" top={"20%"} right="60%">
+        <Box position="absolute" top={{base:"20%", sm:"5%"}} left={{base:"20%", sm:"5%"}}>
           <Text
-            fontSize={"5xl"}
+            fontSize={{base:"2xl", md:"3xl", lg:"5xl"}}
             color="white"
             zIndex={1000}
             fontWeight="semibold"
+            textShadow="0 2px px black"
             fontFamily="'Permanent Marker', cursive"
           >
             {" "}
             Welcome to our
           </Text>
           <Text
-            fontSize={"9xl"}
+            fontSize={{base:"4xl", md:"4xl", lg:"9xl"}}
             textColor="red.500"
             fontWeight={"bold"}
+            textShadow="0 2px 10px black"
             fontFamily="'Permanent Marker', cursive"
           >
             Nosh{" "}
           </Text>
         </Box>
       </Flex>
-      <Flex px="6" py="16" bg="white" alignItems="center" direction={"column"}>
+      <Flex px="6" py="4" bg="white" alignItems="center" direction={"column"}>
         <Text
           fontFamily={"'Nunito', sans-serif"}
-          fontSize="4xl"
+          fontSize={{base:"2xl", md:"3xl", lg:"4xl"}}
           fontWeight={"semibold"}
         >
           International Cuisines
         </Text>
-        <Text fontFamily={"'Nunito', sans-serif"} fontSize="lg">
+        <Text fontFamily={"'Nunito', sans-serif"} fontSize={{base:"sm",lg:"lg"}}>
           Incredibly Tasty International Dish
         </Text>
         <Grid
-          mt="4"
-          templateRows="repeat(1, 1fr)"
-          templateColumns="repeat(5, 1fr)"
+          mt={{base:"0",lg:"4"}}
+          templateRows= {{base:"repeat(5, 1fr)",lg: "repeat(1, 1fr)"}}
+          templateColumns={{base:"repeat(2, 1fr)",lg: "repeat(5, 1fr)"}}
           gap={4}
         >
           <GridItem
             colSpan={2}
-            rowSpan={1}
+            rowSpan={{base:2, lg:1}}
             display="flex"
             alignItems={"center"}
-            justifyContent="end"
+            justifyContent={{base:"center",lg:"end"}}
           >
             <Flex
               direction={"column"}
               alignItems="end"
               justifyContent={"center"}
             >
-              <Box maxW={"md"}>
+              <Box maxW={{base:"full",lg:"md"}}>
                 <Text
                   textColor={"orange.600"}
                   fontSize="xl"
@@ -151,12 +153,12 @@ const Dashboard = () => {
               </Box>
             </Flex>
           </GridItem>
-          <GridItem colSpan={1}>
-            <Box>
-              <img src={section2} />
+          <GridItem colSpan={1} rowSpan={{base:1, lg:1}}>
+            <Box minW={{base:'full'}}>
+              <Image src={section2} />
             </Box>
           </GridItem>
-          <GridItem colSpan={2} display="flex" alignItems={"center"}>
+          <GridItem colSpan={2} rowSpan={{base:2,lg:1}} display="flex" alignItems={"center"}>
             <Flex
               direction={"column"}
               alignItems="start"
@@ -165,7 +167,7 @@ const Dashboard = () => {
               <Box maxW={"md"}>
                 <Text
                   textColor={"orange.600"}
-                  fontSize="xl"
+                  fontSize={"xl"}
                   fontWeight={"semibold"}
                 >
                   African Cuisines
@@ -219,9 +221,9 @@ const Dashboard = () => {
         </Grid>
       </Flex>
       <Flex direction={"column"} position="relative">
-        <Flex direction={"column"} position="absolute" top="40%" left="10%" zIndex={1000}>
-          <Text fontSize={"xl"} textShadow="0 2px 5px black">Enjoy Great Recipe</Text>
-          <Text fontSize={"4xl"} fontWeight="semibold" textColor={"orange.500"} textShadow="0 2px 7px black">Simple And Delicious Food</Text>
+        <Flex direction={"column"} position="absolute" top={{base:"20%",lg:"40%"}} left="10%" zIndex={1000}>
+          <Text fontSize={{sm:"md",lg:"xl"}} textShadow="0 1px 2px black">Enjoy Great Recipe</Text>
+          <Text fontSize={{sm:"lg",lg:"4xl"}} fontWeight="semibold" textColor={"orange.500"} textShadow="0 2px 2px black">Simple And Delicious Food</Text>
         </Flex>
         <Box filter="auto" brightness="70%">
           <img
