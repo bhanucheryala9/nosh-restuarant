@@ -1,8 +1,78 @@
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Button, Flex, HStack, IconButton, Image, Text } from "@chakra-ui/react";
 import purchase from "../../../assets/purchase-history.jpg";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Table } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { RewardsTestData } from "../../../test-data/admin/rewards";
+import { purchase_history } from "../../../test-data/customer/purchase-history";
 
+export interface DataType {
+    key: React.Key;
+    orderID: string;
+    name: string;
+    numberOfItems: number;
+    price: string;
+  }
 const PurchaseHistory = () => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [rewardsData, setRewardsData] = useState<DataType[]>([]);
+  const [showCreateRewardModal, setShowCreateRewardModal] =
+    useState<boolean>(false);
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Order ID",
+      dataIndex: "orderID",
+      render: (text: string) => <a>{text}</a>,
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Number Of Items",
+      dataIndex: "numberOfItems",
+    },
+    {
+      title: "Price $",
+      dataIndex: "price",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+         <Button colorScheme={"orange"} rounded="full">Reorder</Button>
+        </HStack>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    const formattedData = purchase_history.reduce(
+      (accumulator: any, currentValue) => {
+        return [
+          ...accumulator,
+          {
+            key: currentValue.orderID,
+            ...currentValue,
+          },
+        ];
+      },
+      []
+    );
+    setRewardsData(formattedData);
+  }, []);
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
   return (
     <Flex direction={"column"} justifyContent="center">
       <Flex justifyContent={"center"} direction="column" alignItems={"center"}>
@@ -30,6 +100,23 @@ const PurchaseHistory = () => {
             Purchase History
           </Text>
         </Flex>
+      </Flex>
+        <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm" my="6" mx="4">
+
+          <Table
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  // setUserProfile(record);
+                },
+              };
+            }}
+            style={{ width: "100%" }}
+            size="large"
+            rowSelection={rowSelection as any}
+            columns={columns}
+            dataSource={rewardsData}
+          />
       </Flex>
     </Flex>
   );
