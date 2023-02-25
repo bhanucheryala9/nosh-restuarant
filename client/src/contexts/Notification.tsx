@@ -32,7 +32,6 @@ const NotificationProvider = (props: {
   });
 
   const showNotifications = () => {
-
    showNotification.showAlert && showNotification.status === NotificationStatus.SUCCESS && toast.success(showNotification.alertMessage, {
       position: "top-right",
       autoClose: 3000,
@@ -43,7 +42,6 @@ const NotificationProvider = (props: {
       progress: undefined,
       theme: "light",
     });
-
     showNotification.showAlert && showNotification.status === NotificationStatus.ERROR && toast.error(showNotification.alertMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -54,6 +52,11 @@ const NotificationProvider = (props: {
         progress: undefined,
         theme: "light",
       });
+    setShowNotification({
+      status: NotificationStatus.DEFAULT,
+      alertMessage: "This is sample alert..!",
+      showAlert:false
+    });
   };
 
   React.useEffect(()=>{

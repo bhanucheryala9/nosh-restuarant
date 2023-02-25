@@ -12,11 +12,15 @@ import {
   Divider,
   HStack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { useCart } from "../../../contexts/CartContext";
+import { OrderInfo } from "../orders/OrderItem";
 import CartItem from "./CartItem";
 
 const Cart = () => {
-  const {isCartOpen, setIsCartOpen} = useCart();
+  const {isCartOpen, setIsCartOpen, cartData} = useCart();
+  const [cartInfo, setCartInfo] = useState<Array<OrderInfo>>(cartData)
+
   return (
     <div>
       <Drawer
@@ -60,8 +64,8 @@ const Cart = () => {
                 </Text>
               </Flex>
               <Divider mb="4" />
-              {[1, 2, 3, 4].map((item) => {
-                return <CartItem />;
+              {cartInfo.map((item:any) => {
+                return <CartItem {...item}/>;
               })}
 
               <Divider my="6" />

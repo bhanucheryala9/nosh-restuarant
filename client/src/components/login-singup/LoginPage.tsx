@@ -3,9 +3,10 @@ import { Button, Divider, Form, Input, Typography } from "antd";
 import { FC, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { AlertMessageProps, AlertStatus } from "../common/utils";
+import { AlertMessageProps, AlertStatus, NotificationStatus } from "../common/utils";
 import lgn from "../../assets/loginPage.jpg";
 import Header from "../header/Header";
+import { useNotification } from "../../contexts/Notification";
 
 const LoginPage = () => {
   const { Title, Text } = Typography;
@@ -17,31 +18,44 @@ const LoginPage = () => {
     showAlert: false,
   });
   const navigate = useNavigate();
+  const { setShowNotification } = useNotification();
+
+
+  const getErroMessage =(message:string) =>{
+    if(message==="wrong-password"){
+        return "Incorrect password..!"
+    }else if(message==="user-not-found"){
+        return "User doesn't exsists..!"
+    }else{
+      return "Failed to login the user..!"
+    }
+  }
 
   const onSubmitClicked = (values: any) => {
     const email = values.email;
     const pwd = values.password;
     try {
       loginIn(email, pwd)
-        .then(() => {
-          setShowAlert({
-            status: AlertStatus.SUCCESS,
-            alertMessage: "Successfully logged in..!",
+        .then((res: any) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "User successfully logged in..!",
             showAlert: true,
           });
-          navigate("/");
+          navigate("/dashboard");
         })
-        .catch(() => {
-          setShowAlert({
-            status: AlertStatus.ERROR,
-            alertMessage: "Failed to login user",
+        .catch((error: any) => {
+          console.log("**************n error", error.code, error.status)
+          setShowNotification({
+            status: NotificationStatus.ERROR,
+            alertMessage: getErroMessage((error.code as string)?.split('/')[1]),
             showAlert: true,
           });
         });
     } catch {
       setShowAlert({
         status: AlertStatus.ERROR,
-        alertMessage: "Failed to login user",
+        alertMessage: "Failed to login the user..!",
         showAlert: true,
       });
     }

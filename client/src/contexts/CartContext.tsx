@@ -21,10 +21,13 @@ const CartProvider = (props: {
     | undefined;
 }) => {
   const [isCartOpen, setIsCartOpen] = useState();
+  const [cartData, setCartData] = useState([])
 
   const value = {
     isCartOpen: isCartOpen,
-    setIsCartOpen: setIsCartOpen
+    setIsCartOpen: setIsCartOpen,
+    cartData:cartData,
+    setCartData:setCartData
   };
 
   return (

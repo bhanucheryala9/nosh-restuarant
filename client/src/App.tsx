@@ -40,8 +40,7 @@ function App() {
             <AppLayout>
               {/* <ErrorBoundary> */}
               <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<LoginPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/employee" element={<Employee />} />
                 <Route path="/rewards" element={<Rewards />} />

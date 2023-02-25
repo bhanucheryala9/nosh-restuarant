@@ -132,7 +132,6 @@ export interface InventoryRequestPayload {
   tax:number;
 }
 
-
 export interface RewardsRequestPayload {
   id: string;
   rewardType: string;

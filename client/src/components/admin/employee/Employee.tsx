@@ -162,11 +162,7 @@ const Employee = () => {
     axios
       .get("http://localhost:5000/api/admin/employee-details")
       .then((response) => {
-        setShowNotification({
-          status: NotificationStatus.ERROR,
-          alertMessage: "This is sample alert..!",
-          showAlert: true,
-        });
+
       });
   }, []);
 
