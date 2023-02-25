@@ -45,7 +45,6 @@ const LoginPage = () => {
           navigate("/dashboard");
         })
         .catch((error: any) => {
-          console.log("**************n error", error.code, error.status)
           setShowNotification({
             status: NotificationStatus.ERROR,
             alertMessage: getErroMessage((error.code as string)?.split('/')[1]),

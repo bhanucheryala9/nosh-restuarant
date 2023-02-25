@@ -62,9 +62,14 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "/employee",
       },
       {
-        label: "Inventory",
-        subLabel: "Create and manage inventory",
+        label: "Add Inventory",
+        subLabel: "Create inventory",
         href: "/add-inventory",
+      },
+      {
+        label: "Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
       },
       {
         label: "Offers",
@@ -143,6 +148,10 @@ export interface RewardsRequestPayload {
   appliedCategory:string[] |string;
 }
 
+
+export const generateUID = () =>{
+  return Math.floor(Math.random() * 90000) + 10000
+}
 // {
 //   label: "Employee",
 //   children: [

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../header/Header";
 import { Table, Tag } from "antd";
 import {
   Card,
@@ -26,7 +25,6 @@ import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { useNotification } from "../../../contexts/Notification";
-import { NotificationStatus } from "../../common/utils";
 
 interface EmployeeDatatype {
   key: React.Key;
@@ -50,12 +48,11 @@ const Employee = () => {
     {
       title: "Emplyee ID",
       dataIndex: "id",
-      responsive: ["sm"],
     },
     {
       title: "Name",
       dataIndex: "name",
-      responsive: ["sm"],
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text: string) => {
         return (
           <HStack>
@@ -75,17 +72,14 @@ const Employee = () => {
     {
       title: "Email",
       dataIndex: "email",
-      responsive: ["sm"],
     },
     {
       title: "Phone Number",
       dataIndex: "phoneNumber",
-      responsive: ["sm"],
     },
     {
       title: "Employee Type",
       dataIndex: "employeeType",
-      responsive: ["sm"],
       filters: [
         {
           text: "Manager",
@@ -116,18 +110,16 @@ const Employee = () => {
     {
       title: "Address",
       dataIndex: "address",
-      responsive: ["sm"],
     },
     {
       title: "Salary/hr",
       dataIndex: "salary",
-      responsive: ["sm"],
     },
-    {
-      title: "Joined Date",
-      dataIndex: "joinedDate",
-      responsive: ["sm"],
-    },
+    // {
+    //   title: "Joined Date",
+    //   dataIndex: "joinedDate",
+    //   responsive: ["sm"],
+    // },
   ];
 
   const { setShowNotification } = useNotification();

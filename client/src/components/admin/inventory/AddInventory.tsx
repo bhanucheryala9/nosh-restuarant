@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../header/Header";
 import {
   Card,
   Flex,
@@ -20,15 +19,23 @@ import {
   Select,
   InputGroup,
   InputLeftElement,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
 import { InventoryRequestPayload } from "../../common/utils";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 
 const AddInventory = () => {
   const [formData, setFormData] = useState<InventoryRequestPayload>();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
   const props: UploadProps = {
     name: "file",
     multiple: true,
@@ -50,20 +57,17 @@ const AddInventory = () => {
   };
 
   const onSubmitClicked = () => {
-    const preparedPayload =  {...formData, id:"sjhagdjhsaddghj"}
-    console.log("payload of inventory", preparedPayload )
+    const preparedPayload = { ...formData, id: "sjhagdjhsaddghj" };
+    console.log("payload of inventory", preparedPayload);
     axios
-    .post("http://localhost:5000/api/admin/add-item", preparedPayload)
-    .then((response) => {
-    })
-    .catch((error) => {
-    });
-
+      .post("http://localhost:5000/api/admin/add-item", preparedPayload)
+      .then((response) => {})
+      .catch((error) => {});
   };
 
   return (
     <React.Fragment>
-      <form >
+      <form onSubmit={handleSubmit(onSubmitClicked)}>
         <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
           <Flex justifyContent={"space-between"}>
             <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
@@ -71,9 +75,9 @@ const AddInventory = () => {
             </Text>
             <Button
               colorScheme={"orange"}
-              size={{ base: "sm", lg: "lg" }}
-              // type="submit"
-              onClick={onSubmitClicked}
+              size={{ base: "sm", lg: "md" }}
+              type="submit"
+              // onClick={onSubmitClicked}
             >
               {" "}
               Add Product
@@ -105,10 +109,13 @@ const AddInventory = () => {
                   my="4"
                 />
                 <form>
-                  <FormControl mt="4">
+                  <FormControl mt="4" isInvalid={!!errors["productName"]}>
                     <FormLabel fontSize={"xs"}>Product Name</FormLabel>
                     <Input
                       placeholder="Enter product name"
+                      {...register("productName", {
+                        required: "Product Name is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -117,21 +124,26 @@ const AddInventory = () => {
                         setFormData(data as any);
                       }}
                     />
+                    <FormErrorMessage>
+                      {errors["productName"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                   <FormControl mt="4">
                     <FormLabel fontSize={"xs"}>Description</FormLabel>
                     <Textarea
                       placeholder="Enter product summary here.."
+                      {...register("description")}
                       onChange={(e) => {
                         const data = {
                           ...formData,
                           description: e.target.value,
                         };
+
                         setFormData(data as any);
                       }}
                     />
                   </FormControl>
-                  <FormControl mt="4">
+                  <FormControl mt="4" isInvalid={!!errors["price"]}>
                     <FormLabel fontSize={"xs"}>Price</FormLabel>
                     <InputGroup>
                       <InputLeftElement
@@ -143,28 +155,43 @@ const AddInventory = () => {
                       <Input
                         placeholder="Enter amount"
                         type={"number"}
+                        {...register("price", {
+                          required: "Price is required",
+                        })}
                         onChange={(e) => {
                           const data = { ...formData, price: e.target.value };
                           setFormData(data as any);
                         }}
                       />
                     </InputGroup>
+                    <FormErrorMessage>
+                      {errors["price"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl mt="4">
+                  <FormControl mt="4" isInvalid={!!errors["discount"]}>
                     <FormLabel fontSize={"xs"}>Discount</FormLabel>
                     <Input
                       placeholder="Enter discount"
                       type="number"
+                      {...register("discount", {
+                        required: "Discount is required",
+                      })}
                       onChange={(e) => {
                         const data = { ...formData, discount: e.target.value };
                         setFormData(data as any);
                       }}
                     />
+                    <FormErrorMessage>
+                      {errors["discount"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl mt="4">
+                  <FormControl mt="4" isInvalid={!!errors["isAvailable"]}>
                     <FormLabel fontSize={"xs"}>Available</FormLabel>
                     <Select
                       placeholder="Change Availablity Status"
+                      {...register("isAvailable", {
+                        required: "Is available is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -176,6 +203,9 @@ const AddInventory = () => {
                       <option value={"yes"}>Yes</option>
                       <option value={"no"}>No</option>
                     </Select>
+                    <FormErrorMessage>
+                      {errors["isAvailable"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </form>
               </Flex>
@@ -227,36 +257,60 @@ const AddInventory = () => {
                 />
 
                 <Flex direction="column" p="4" width={"100%"}>
-                  <FormControl mt="4">
+                  <FormControl mt="4" isInvalid={!!errors["category"]}>
                     <FormLabel fontSize={"xs"}>Product Category</FormLabel>
                     <Select
                       placeholder="Select option"
-                      // {...register("employeeType", {
-                      //   required: "Employee is required",
-                      // })}
+                      {...register("category", {
+                        required: "Category is required",
+                      })}
                       onChange={(e) => {
                         const data = { ...formData, category: e.target.value };
                         setFormData(data as any);
                       }}
                     >
+                      <option value="appetizers" style={{ padding: "0 10px" }}>
+                        Appetizers
+                      </option>
+                      <option value="biryani" style={{ padding: "0 10px" }}>
+                        Biryani
+                      </option>
+                      <option value="soups" style={{ padding: "0 10px" }}>
+                        Soups
+                      </option>
+                      <option
+                        value="indo-chinese"
+                        style={{ padding: "0 10px" }}
+                      >
+                        Indo Chinese
+                      </option>
                       <option value="main-course" style={{ padding: "0 10px" }}>
                         Main Course
                       </option>
-                      <option value="staters" style={{ padding: "0 10px" }}>
-                        Staters
+                      <option value="beverages" style={{ padding: "0 10px" }}>
+                        Beverages
                       </option>
                     </Select>
+                    <FormErrorMessage>
+                      {errors["category"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl mt="4">
+                  <FormControl mt="4" isInvalid={!!errors["tax"]}>
                     <FormLabel fontSize={"xs"}>Tax Percentage</FormLabel>
                     <Input
                       placeholder="Enter tax percentage"
                       type="number"
+                      {...register("tax", {
+                        required: "Tax is required",
+                      })}
                       onChange={(e) => {
                         const data = { ...formData, tax: e.target.value };
                         setFormData(data as any);
                       }}
                     />
+                    <FormErrorMessage>
+                      {errors["tax"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </Flex>
               </Flex>

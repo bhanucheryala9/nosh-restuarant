@@ -13,17 +13,17 @@ import Dashboard from "./components/Dashboard";
 import Loader from "./components/common/Loader";
 import ForgotPassword from "./components/login-singup/ForgotPassword";
 import Employee from "./components/admin/employee/Employee";
-import Inventory from "./components/admin/inventory/AddInventory";
+import AddInventory from "./components/admin/inventory/AddInventory";
 import Rewards from "./components/admin/rewards/Rewards";
 import SalesDashboard from "./components/admin/sales/SalesDashboard";
 import AppLayout from "./components/common/AppLayout";
 import Orders from "./components/customer/orders/Orders";
-import Cart from "./components/customer/cart/Cart";
 import CartProvider from "./contexts/CartContext";
 import PurchaseHistory from "./components/customer/purchase-history/PurchaseHistory";
 import Payments from "./components/customer/payments/Payments";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 import NotificationProvider from "./contexts/Notification";
+import Inventory from "./components/admin/inventory/Inventory";
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -40,11 +40,13 @@ function App() {
             <AppLayout>
               {/* <ErrorBoundary> */}
               <Routes>
+                //inventory
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/employee" element={<Employee />} />
                 <Route path="/rewards" element={<Rewards />} />
-                <Route path="/add-inventory" element={<Inventory />} />
+                <Route path="/inventory" element={<Inventory />} />
+                <Route path="/add-inventory" element={<AddInventory />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/sales" element={<SalesDashboard />} />

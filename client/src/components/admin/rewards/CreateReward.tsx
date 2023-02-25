@@ -23,7 +23,10 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { ReactNode, useState } from "react";
-import { RewardsRequestPayload } from "../../common/utils";
+import { generateUID, NotificationStatus, RewardsRequestPayload } from "../../common/utils";
+import { uuid } from "uuidv4";
+import { useForm } from "react-hook-form";
+import { useNotification } from "../../../contexts/Notification";
 
 interface CreateRewardProps {
   isModalOpen: boolean;
@@ -33,17 +36,34 @@ interface CreateRewardProps {
 const CreateReward = (props: CreateRewardProps) => {
   const { isModalOpen, setIsModalOpen } = props;
   const [formData, setFormData] = useState<RewardsRequestPayload>();
+  const [showField, setShowField] = useState<string>('all');
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+  const { setShowNotification } = useNotification();
 
   const onSubmitClicked = () => {
-    const preparedPayload =  {...formData, id:"sjhagdjhsaddghj"}
-    console.log("payload of inventory", preparedPayload )
+    const preparedPayload = { ...formData, id: "R"+ generateUID() };
     axios
-    .post("http://localhost:5000/api/admin/add-reward", preparedPayload)
-    .then((response) => {
-    })
-    .catch((error) => {
-    });
-
+      .post("http://localhost:5000/api/admin/add-reward", preparedPayload)
+      .then((response) => {
+        setIsModalOpen(false);
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Reward created successfully..!",
+          showAlert: true,
+        });
+      })
+      .catch((error) => {
+        setIsModalOpen(false);
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Failed to create Reward..!",
+          showAlert: true,
+        });
+      });
   };
   return (
     <React.Fragment>
@@ -55,18 +75,18 @@ const CreateReward = (props: CreateRewardProps) => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textColor={"orange.500"}>Add New Reward</ModalHeader>
-          <ModalCloseButton />
-          <Divider />
-          <ModalBody p={8}>
-            <form>
+          <form onSubmit={handleSubmit(onSubmitClicked)}>
+            <ModalHeader textColor={"orange.500"}>Add New Reward</ModalHeader>
+            <ModalCloseButton />
+            <Divider />
+            <ModalBody p={8}>
               <Grid
-                templateRows="repeat(6, 1fr)"
+                templateRows={showField==="category"? "repeat(6, 1fr)":"repeat(5, 1fr)"}
                 templateColumns="repeat(2, 1fr)"
                 gap={4}
               >
                 <GridItem rowSpan={1} colSpan={2}>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors["rewardType"]}>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -76,6 +96,9 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Select
                       placeholder="Reward Type"
+                      {...register("rewardType", {
+                        required: "Reward type is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -91,10 +114,13 @@ const CreateReward = (props: CreateRewardProps) => {
                         Discount
                       </option>
                     </Select>
+                    <FormErrorMessage>
+                      {errors["rewardType"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={2}>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors["code"]}>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -103,19 +129,25 @@ const CreateReward = (props: CreateRewardProps) => {
                       Promo Code
                     </FormLabel>
                     <Input
-                      placeholder="lastName"
+                      placeholder="Promo Code"
+                      {...register("code", {
+                        required: "Reward Code is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
-                          rewardType: e.target.value,
+                          code: e.target.value,
                         };
                         setFormData(data as any);
                       }}
                     />
+                    <FormErrorMessage>
+                      {errors["code"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={1}>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors["discountPercentage"]}>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -126,6 +158,9 @@ const CreateReward = (props: CreateRewardProps) => {
                     <Input
                       type="number"
                       placeholder="Enter discount"
+                      {...register("discountPercentage", {
+                        required: "Discount Percentage is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -134,11 +169,14 @@ const CreateReward = (props: CreateRewardProps) => {
                         setFormData(data as any);
                       }}
                     />
+                    <FormErrorMessage>
+                      {errors["discountPercentage"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
 
                 <GridItem rowSpan={1} colSpan={1}>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors["maxDiscountAmount"]}>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -149,6 +187,9 @@ const CreateReward = (props: CreateRewardProps) => {
                     <Input
                       type="number"
                       placeholder="Max Discount Amount"
+                      {...register("maxDiscountAmount", {
+                        required: "Max Disount is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -157,10 +198,13 @@ const CreateReward = (props: CreateRewardProps) => {
                         setFormData(data as any);
                       }}
                     />
+                    <FormErrorMessage>
+                      {errors["maxDiscountAmount"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={2}>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors["minOrderPrice"]}>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -178,6 +222,9 @@ const CreateReward = (props: CreateRewardProps) => {
                       <Input
                         type="number"
                         placeholder="Min Order Price"
+                        {...register("minOrderPrice", {
+                          required: "Min Order Price is required",
+                        })}
                         onChange={(e) => {
                           const data = {
                             ...formData,
@@ -187,10 +234,13 @@ const CreateReward = (props: CreateRewardProps) => {
                         }}
                       />
                     </InputGroup>
+                    <FormErrorMessage>
+                      {errors["minOrderPrice"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={2}>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors["appliesTo"]}>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -200,11 +250,15 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Select
                       placeholder="Reward Applies"
+                      {...register("appliesTo", {
+                        required: "Applies To is required",
+                      })}
                       onChange={(e) => {
                         const data = {
                           ...formData,
                           appliesTo: e.target.value,
                         };
+                        setShowField(e.target.value);
                         setFormData(data as any);
                       }}
                     >
@@ -215,10 +269,13 @@ const CreateReward = (props: CreateRewardProps) => {
                         Category
                       </option>
                     </Select>
+                    <FormErrorMessage>
+                      {errors["appliesTo"]?.message as string}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
-                <GridItem rowSpan={1} colSpan={2}>
-                  <FormControl>
+               {showField === "category" && <GridItem rowSpan={1} colSpan={2}>
+                  <FormControl >
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -228,6 +285,7 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Select
                       placeholder="Select Category"
+                      {...register("appliedCategory")}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -236,27 +294,37 @@ const CreateReward = (props: CreateRewardProps) => {
                         setFormData(data as any);
                       }}
                     >
-                      <option value="cat-1" style={{ padding: "0 10px" }}>
-                        Category-1
+                      <option value="appetizers" style={{ padding: "0 10px" }}>
+                        Appetizers
                       </option>
-                      <option value="cat-2" style={{ padding: "0 10px" }}>
-                        Category-2
+                      <option value="biryani" style={{ padding: "0 10px" }}>
+                        Biryani
+                      </option>
+                      <option value="soups" style={{ padding: "0 10px" }}>
+                        Soups
+                      </option>
+                      <option value="indo-chinese">Indo Chinese</option>
+                      <option value="main-course" style={{ padding: "0 10px" }}>
+                        Main Course
+                      </option>
+                      <option value="beverages" style={{ padding: "0 10px" }}>
+                        Beverages
                       </option>
                     </Select>
                   </FormControl>
-                </GridItem>
+                </GridItem>}
               </Grid>
-            </form>
-          </ModalBody>
-          <Divider />
-          <ModalFooter>
-            <HStack>
-              <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-              <Button colorScheme="orange" mr={3} onClick={onSubmitClicked}>
-                Create Reward
-              </Button>
-            </HStack>
-          </ModalFooter>
+            </ModalBody>
+            <Divider />
+            <ModalFooter>
+              <HStack>
+                <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                <Button colorScheme="orange" mr={3} type="submit">
+                  Create Reward
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </React.Fragment>

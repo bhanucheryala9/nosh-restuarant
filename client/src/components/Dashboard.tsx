@@ -47,7 +47,7 @@ const Dashboard = () => {
             }}
           />
         </Box>
-        <Box position="absolute" top={{base:"20%", sm:"5%"}} left={{base:"20%", sm:"5%"}}>
+        <Box position="absolute" top={{lg:"20%", base:"20%"}} left={{lg:"30%", base:"5%"}}>
           <Text
             fontSize={{base:"2xl", md:"3xl", lg:"5xl"}}
             color="white"
@@ -82,7 +82,7 @@ const Dashboard = () => {
           Incredibly Tasty International Dish
         </Text>
         <Grid
-          mt={{base:"0",lg:"4"}}
+          mt={{base:"6",lg:"4"}}
           templateRows= {{base:"repeat(5, 1fr)",lg: "repeat(1, 1fr)"}}
           templateColumns={{base:"repeat(2, 1fr)",lg: "repeat(5, 1fr)"}}
           gap={4}
@@ -91,7 +91,7 @@ const Dashboard = () => {
             colSpan={2}
             rowSpan={{base:2, lg:1}}
             display="flex"
-            alignItems={"center"}
+            alignItems={{base:"start",lg:"center"}}
             justifyContent={{base:"center",lg:"end"}}
           >
             <Flex
@@ -153,10 +153,10 @@ const Dashboard = () => {
               </Box>
             </Flex>
           </GridItem>
-          <GridItem colSpan={1} rowSpan={{base:1, lg:1}}>
-            <Box minW={{base:'full'}}>
-              <Image src={section2} />
-            </Box>
+          <GridItem colSpan={{base:2, lg:1}} rowSpan={{base:1, lg:1}}>
+            <Flex justifyContent={{base:"center"}}>
+              <Image src={section2} h={{base: '64', lg:'full' }} w={"lg"} />
+            </Flex>
           </GridItem>
           <GridItem colSpan={2} rowSpan={{base:2,lg:1}} display="flex" alignItems={"center"}>
             <Flex
@@ -225,7 +225,7 @@ const Dashboard = () => {
           <Text fontSize={{sm:"md",lg:"xl"}} textShadow="0 1px 2px black">Enjoy Great Recipe</Text>
           <Text fontSize={{sm:"lg",lg:"4xl"}} fontWeight="semibold" textColor={"orange.500"} textShadow="0 2px 2px black">Simple And Delicious Food</Text>
         </Flex>
-        <Box filter="auto" brightness="70%">
+        <Box filter="auto" brightness="80%">
           <img
             src={section3}
             alt="welcome screen"

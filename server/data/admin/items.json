@@ -1,12 +1,1 @@
-[
-    {
-        "productName": "dfds",
-        "description": "dsfsd",
-        "price": "12",
-        "discount": "1",
-        "isAvailable": true,
-        "tax": "1",
-        "category": "main-course",
-        "id": "sjhagdjhsaddghj"
-    }
-]
+[{"productName":"dfds","description":"dsfsd","price":"12","discount":"1","isAvailable":true,"tax":"1","category":"main-course","id":"sjhagdjhsaddghj"},{"productName":"chicken","description":"burger with chicken patte","price":"12","discount":"2","isAvailable":true,"tax":"1","category":"appetizers","id":"sjhagdjhsaddghj"}]

@@ -75,7 +75,7 @@ router.get("/get-items", function (req, res, next) {
       res.status(500).json({message:"Failed to fetch items data...!"});
       return;
     }
-    res.status(200).json({employees: JSON.parse(data)});
+    res.status(200).json({inventory: JSON.parse(data)});
   });
 });
 
@@ -114,7 +114,7 @@ router.get("/get-rewards", function (req, res, next) {
       res.status(500).json({message:"Failed to fetch rwards information...!"});
       return;
     }
-    res.status(200).json({employees: JSON.parse(data)});
+    res.status(200).json({rewards: JSON.parse(data)});
   });
 });
 

@@ -19,6 +19,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import Table, { ColumnsType } from "antd/es/table";
+import axios from "axios";
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { AiFillCodeSandboxSquare } from "react-icons/ai";
 import { Line, LineChart, XAxis, YAxis } from "recharts";
@@ -26,42 +28,52 @@ import {
   RewardsTestData,
   statsChartData,
 } from "../../../test-data/admin/rewards";
+import { RewardsRequestPayload } from "../../common/utils";
 import CreateReward from "./CreateReward";
-export interface DataType {
+export interface RewardDataType {
   key: React.Key;
   id: string;
   code: string;
-  category: string;
-  discoundPercentage: string;
-  minOrder: string;
-  maxDiscountAmount: string;
+  discountPercentage: number;
+  maxDiscountAmount:number;
+  appliesTo:string;
+  minOrderPrice:number;
+  rewardType: string;
+  appliedCategory:string[] |string;
 }
+
 const Rewards = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [rewardsData, setRewardsData] = useState<DataType[]>([]);
+  const [rewardsData, setRewardsData] = useState<RewardDataType[]>([]);
   const [showCreateRewardModal, setShowCreateRewardModal] =
     useState<boolean>(false);
-  const columns: ColumnsType<DataType> = [
-    {
-      title: "Reward ID",
-      dataIndex: "id",
-      render: (text: string) => <a>{text}</a>,
-    },
+  const columns: ColumnsType<RewardDataType> = [
+    // {
+    //   title: "Reward ID",
+    //   dataIndex: "id",
+    //   render: (text: string) => <a>{text}</a>,
+    // },
     {
       title: "Reward Code",
       dataIndex: "code",
     },
     {
+      title: "Applies To",
+      dataIndex: "appliesTo",
+      render:(text) => <div>{_.capitalize(text as string)}</div>
+    },
+    {
       title: "Category",
-      dataIndex: "category",
+      dataIndex: "appliedCategory",
+      
     },
     {
       title: "Discount %",
-      dataIndex: "discoundPercentage",
+      dataIndex: "discountPercentage",
     },
     {
       title: "Min Order",
-      dataIndex: "minOrder",
+      dataIndex: "minOrderPrice",
     },
     {
       title: "Max Discount Amount",
@@ -88,25 +100,46 @@ const Rewards = () => {
     },
   ];
 
-  useEffect(() => {
-    const formattedData = RewardsTestData.reduce(
-      (accumulator: any, currentValue) => {
-        return [
-          ...accumulator,
-          {
-            key: currentValue.id,
-            ...currentValue,
-          },
-        ];
+  const prepareData = (data:RewardsRequestPayload[]) =>{
+    const formattedData = data.reduce(
+      (accumulator: any, currentValue:RewardsRequestPayload) => {
+        if(currentValue.appliedCategory){
+          return [
+            ...accumulator,
+            {
+              key: currentValue.id,
+              ...currentValue,
+            },
+          ];
+        }else{
+          return [
+            ...accumulator,
+            {
+              key: currentValue.id,
+              ...currentValue,
+              appliedCategory:"all"
+            },
+          ];
+        }
       },
       []
     );
-    setRewardsData(formattedData);
-  }, []);
+    return formattedData;
+  }
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/get-rewards")
+      .then((response) => {
+        setRewardsData(prepareData(response.data.rewards));
+      })
+      .catch((error) => {
+      });
+  }, [showCreateRewardModal]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -141,6 +174,7 @@ const Rewards = () => {
     "linear-gradient(to top, #0ba360 0%, #3cba92 40%)",
     "linear-gradient(to top, #ff0844 -30%, #ffb199 90%)",
   ];
+
   const getStatusComponent = () => {
     return StatusProps.map((item, index) => {
       return (
@@ -201,7 +235,7 @@ const Rewards = () => {
             Offers and Rewards
           </Text>
           <Button
-            size={{base:"sm", lg:"lg"}}
+            size={{base:"sm", lg:"md"}}
             colorScheme={"orange"}
             onClick={() => setShowCreateRewardModal(true)}
           >
