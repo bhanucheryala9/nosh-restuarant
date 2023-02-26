@@ -37,7 +37,122 @@ import {
   }
 
   const AddEmployee=(props: AddEmployeeProps)=>{
-    
+    const { isModalOpen, setIsModalOpen, defaultData, isUpdate, setIsUpdate } = props;
+  const { signUp } = useAuth();
+  const { setShowNotification } = useNotification();
+  const [formData, setFormData] = useState<EmployeeRequestPayload>();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      firstName: defaultData?.firstName,
+      lastName: defaultData?.lastName,
+      email: defaultData?.email,
+      phone: defaultData?.phoneNumber,
+      employeeType: defaultData?.subtype,
+      salary: defaultData?.salary,
+      addressLine1: defaultData?.address.addressLine1,
+      addressLine2: defaultData?.address.addressLine1,
+      city: defaultData?.address.city,
+      state: defaultData?.address.state,
+      about: defaultData?.about,
+    },
+  });
+
+
+  const prepareData = () => {
+    const formattedData = {
+      firstName: defaultData.firstName,
+      lastName: defaultData.lastName,
+      email: defaultData.email,
+      phone: defaultData.phoneNumber,
+      subtype: defaultData.subtype,
+      type: defaultData.type,
+      salary: defaultData.salary,
+      address: defaultData.address,
+      about: defaultData.about,
+    };
+    return formattedData;
+  };
+
+  const onSubmitClicked = (data: any) => {
+    let formattedData = formData;
+
+    if (!isUpdate) {
+      formattedData = {
+        ...formattedData,
+        id: (
+          formattedData &&
+          formattedData?.firstName[0] +
+            formattedData?.lastName[0] +
+            Math.floor(Math.random() * 90000) +
+            10000
+        )?.toLowerCase(),
+        joinedDate: Date.now(),
+        credits: 0,
+        address: {
+          ...formattedData?.address,
+          zipcode: "12208",
+        },
+      } as any;
+      axios
+        .post("http://34.235.166.147:5000/api/admin/v1/add-employee", formattedData)
+        .then((response) => {
+          try {
+            signUp(formattedData?.email, "Nosh@123")
+              .then((res: any) => {
+                setShowNotification({
+                  status: NotificationStatus.SUCCESS,
+                  alertMessage: "employee account successfully created..!",
+                  showAlert: true,
+                });
+                setIsModalOpen(false);
+              })
+              .catch((error: any) => {
+                setShowNotification({
+                  status: NotificationStatus.ERROR,
+                  alertMessage: "Failed to create employee login..!",
+                  showAlert: true,
+                });
+                setIsModalOpen(false);
+              });
+          } catch {
+            setShowNotification({
+              status: NotificationStatus.ERROR,
+              alertMessage: "Failed to create employee login..!",
+              showAlert: true,
+            });
+          }
+        })
+        .catch((error) => {
+          setIsModalOpen(false);
+          setIsUpdate(false);
+        });
+    } else {
+      const preparedUserData = prepareData();
+      formattedData = {
+        id: defaultData.id as string,
+        ...preparedUserData,
+        ...formData,
+      } as any;
+      axios
+        .put(
+          "http://34.235.166.147:5000/api/admin/v1/update-employee",
+          formattedData
+        )
+        .then((response) => {
+          setIsModalOpen(false);
+          setIsUpdate(false);
+        })
+        .catch((error) => {
+          setIsModalOpen(false);
+          setIsUpdate(false);
+
+        });
+    }
+  };
     return(
 <React.Fragment>
       <Modal
