@@ -14,22 +14,151 @@ import {
   Icon,
   IconButton,
 } from "@chakra-ui/react";
+import AddEmployee from "./AddEmployee";
 import { DeleteIcon, EditIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
-import { faker } from "@faker-js/faker";
+import axios from "axios";
+import { NotificationStatus } from "../../common/utils";
 import _ from "lodash";
+import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
+import { AiOutlineSearch } from "react-icons/ai";
 
-
+export interface EmployeeDatatype {
+  key: React.Key;
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  employeeType: string;
+  address: string;
+  salary: string;
+  joinedDate: string;
+  about?: string;
+}
 const Employee = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addEmployeeModal, setAddEmployeeModal] = useState<boolean>(false);
-  const [unformattedEmployeeData, setunformattedEmployeeData] = useState([]);
   const [employeeData, setEmployeeData] = useState<Array<EmployeeDatatype>>([]);
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [userProfile, setUserProfile] = useState<EmployeeDatatype>(
     employeeData[0]
   );
+  const [initialFormData, setInitialFormData] = useState();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
+
   type DataIndex = keyof EmployeeDatatype;
 
-  const handleSearch = (
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<EmployeeDatatype> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            colorScheme="orange"
+            size="sm"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+          >
+            Search
+          </Button>
+          <Button
+            colorScheme="gray"
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+            size="sm"
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <AiOutlineSearch style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record: any) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
+
+  const prepareData = (data: any) => {
+    const formattedData = data
+      .filter((item: any) => item.type === "employee")
+      .reduce((accumulator: any, currentValue: any) => {
+        return [
+          ...accumulator,
+          {
+            key: currentValue.id,
+            id: currentValue.id.toUpperCase(),
+            name: currentValue.lastName + " " + currentValue.firstName,
+            email: currentValue.email,
+            phoneNumber: currentValue.phoneNumber,
+            employeeType: currentValue.subtype,
+            about: currentValue.about,
+            address:
+              currentValue.address.addressLine1 +
+              ", " +
+              currentValue.address.city +
+              ", " +
+              currentValue.address.state,
+            salary: currentValue.salary,
+            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
+          },
+        ];
+      }, []);
+    setUserProfile(formattedData[0]);
+    return formattedData;
   };
+ 
+
+
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-employee-details")
+      .then((response: any) => {
+        setunformattedEmployeeData(response.data.employees);
+        setEmployeeData(prepareData(response.data.employees));
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive employees information..!",
+          showAlert: true,
+        });
+      });
+  }, [addEmployeeModal]);
 
   return (
     <React.Fragment>
