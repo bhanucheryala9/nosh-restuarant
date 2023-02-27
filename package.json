@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/Cbhanu12dec/my-restuarant/issues"
   },
-  "homepage": "https://github.com/Cbhanu12dec/my-restuarant#readme"
+  "homepage": "https://github.com/Cbhanu12dec/my-restuarant#readme",
+  "dependencies": {
+    "@stripe/react-stripe-js": "^1.16.5",
+    "@stripe/stripe-js": "^1.47.0",
+    "firebase": "^9.17.1"
+  }
 }

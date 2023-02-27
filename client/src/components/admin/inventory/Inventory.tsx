@@ -1,160 +1,144 @@
-import React, { useState } from "react";
-import Header from "../../header/Header";
-import {
-  Card,
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Avatar,
-  HStack,
-  Link,
-  Portal,
-  Code,
-  VStack,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
-  Select,
-} from "@chakra-ui/react";
-import Dragger from "antd/es/upload/Dragger";
-import { UploadProps } from "antd";
-import { FaInbox } from "react-icons/fa";
-
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { Flex, HStack, IconButton, Text } from "@chakra-ui/react";
+import { Table, Tag } from "antd";
+import { ColumnsType } from "antd/es/table";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Loader from "../../common/Loader";
+interface InventoryColumns {
+  id: string;
+  productName: string;
+  description: string;
+  price: number;
+  discount: number;
+  isAvailable: boolean;
+  tax: number;
+  category: string;
+}
 const Inventory = () => {
-  const props: UploadProps = {
-    name: "file",
-    multiple: true,
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        console.log(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        console.log(`${info.file.name} file upload failed.`);
-      }
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [inventoryData, setInventoryData] = useState<InventoryColumns[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const columns: ColumnsType<InventoryColumns> = [
+    {
+      title: "Product Name",
+      dataIndex: "productName",
     },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
+    {
+      title: "Description",
+      dataIndex: "description",
     },
+    {
+      title: "Price",
+      dataIndex: "price",
+    },
+    {
+      title: "Discount %",
+      dataIndex: "discount",
+    },
+    {
+      title: "Is Available",
+      dataIndex: "isAvailable",
+      render: (text) => (
+        <>
+          {text ? (
+            <Tag color={"green"} key={text}>
+              {"Yes"}
+            </Tag>
+          ) : (
+            <Tag color={"blue"} key={text}>
+              {"No"}
+            </Tag>
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Tax",
+      dataIndex: "tax",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <IconButton
+            aria-label="delete inventory"
+            icon={<DeleteIcon />}
+            size="sm"
+          />
+          <IconButton
+            aria-label="edit inventory"
+            icon={<EditIcon />}
+            size="sm"
+          />
+        </HStack>
+      ),
+    },
+  ];
+
+  const prepareData = (data: InventoryColumns[]) => {
+    const formattedData = data.reduce((accumulator: any, currentValue) => {
+      return [
+        ...accumulator,
+        {
+          productName: currentValue.productName,
+          description: currentValue.description,
+          price: currentValue.price,
+          discount: currentValue.discount,
+          isAvailable: currentValue.isAvailable,
+          tax: currentValue.tax,
+          category: currentValue.category,
+        },
+      ];
+    }, []);
+    return formattedData;
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios.get("http://localhost:5000/api/admin/get-items").then((response) => {
+      setInventoryData(prepareData(response.data.inventory));
+      setIsLoading(false);
+    }).catch((error)=>{
+        setIsLoading(false);
+    });
+  }, []);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
   };
   return (
-    <React.Fragment>
-      <Header />
-      <Flex mx="10" my="6" direction={"column"}>
-        <Flex justifyContent={"space-between"} >
-          <Text fontSize={"xl"} fontWeight="bold">
-            Add Inventory
-          </Text>
-          <Button colorScheme={"orange"}> Add Product</Button>
-        </Flex>
-
-        <Grid
-          mt="4"
-          templateRows="repeat(2, 1fr)"
-          templateColumns="repeat(7, 1fr)"
-          gap={4}
-        >
-          <GridItem colSpan={4} rowSpan={2}>
-            <Flex
-              bg="white"
-              p="6"
-              borderRadius={"md"}
-              w="100%"
-              direction={"column"}
-            >
-              <Code
-                bg="gray.50"
-                children="Genaral Information"
-                p="2"
-                width={"99%"}
-                mx="1"
-                my="4"
-              />
-              <form>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Product Name</FormLabel>
-                  <Input type="Enter product name" />
-                </FormControl>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Reference</FormLabel>
-                  <Input type="Enter refernce" />
-                </FormControl>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Description</FormLabel>
-                  <Textarea placeholder="Here is a sample placeholder" />
-                </FormControl>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Country</FormLabel>
-                  <Select placeholder="Select country">
-                    <option>United Arab Emirates</option>
-                    <option>Nigeria</option>
-                  </Select>
-                </FormControl>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Amount</FormLabel>
-                  <Input type="Enter Amount" />
-                </FormControl>
-              </form>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={3} rowSpan={1} bg="white" borderRadius={"md"}>
-            <Flex p="4" direction={"column"} alignItems="center">
-              <Code
-                bg="gray.50"
-                children="PRODUCT IMAGES"
-                p="2"
-                width={"99%"}
-                mx="4"
-                my="4"
-              />
-              <Dragger {...props} style={{ width: "100%" }}>
-                <Flex alignItems={"center"} direction="column" py="4" px="8">
-                  <p className="ant-upload-drag-icon">
-                    <FaInbox width={40} height={40} />
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                  <p className="ant-upload-hint">
-                    Support for a single or bulk upload. Strictly prohibit from
-                    uploading company data or other band files
-                  </p>
-                </Flex>
-              </Dragger>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={3} rowSpan={1} bg="white" borderRadius={"md"}>
-            <Flex p="4" direction={"column"} alignItems="center">
-              <Code
-                bg="gray.50"
-                children="PRODUCT META INFO"
-                p="2"
-                width={"99%"}
-                mx="4"
-                my="4"
-              />
-
-              <Flex direction="column" p="4" width={"100%"}>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Product Name</FormLabel>
-                  <Input type="Enter product name" />
-                </FormControl>
-                <FormControl mt="4">
-                  <FormLabel fontSize={"xs"}>Reference</FormLabel>
-                  <Input type="Enter refernce" />
-                </FormControl>
-              </Flex>
-            </Flex>
-          </GridItem>
-        </Grid>
+    <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
+      {isLoading && <Loader />}
+      <Flex justifyContent={"space-between"}>
+        <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
+          Offers and Rewards
+        </Text>
       </Flex>
-    </React.Fragment>
+      <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm">
+        <Table
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                // setUserProfile(record);
+              },
+            };
+          }}
+          style={{ width: "100%" }}
+          scroll={{ x: 400 }}
+          size="large"
+          rowSelection={rowSelection as any}
+          columns={columns}
+          dataSource={inventoryData}
+        />
+      </Flex>
+    </Flex>
   );
 };
 

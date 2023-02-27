@@ -1,28 +1,39 @@
-import { Spin } from "antd";
-import { createContext, FC, useContext, useState } from "react";
+import { Flex, Text } from "@chakra-ui/react";
+import {
+  Children,
+  createContext,
+  CSSProperties,
+  FC,
+  ReactNode,
+  useContext,
+  useState,
+} from "react";
+import { BounceLoader } from "react-spinners";
 // import { LoaderProps } from "./utils";
 
 interface LoaderProps {
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoadingMessage?: React.Dispatch<React.SetStateAction<string>>;
+  message?: string;
+  children?: ReactNode;
 }
-export const AntdLoaderContext = createContext<any>(null);
-// export const useLoader = () => {
-//   return useContext(AntdLoaderContext);
-// };
-const Loader = (props: any) => {
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [loadingMessage, setLoadingMessage] = useState<string>("");
-  const value = {
-    setLoading,
-    setLoadingMessage,
-  };
+
+const Loader = (props: LoaderProps) => {
   return (
-    <AntdLoaderContext.Provider value={value}>
-      <Spin tip={loadingMessage} size="default" spinning={isLoading}>
+      <Flex
+        height={"100vh"}
+        w="100%"
+        bg={"#000000cc"}
+        direction="column"
+        position={"fixed"}
+        alignItems="center"
+        justifyContent={"center"}
+        zIndex="1000"
+        top="0%"
+        left={"0%"}
+      >
+        <BounceLoader color="#ED8936"  className="spinner-custom"></BounceLoader>
+        <Text marginTop={"3"} textColor="white" fontFamily={"'Allura', cursive"} fontSize="2xl" letterSpacing={2}>Loading...</Text>
         {props.children}
-      </Spin>
-    </AntdLoaderContext.Provider>
+      </Flex>
   );
 };
 
