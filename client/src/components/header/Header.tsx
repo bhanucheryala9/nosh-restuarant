@@ -27,10 +27,23 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import React from "react";
 import { useCart } from "../../contexts/CartContext";
 import { faker } from "@faker-js/faker";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { setIsCartOpen } = useCart();
+  const { logOut } = useAuth();
+  const navigate = useNavigate();
+
+  const logoutUser = () => {
+    logOut()
+      .then(() => {
+        console.log(" logout successfully");
+        navigate('/');
+      })
+      .catch(() => {});
+  };
 
   return (
     <Box>
@@ -104,11 +117,7 @@ const Header = () => {
               cursor={"pointer"}
               minW={0}
             >
-              <Avatar
-                size="sm"
-                bg="gray.200"
-                src={faker.image.avatar()}
-              >
+              <Avatar size="sm" bg="gray.200" src={faker.image.avatar()}>
                 <AvatarBadge boxSize="1.25em" bg="green.500" />
               </Avatar>
             </MenuButton>
@@ -124,7 +133,7 @@ const Header = () => {
               <br />
               <MenuDivider />
               <MenuItem>Account Settings</MenuItem>
-              <MenuItem>Logout</MenuItem>
+              <MenuItem onClick={logoutUser}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </Stack>

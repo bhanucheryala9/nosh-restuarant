@@ -20,6 +20,7 @@ import CartItem from "./CartItem";
 const Cart = () => {
   const {isCartOpen, setIsCartOpen, cartData} = useCart();
   const [cartInfo, setCartInfo] = useState<Array<OrderInfo>>(cartData)
+  console.log("******************* cart items", cartData)
 
   return (
     <div>
@@ -64,7 +65,7 @@ const Cart = () => {
                 </Text>
               </Flex>
               <Divider mb="4" />
-              {cartInfo.map((item:any) => {
+              {cartData.map((item:any) => {
                 return <CartItem {...item}/>;
               })}
 

@@ -24,7 +24,9 @@ import {
 import axios from "axios";
 import React, { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
-import { EmployeeRequestPayload } from "../../common/utils";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useNotification } from "../../../contexts/Notification";
+import { EmployeeRequestPayload, NotificationStatus } from "../../common/utils";
 
 interface AddEmployeeProps {
   isModalOpen: boolean;
@@ -33,6 +35,9 @@ interface AddEmployeeProps {
 }
 const AddEmployee = (props: AddEmployeeProps) => {
   const { isModalOpen, setIsModalOpen } = props;
+  const { signUp } = useAuth();
+  const { setShowNotification } = useNotification();
+
   const [formData, setFormData] = useState<EmployeeRequestPayload>();
   const {
     handleSubmit,
@@ -60,6 +65,32 @@ const AddEmployee = (props: AddEmployeeProps) => {
     axios
       .post("http://localhost:5000/api/admin/add-employee", formattedData)
       .then((response) => {
+
+        try {
+          signUp(formattedData?.email, "Nosh@123")
+            .then((res: any) => {
+              setShowNotification({
+                status: NotificationStatus.SUCCESS,
+                alertMessage: "User successfully logged in..!",
+                showAlert: true,
+              });
+            })
+            .catch((error: any) => {
+              setShowNotification({
+                status: NotificationStatus.ERROR,
+                alertMessage: "Failed to create employee login..!",
+                showAlert: true,
+              });
+            });
+        } catch {
+          setShowNotification({
+            status: NotificationStatus.ERROR,
+            alertMessage: "Failed to create employee login..!",
+            showAlert: true,
+          });
+        }
+
+
       })
       .catch((error) => {
       });
