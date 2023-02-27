@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../header/Header";
 import { Table, Tag } from "antd";
 import {
   Card,
@@ -23,6 +22,9 @@ import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { EmployeeTestData } from "../../../test-data/admin/employee";
 import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
+import { faker } from "@faker-js/faker";
+import axios from "axios";
+import { useNotification } from "../../../contexts/Notification";
 
 interface EmployeeDatatype {
   key: React.Key;
@@ -46,17 +48,23 @@ const Employee = () => {
     {
       title: "Emplyee ID",
       dataIndex: "id",
-      responsive: ["sm"],
     },
     {
       title: "Name",
       dataIndex: "name",
-      responsive: ["sm"],
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text: string) => {
         return (
           <HStack>
-            <Avatar size={"sm"} name="Ryan Florence" src="https://bit.ly/ryan-florence" />
-            <Text textColor="gray.600" fontWeight={"semibold"}>{text}</Text>,
+            <Avatar
+              size={"sm"}
+              name="Ryan Florence"
+              src={faker.image.avatar()}
+            />
+            <Text textColor="gray.600" fontWeight={"semibold"}>
+              {text}
+            </Text>
+            ,
           </HStack>
         );
       },
@@ -64,17 +72,14 @@ const Employee = () => {
     {
       title: "Email",
       dataIndex: "email",
-      responsive: ["sm"],
     },
     {
       title: "Phone Number",
       dataIndex: "phoneNumber",
-      responsive: ["sm"],
     },
     {
       title: "Employee Type",
       dataIndex: "employeeType",
-      responsive: ["sm"],
       filters: [
         {
           text: "Manager",
@@ -105,21 +110,19 @@ const Employee = () => {
     {
       title: "Address",
       dataIndex: "address",
-      responsive: ["sm"],
     },
     {
       title: "Salary/hr",
       dataIndex: "salary",
-      responsive: ["sm"],
     },
-    {
-      title: "Joined Date",
-      dataIndex: "joinedDate",
-      responsive: ["sm"],
-    },
+    // {
+    //   title: "Joined Date",
+    //   dataIndex: "joinedDate",
+    //   responsive: ["sm"],
+    // },
   ];
 
-  console.log("test user profile data", userProfile);
+  const { setShowNotification } = useNotification();
 
   useEffect(() => {
     const formattedData = EmployeeTestData.reduce(
@@ -148,29 +151,35 @@ const Employee = () => {
     );
     setEmployeeData(formattedData);
     setUserProfile(formattedData[0]);
+    axios
+      .get("http://localhost:5000/api/admin/employee-details")
+      .then((response) => {
+
+      });
   }, []);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   return (
     <React.Fragment>
-      <Flex mx="10" my="6" direction={"column"}>
+      {/* <Notifications /> */}
+      <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
         <Text fontSize={"xl"} fontWeight="bold">
           Employees List
         </Text>
         <Grid
           mt="4"
-          templateRows="repeat(1, 1fr)"
-          templateColumns="repeat(6, 1fr)"
-          gap={4}
+          templateRows={{ base: "repeat(2, 1fr)", lg: "repeat(1, 1fr)" }}
+          templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(6, 1fr)" }}
+          gap={{ base: 2, lg: 4 }}
         >
-          <GridItem colSpan={4}>
+          <GridItem colSpan={{ base: 1, lg: 4 }}>
             <Flex
               bg="white"
               p="6"
@@ -179,14 +188,19 @@ const Employee = () => {
               direction={"column"}
             >
               <Flex justifyContent={"space-between"} mb="4">
-                <InputGroup maxW="44" alignItems={"center"}>
+                <InputGroup maxW="44" alignItems={"center"} rounded="md">
                   <InputLeftElement
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
                   />
-                  <Input variant="filled" placeholder="Search.." />
+                  <Input
+                    variant="filled"
+                    placeholder="Search.."
+                    size={{ base: "sm" }}
+                  />
                 </InputGroup>
                 <Button
+                  size={{ base: "sm", lg: "md" }}
                   colorScheme="orange"
                   onClick={() => setAddEmployeeModal(true)}
                 >
@@ -201,6 +215,7 @@ const Employee = () => {
                     },
                   };
                 }}
+                scroll={{ x: 400 }}
                 style={{ width: "100%" }}
                 size="large"
                 rowSelection={rowSelection as any}
@@ -298,6 +313,7 @@ const Employee = () => {
           </GridItem>
         </Grid>
       </Flex>
+
       <AddEmployee
         isModalOpen={addEmployeeModal}
         setIsModalOpen={setAddEmployeeModal}
