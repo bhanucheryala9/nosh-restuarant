@@ -71,9 +71,10 @@ const AddEmployee = (props: AddEmployeeProps) => {
             .then((res: any) => {
               setShowNotification({
                 status: NotificationStatus.SUCCESS,
-                alertMessage: "User successfully logged in..!",
+                alertMessage: "employee account successfully created..!",
                 showAlert: true,
               });
+              setIsModalOpen(false);
             })
             .catch((error: any) => {
               setShowNotification({
@@ -81,6 +82,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                 alertMessage: "Failed to create employee login..!",
                 showAlert: true,
               });
+              setIsModalOpen(false);
             });
         } catch {
           setShowNotification({

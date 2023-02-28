@@ -10,7 +10,6 @@ import SignUp from "./components/login-singup/Signup";
 import AuthProvider from "./contexts/AuthContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-import Loader from "./components/common/Loader";
 import ForgotPassword from "./components/login-singup/ForgotPassword";
 import Employee from "./components/admin/employee/Employee";
 import AddInventory from "./components/admin/inventory/AddInventory";
