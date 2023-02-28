@@ -24,9 +24,11 @@ import {
 import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
-import { InventoryRequestPayload } from "../../common/utils";
+import { InventoryRequestPayload, NotificationStatus } from "../../common/utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useNotification } from "../../../contexts/Notification";
+import { useNavigate } from "react-router-dom";
 
 const AddInventory = () => {
   const [formData, setFormData] = useState<InventoryRequestPayload>();
@@ -35,6 +37,8 @@ const AddInventory = () => {
     register,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+  const { setShowNotification } = useNotification();
 
   const props: UploadProps = {
     name: "file",
@@ -61,8 +65,22 @@ const AddInventory = () => {
     console.log("payload of inventory", preparedPayload);
     axios
       .post("http://localhost:5000/api/admin/add-item", preparedPayload)
-      .then((response) => {})
-      .catch((error) => {});
+      .then((response) => {
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Successfully Item added to invetory..!",
+          showAlert: true,
+        });
+        navigate("/inventory");
+
+      })
+      .catch((error) => {
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Failed to added Item to invetory..!",
+          showAlert: true,
+        });
+      });
   };
 
   return (

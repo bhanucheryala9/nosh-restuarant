@@ -3,9 +3,10 @@ import { Button, Divider, Form, Input } from "antd";
 import { useAuth } from "../../contexts/AuthContext";
 import AlertMessage from "../common/AlertMessage";
 import { useState } from "react";
-import { AlertMessageProps, AlertStatus } from "../common/utils";
-import { Link } from "react-router-dom";
+import { AlertMessageProps, AlertStatus, NotificationStatus } from "../common/utils";
+import { Link, useNavigate } from "react-router-dom";
 import lgn from "../../assets/loginPage.jpg";
+import { useNotification } from "../../contexts/Notification";
 
 interface UserInformation {
   email: string;
@@ -20,6 +21,9 @@ const SignUp = () => {
     alertMessage: "loading",
     showAlert: false,
   });
+
+  const navigate = useNavigate();
+  const { setShowNotification } = useNotification();
 
   const isPasswordMatched = (values: any) => {
     if (values.password === values.conformPasswords) {
@@ -36,23 +40,24 @@ const SignUp = () => {
       try {
         signUp(email, pwd)
           .then(() => {
-            setShowAlert({
-              status: AlertStatus.SUCCESS,
-              alertMessage: "Successfully created user details",
+            setShowNotification({
+              status: NotificationStatus.SUCCESS,
+              alertMessage: "User account successfully created..!",
               showAlert: true,
             });
+            navigate("/");
           })
           .catch(() => {
-            setShowAlert({
-              status: AlertStatus.ERROR,
-              alertMessage: "Failed to create user information",
+            setShowNotification({
+              status: NotificationStatus.SUCCESS,
+              alertMessage: "Failed to create user account..!",
               showAlert: true,
             });
           });
       } catch {
-        setShowAlert({
-          status: AlertStatus.ERROR,
-          alertMessage: "Failed to create user information",
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Failed to create user account..!",
           showAlert: true,
         });
       }
