@@ -167,14 +167,13 @@ const Employee = () => {
           setEmployeeData(prepareData(response.data.employees));
           setShowNotification({
             status: NotificationStatus.SUCCESS,
-            alertMessage: "User successfully created in..!",
+            alertMessage: "Employee info retreived successfully..!",
             showAlert: true,
           });
-          navigate("/");
       }).catch(()=>{
         setShowNotification({
           status: NotificationStatus.ERROR,
-          alertMessage: "Failed to created user account..!",
+          alertMessage: "Failed to retreive employees information..!",
           showAlert: true,
         });
       })
