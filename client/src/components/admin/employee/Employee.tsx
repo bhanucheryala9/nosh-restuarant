@@ -25,6 +25,8 @@ import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { useNotification } from "../../../contexts/Notification";
+import { NotificationStatus } from "../../common/utils";
+import { useNavigate } from "react-router-dom";
 
 interface EmployeeDatatype {
   key: React.Key;
@@ -44,6 +46,8 @@ const Employee = () => {
   const [userProfile, setUserProfile] = useState<EmployeeDatatype>(
     employeeData[0]
   );
+
+
   const columns: ColumnsType<EmployeeDatatype> = [
     {
       title: "Emplyee ID",
@@ -123,15 +127,17 @@ const Employee = () => {
   ];
 
   const { setShowNotification } = useNotification();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const formattedData = EmployeeTestData.reduce(
-      (accumulator: any, currentValue) => {
+
+  const prepareData = (data: any) =>{
+    const formattedData = data.reduce(
+      (accumulator: any, currentValue: any) => {
         return [
           ...accumulator,
           {
             key: currentValue.id,
-            id: currentValue.id,
+            id: (currentValue.id).toUpperCase(),
             name: currentValue.lastName + " " + currentValue.firstName,
             email: currentValue.email,
             phoneNumber: currentValue.phoneNumber,
@@ -143,20 +149,36 @@ const Employee = () => {
               ", " +
               currentValue.address.state,
             salary: currentValue.salary,
-            joinedDate: currentValue.joinedDate,
+            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
           },
         ];
       },
       []
     );
-    setEmployeeData(formattedData);
+    // setEmployeeData(formattedData);
     setUserProfile(formattedData[0]);
+    return formattedData;
+  }
+
+  useEffect(() => {
     axios
       .get("http://localhost:5000/api/admin/employee-details")
-      .then((response) => {
-
-      });
-  }, []);
+      .then((response:any) => {
+          setEmployeeData(prepareData(response.data.employees));
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "User successfully created in..!",
+            showAlert: true,
+          });
+          navigate("/");
+      }).catch(()=>{
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to created user account..!",
+          showAlert: true,
+        });
+      })
+  }, [addEmployeeModal]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
