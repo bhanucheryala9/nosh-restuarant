@@ -17,11 +17,6 @@ import {
 import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { DeleteIcon, EditIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
-import { faker } from "@faker-js/faker";
-import axios from "axios";
-import { useNotification } from "../../../contexts/Notification";
-import { NotificationStatus } from "../../common/utils";
-import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -69,82 +64,8 @@ const Employee = () => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): ColumnType<EmployeeDatatype> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            colorScheme="orange"
-            size="sm"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
-          >
-            Search
-          </Button>
-          <Button
-            colorScheme="gray"
-            onClick={() => {
-              clearFilters && handleReset(clearFilters);
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-            size="sm"
-          >
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <AiOutlineSearch style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record: any) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) => text,
+  
   });
-
-
-  const getActualData = (data: any) => {
-    const userData = unformattedEmployeeData.filter(
-      (item: any) => item.id.toLowerCase() === data.id.toLowerCase()
-    );
-    return userData[0];
-  };
-  const onUpdateClicked = (data: EmployeeDatatype) => {
-    setInitialFormData(getActualData(data) as any);
-    setForUpdate(true);
-    setAddEmployeeModal(true);
-  };
 
   const columns: ColumnsType<EmployeeDatatype> = [
     {
@@ -194,7 +115,6 @@ const Employee = () => {
           value: "employee",
         },
       ],
-
     },
     {
       title: "Address",
@@ -233,7 +153,6 @@ const Employee = () => {
     //   responsive: ["sm"],
     // },
   ];
-
 
   return (
     <React.Fragment>
