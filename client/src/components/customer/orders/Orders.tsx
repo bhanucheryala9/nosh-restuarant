@@ -12,10 +12,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import OrdersBanner from "../../../assets/orders.jpg";
 import Cart from "../cart/Cart";
 import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
 import { Orders_Catergory } from "../../common/utils";
+import _ from "lodash";
+import ReactPaginate from "react-paginate";
 import axios from "axios";
 
 const Orders = () => {
@@ -50,7 +53,7 @@ const Orders = () => {
     <div>
       <Flex direction={"column"}>
         <Flex
-         
+          justifyContent={"center"}
           direction="column"
           alignItems={"center"}
         >
@@ -58,12 +61,17 @@ const Orders = () => {
           <Flex
             bg={"white"}
             rounded="lg"
-           
+            py="4"
+            px={{ base: "16", lg: "28" }}
             mt="-10"
             zIndex={10}
             shadow="base"
           >
-            <Text>
+            <Text
+              fontSize={{ sm: "md", lg: "2xl" }}
+              fontWeight="semibold"
+              fontFamily={"'Nunito', sans-serif"}
+            >
               Order Section
             </Text>
           </Flex>
@@ -71,6 +79,9 @@ const Orders = () => {
         <Tabs
           variant="soft-rounded"
           colorScheme="orange"
+          mt={{ base: "4", lg: "8" }}
+          mx={{ base: "4", lg: "10" }}
+          size={{ base: "sm", lg: "lg" }}
           onChange={(index) => {
             setSelectedCategory(Orders_Catergory[index]);
             const redata = itemsData.filter(
@@ -93,7 +104,9 @@ const Orders = () => {
               return (
                 <TabPanel bg={"white"} key={index}>
                   <Text
-                    
+                    fontSize={"2xl"}
+                    fontWeight="semibold"
+                    textColor={"orange.500"}
                     mx="4"
                     my="4"
                   >
@@ -101,7 +114,14 @@ const Orders = () => {
                   </Text>
                   <Grid
                     mt="4"
-                    
+                    templateRows={{
+                      base: "repeat(8, 1fr)",
+                      lg: "repeat(2, 1fr)",
+                    }}
+                    templateColumns={{
+                      base: "repeat(1, 1fr)",
+                      lg: "repeat(4, 1fr)",
+                    }}
                     gap={{ base: 3, lg: 8 }}
                   >
                     {data &&

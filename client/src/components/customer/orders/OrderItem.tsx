@@ -41,7 +41,7 @@ const OrderItem = (props: OrderItemsProps) => {
   const [error, setError] = useState();
   const [image, setImage] = useState();
 
-  
+  // console.log("*************** item id:", ItemId, ItemName)
   useEffect(() => {
     const fetchImage = async () => {
       try {
@@ -115,7 +115,7 @@ const OrderItem = (props: OrderItemsProps) => {
           variant={"solid"}
           colorScheme="orange"
           rounded={"full"}
-          
+          // onClick={onItemClicked}
         >
           Add to cart
         </Button>
