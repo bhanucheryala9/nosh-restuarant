@@ -14,10 +14,14 @@ import {
   Icon,
   IconButton,
 } from "@chakra-ui/react";
+import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { DeleteIcon, EditIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import { faker } from "@faker-js/faker";
 import axios from "axios";
+import { useNotification } from "../../../contexts/Notification";
 import { NotificationStatus } from "../../common/utils";
+import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -35,7 +39,9 @@ export interface EmployeeDatatype {
   about?: string;
 }
 const Employee = () => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addEmployeeModal, setAddEmployeeModal] = useState<boolean>(false);
+  const [unformattedEmployeeData, setunformattedEmployeeData] = useState([]);
   const [employeeData, setEmployeeData] = useState<Array<EmployeeDatatype>>([]);
   const [forUpdate, setForUpdate] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<EmployeeDatatype>(
@@ -47,6 +53,21 @@ const Employee = () => {
   const searchInput = useRef<InputRef>(null);
 
   type DataIndex = keyof EmployeeDatatype;
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
@@ -112,53 +133,107 @@ const Employee = () => {
     render: (text) => text,
   });
 
-  const prepareData = (data: any) => {
-    const formattedData = data
-      .filter((item: any) => item.type === "employee")
-      .reduce((accumulator: any, currentValue: any) => {
-        return [
-          ...accumulator,
-          {
-            key: currentValue.id,
-            id: currentValue.id.toUpperCase(),
-            name: currentValue.lastName + " " + currentValue.firstName,
-            email: currentValue.email,
-            phoneNumber: currentValue.phoneNumber,
-            employeeType: currentValue.subtype,
-            about: currentValue.about,
-            address:
-              currentValue.address.addressLine1 +
-              ", " +
-              currentValue.address.city +
-              ", " +
-              currentValue.address.state,
-            salary: currentValue.salary,
-            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
-          },
-        ];
-      }, []);
-    setUserProfile(formattedData[0]);
-    return formattedData;
+
+  const getActualData = (data: any) => {
+    const userData = unformattedEmployeeData.filter(
+      (item: any) => item.id.toLowerCase() === data.id.toLowerCase()
+    );
+    return userData[0];
   };
- 
+  const onUpdateClicked = (data: EmployeeDatatype) => {
+    setInitialFormData(getActualData(data) as any);
+    setForUpdate(true);
+    setAddEmployeeModal(true);
+  };
 
+  const columns: ColumnsType<EmployeeDatatype> = [
+    {
+      title: "Emplyee ID",
+      dataIndex: "id",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps("name"),
+      render: (text: string) => {
+        return (
+          <HStack>
+            <Avatar
+              size={"sm"}
+              bg='orange.400'
+              textColor="white"
+              name={text}
+            />
+            <Text textColor="gray.600" fontWeight={"semibold"}>
+              {text}
+            </Text>
+            ,
+          </HStack>
+        );
+      },
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+    },
+    {
+      title: "Employee Type",
+      dataIndex: "employeeType",
+      filters: [
+        {
+          text: "Manager",
+          value: "manager",
+        },
+        {
+          text: "Employee",
+          value: "employee",
+        },
+      ],
 
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+    },
+    {
+      title: "Salary/hr",
+      dataIndex: "salary",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <IconButton
+            aria-label="Search database"
+            onClick={() => {
+              onDeleteClicked(record);
+            }}
+            icon={<DeleteIcon />}
+            size="sm"
+          />
+          <IconButton
+            aria-label="Search database"
+            onClick={() => onUpdateClicked(record)}
+            icon={<EditIcon />}
+            size="sm"
+          />
+        </HStack>
+      ),
+    },
+    // {
+    //   title: "Joined Date",
+    //   dataIndex: "joinedDate",
+    //   responsive: ["sm"],
+    // },
+  ];
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/admin/v1/get-employee-details")
-      .then((response: any) => {
-        setunformattedEmployeeData(response.data.employees);
-        setEmployeeData(prepareData(response.data.employees));
-      })
-      .catch(() => {
-        setShowNotification({
-          status: NotificationStatus.ERROR,
-          alertMessage: "Failed to retreive employees information..!",
-          showAlert: true,
-        });
-      });
-  }, [addEmployeeModal]);
 
   return (
     <React.Fragment>
