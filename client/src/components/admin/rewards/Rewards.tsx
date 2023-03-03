@@ -79,25 +79,25 @@ const Rewards = () => {
       title: "Max Discount Amount",
       dataIndex: "maxDiscountAmount",
     },
-    {
-      title: "Action",
-      key: "action",
-      width: "45px",
-      render: (_, record) => (
-        <HStack>
-          <IconButton
-            aria-label="Search database"
-            icon={<DeleteIcon />}
-            size="sm"
-          />
-          <IconButton
-            aria-label="Search database"
-            icon={<EditIcon />}
-            size="sm"
-          />
-        </HStack>
-      ),
-    },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   width: "45px",
+    //   render: (_, record) => (
+    //     <HStack>
+    //       <IconButton
+    //         aria-label="Search database"
+    //         icon={<DeleteIcon />}
+    //         size="sm"
+    //       />
+    //       <IconButton
+    //         aria-label="Search database"
+    //         icon={<EditIcon />}
+    //         size="sm"
+    //       />
+    //     </HStack>
+    //   ),
+    // },
   ];
 
   const prepareData = (data:RewardsRequestPayload[]) =>{

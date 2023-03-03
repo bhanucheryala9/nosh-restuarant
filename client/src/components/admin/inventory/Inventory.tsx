@@ -58,25 +58,25 @@ const Inventory = () => {
       title: "Tax",
       dataIndex: "tax",
     },
-    {
-      title: "Action",
-      key: "action",
-      width: "45px",
-      render: (_, record) => (
-        <HStack>
-          <IconButton
-            aria-label="delete inventory"
-            icon={<DeleteIcon />}
-            size="sm"
-          />
-          <IconButton
-            aria-label="edit inventory"
-            icon={<EditIcon />}
-            size="sm"
-          />
-        </HStack>
-      ),
-    },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   width: "45px",
+    //   render: (_, record) => (
+    //     <HStack>
+    //       <IconButton
+    //         aria-label="delete inventory"
+    //         icon={<DeleteIcon />}
+    //         size="sm"
+    //       />
+    //       <IconButton
+    //         aria-label="edit inventory"
+    //         icon={<EditIcon />}
+    //         size="sm"
+    //       />
+    //     </HStack>
+    //   ),
+    // },
   ];
 
   const prepareData = (data: InventoryColumns[]) => {

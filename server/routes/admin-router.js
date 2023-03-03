@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var fs = require("fs");
+const usersService = require("../services/users-services.js");
 
 router.post("/add-employee", function (req, res, next) {
   const payload = req.body;
@@ -27,6 +28,16 @@ router.post("/add-employee", function (req, res, next) {
       }
     );
   });
+});
+
+router.post("/v1/add-employee", async function (req, res, next) {
+  const payload = req.body;
+  try {
+    const users = await usersService.createUsers(payload);
+    res.json({ users: users, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get("/employee-details", function (req, res, next) {

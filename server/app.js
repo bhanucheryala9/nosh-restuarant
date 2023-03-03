@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
+const mongoose = require("mongoose");
 
 
 var indexRouter = require('./routes/index');
@@ -12,6 +13,24 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin-router')
 
 var app = express();
+
+
+const uri =
+  "mongodb+srv://bcheryala:bhanucheryala@se-assignment-2.45lwac2.mongodb.net/nosh?retryWrites=true&w=majority";
+
+mongoose.connect(
+  uri, 
+  {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+  }
+);
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+  console.log("Connected successfully");
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

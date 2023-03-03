@@ -23,6 +23,7 @@ import Payments from "./components/customer/payments/Payments";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 import NotificationProvider from "./contexts/Notification";
 import Inventory from "./components/admin/inventory/Inventory";
+import Test from "./components/Test";
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -42,6 +43,7 @@ function App() {
                 //inventory
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/test" element={<Test />} />
                 <Route path="/employee" element={<Employee />} />
                 <Route path="/rewards" element={<Rewards />} />
                 <Route path="/inventory" element={<Inventory />} />
