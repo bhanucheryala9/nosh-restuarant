@@ -93,16 +93,39 @@ return(
                     >
                       Menu
                     </Text>
-                    {/* <Input
-                      type="text"
-                      placeholder="search food"
-                      width="48"
-                      onChange={(e) => {
-                        setSearchFood(e.target.value);
-                      }}
-                    /> */}
+                    {}
                   </Flex>
 
+                  <Grid
+                    mt="4"
+                    templateRows={{
+                      base: "repeat(8, 1fr)",
+                      lg: "repeat(2, 1fr)",
+                    }}
+                    templateColumns={{
+                      base: "repeat(1, 1fr)",
+                      lg: "repeat(4, 1fr)",
+                    }}
+                    gap={{ base: 3, lg: 5 }}
+                  >
+                    {data &&
+                      data
+                        ?.filter((item: any) => item.isAvailable === true)
+                        .map((orders, index) => {
+                          return (
+                            <GridItem
+                              colSpan={1}
+                              rowSpan={1}
+                              display="flex"
+                              alignItems={"center"}
+                              justifyContent="end"
+                              key={index}
+                            >
+                              <OrderItem {...(orders as any)} />
+                            </GridItem>
+                          );
+                        })}
+                  </Grid>
           </TabPanel>
               );
             })}
