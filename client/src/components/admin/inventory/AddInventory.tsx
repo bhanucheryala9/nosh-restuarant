@@ -91,7 +91,37 @@ function InventoryPage() {
           </Flex>
           </Flex>
           </form>
-          
+
+           <FormControl mt="4" isInvalid={!!errors["price"]}>
+                    <FormLabel fontSize={"xs"}>Price</FormLabel>
+                    <InputGroup>
+                      <InputLeftElement
+                        pointerEvents="none"
+                        color="gray.300"
+                        fontSize="1.2em"
+                        children="$"
+                      />
+                      <Input
+                        placeholder="Enter amount"
+                        type={"number"}
+                        defaultValue={(defaultValues as any)?.price}
+                        {...register("price", {
+                          required: "Price is required",
+                        })}
+                        onChange={(e) => {
+                          const data = {
+                            ...formData,
+                            price: Number(e.target.value),
+                          };
+                          setFormData(data as any);
+                        }}
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>
+                      {errors["price"]?.message as string}
+                    </FormErrorMessage>
+                  </FormControl>
+
       <table>
         <thead>
           <tr>

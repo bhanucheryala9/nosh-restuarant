@@ -36,6 +36,51 @@ function Inventory() {
 
   type DataIndex = keyof InventoryColumns;
 
+   const prepareData = (data: InventoryColumns[]) => {
+    const formattedData = data.reduce((accumulator: any, currentValue) => {
+      return [
+        ...accumulator,
+        {
+          id: currentValue.id,
+          productName: currentValue.productName,
+          description: currentValue.description,
+          price: currentValue.price,
+          discount: currentValue.discount,
+          isAvailable: currentValue.isAvailable,
+          tax: currentValue.tax,
+          category: currentValue.category,
+        },
+      ];
+    }, []);
+    return formattedData;
+  };
+
+    const onDeleteClicked = (data: any) => {
+    console.log(" data for deleteinh", data);
+    axios
+      .delete("http://34.235.166.147:5000/api/admin/v1/delete-item", {
+        params: {
+          id: data.id,
+        },
+      })
+      .then((response: any) => {
+        setInventoryData(prepareData(response.data.items));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Successfully deleted item!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive items information..!",
+          showAlert: true,
+        });
+      });
+  };
+
+
    const getColumnSearchProps = (
     dataIndex: DataIndex
   ): ColumnType<InventoryColumns> => ({
@@ -99,7 +144,7 @@ function Inventory() {
     },
     render: (text) => text,
   });
-  
+
 
   const handleSearch = (
     selectedKeys: string[],
