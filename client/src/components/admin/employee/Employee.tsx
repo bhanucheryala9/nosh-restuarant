@@ -17,6 +17,11 @@ import {
 import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { DeleteIcon, EditIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import { faker } from "@faker-js/faker";
+import axios from "axios";
+import { useNotification } from "../../../contexts/Notification";
+import { NotificationStatus } from "../../common/utils";
+import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -59,13 +64,88 @@ const Employee = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText("");
+
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<EmployeeDatatype> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            colorScheme="orange"
+            size="sm"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+          >
+            Search
+          </Button>
+          <Button
+            colorScheme="gray"
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+            size="sm"
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+
+  });
+
+  const prepareData = (data: any) => {
+    const formattedData = data
+      .filter((item: any) => item.type === "employee")
+      .reduce((accumulator: any, currentValue: any) => {
+        return [
+          ...accumulator,
+          {
+            key: currentValue.id,
+            id: currentValue.id.toUpperCase(),
+            name: currentValue.lastName + " " + currentValue.firstName,
+            email: currentValue.email,
+            phoneNumber: currentValue.phoneNumber,
+            employeeType: currentValue.subtype,
+            about: currentValue.about,
+            address:
+              currentValue.address.addressLine1 +
+              ", " +
+              currentValue.address.city +
+              ", " +
+              currentValue.address.state,
+            salary: currentValue.salary,
+            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
+          },
+        ];
+      }, []);
+    setUserProfile(formattedData[0]);
+    return formattedData;
   };
 
-  
-  });
+
 
   const columns: ColumnsType<EmployeeDatatype> = [
     {
@@ -153,6 +233,8 @@ const Employee = () => {
     //   responsive: ["sm"],
     // },
   ];
+
+
 
   return (
     <React.Fragment>
