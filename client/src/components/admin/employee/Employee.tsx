@@ -64,6 +64,10 @@ const Employee = () => {
     setSearchedColumn(dataIndex);
   };
 
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
