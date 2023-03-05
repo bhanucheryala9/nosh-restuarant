@@ -212,6 +212,22 @@ const Employee = () => {
           value: "employee",
         },
       ],
+      onFilter: (value: any, record) =>
+      record.employeeType.indexOf(value) === 0,
+    sorter: (a, b) => a.name.length - b.name.length,
+    render: (text) => (
+      <>
+        {text === "Manager" ? (
+          <Tag color={"green"} key={text}>
+            {text.toUpperCase()}
+          </Tag>
+        ) : (
+          <Tag color={"blue"} key={text}>
+            {text.toUpperCase()}
+          </Tag>
+        )}
+      </>
+    ),
     },
     {
       title: "Address",
