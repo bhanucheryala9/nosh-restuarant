@@ -161,8 +161,41 @@ const Employee = () => {
     setUserProfile(formattedData[0]);
     return formattedData;
   };
+  const onDeleteClicked = (data: EmployeeDatatype) => {
+    axios
+      .delete("http://localhost:5000/api/admin/v1/delete-employee/", {
+        params: {
+          id: data.id.toLowerCase(),
+        },
+      })
+      .then((response: any) => {
+        setEmployeeData(prepareData(response.data.employees));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Employee info deleted successfully..!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive employees information..!",
+          showAlert: true,
+        });
+      });
+  };
 
-
+  const getActualData = (data: any) => {
+    const userData = unformattedEmployeeData.filter(
+      (item: any) => item.id.toLowerCase() === data.id.toLowerCase()
+    );
+    return userData[0];
+  };
+  const onUpdateClicked = (data: EmployeeDatatype) => {
+    setInitialFormData(getActualData(data) as any);
+    setForUpdate(true);
+    setAddEmployeeModal(true);
+  };
 
   const columns: ColumnsType<EmployeeDatatype> = [
     {
@@ -213,21 +246,21 @@ const Employee = () => {
         },
       ],
       onFilter: (value: any, record) =>
-      record.employeeType.indexOf(value) === 0,
-    sorter: (a, b) => a.name.length - b.name.length,
-    render: (text) => (
-      <>
-        {text === "Manager" ? (
-          <Tag color={"green"} key={text}>
-            {text.toUpperCase()}
-          </Tag>
-        ) : (
-          <Tag color={"blue"} key={text}>
-            {text.toUpperCase()}
-          </Tag>
-        )}
-      </>
-    ),
+        record.employeeType.indexOf(value) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      render: (text) => (
+        <>
+          {text === "Manager" ? (
+            <Tag color={"green"} key={text}>
+              {text.toUpperCase()}
+            </Tag>
+          ) : (
+            <Tag color={"blue"} key={text}>
+              {text.toUpperCase()}
+            </Tag>
+          )}
+        </>
+      ),
     },
     {
       title: "Address",
@@ -267,7 +300,24 @@ const Employee = () => {
     // },
   ];
 
+  const { setShowNotification } = useNotification();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-employee-details")
+      .then((response: any) => {
+        setunformattedEmployeeData(response.data.employees);
+        setEmployeeData(prepareData(response.data.employees));
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive employees information..!",
+          showAlert: true,
+        });
+      });
+  }, [addEmployeeModal]);
 
   return (
     <React.Fragment>
