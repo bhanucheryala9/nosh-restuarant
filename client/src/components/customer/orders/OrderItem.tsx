@@ -23,25 +23,25 @@ interface OrderItemsProps {
   discount: number;
   isAvailable: boolean;
   tax: number;
+  url: string,
   category: string;
   createdAt: string | Date;
 }
 
 export interface OrderInfo {
-  itemID: string;
-  itemName: string;
+  id: string;
+  productName: string;
   category: string;
   price: number;
   quantity: number;
 }
 const OrderItem = (props: OrderItemsProps) => {
-  const { id, productName, description, category, price, discount, isAvailable, tax,  } =
+  const { id, productName, description, category, price, discount, isAvailable, tax, url  } =
     props;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const [image, setImage] = useState();
 
-  // console.log("*************** item id:", ItemId, ItemName)
   useEffect(() => {
     const fetchImage = async () => {
       try {
@@ -56,38 +56,37 @@ const OrderItem = (props: OrderItemsProps) => {
     fetchImage();
   }, []);
   const { cartData, setCartData } = useCart();
-  // const onItemClicked = () => {
-  //   const filterData =
-  //     cartData.length > 0
-  //       ? cartData.findIndex((item: any) => item.itemName === ItemName) !== -1
-  //         ? cartData.map((item: any) =>
-  //             item.itemID === ItemId
-  //               ? { ...item, quantity: item.quantity + 1 }
-  //               : item
-  //           )
-  //         : [
-  //             ...cartData,
-  //             {
-  //               itemID: ItemId,
-  //               itemName: ItemName,
-  //               category: category,
-  //               price: price,
-  //               quantity: 1,
-  //             },
-  //           ]
-  //       : [
-  //           {
-  //             itemID: ItemId,
-  //             itemName: ItemName,
-  //             category: category,
-  //             price: price,
-  //             quantity: 1,
-  //           },
-  //         ];
+  const onItemClicked = () => {
+    const filterData =
+      cartData.length > 0
+        ? cartData.findIndex((item: any) => item.productName === productName) !== -1
+          ? cartData.map((item: any) =>
+              item.id === id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          : [
+              ...cartData,
+              {
+                id: id,
+                productName: productName,
+                category: category,
+                price: price,
+                quantity: 1,
+              },
+            ]
+        : [
+            {
+              id: id,
+              productName: productName,
+              category: category,
+              price: price,
+              quantity: 1,
+            },
+          ];
 
-  //   console.log(" filterd data", filterData);
-  //   setCartData(filterData);
-  // };
+    setCartData(filterData);
+  };
   return (
     <Card maxW={{ base: "full", lg: "sm" }} key={id}>
       <CardBody>
@@ -96,7 +95,7 @@ const OrderItem = (props: OrderItemsProps) => {
           brightness="70%"
           maxHeight={"56"}
           minW={{ base: "full", lg: "xs" }}
-          src={image}
+          src={url}
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
@@ -115,7 +114,7 @@ const OrderItem = (props: OrderItemsProps) => {
           variant={"solid"}
           colorScheme="orange"
           rounded={"full"}
-          // onClick={onItemClicked}
+          onClick={onItemClicked}
         >
           Add to cart
         </Button>
