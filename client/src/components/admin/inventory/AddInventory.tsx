@@ -70,6 +70,99 @@ function InventoryPage() {
       });
   };
 
+
+
+  const prepareData = () => {
+    const formattedData = {
+      id: (defaultValues as any).id,
+      productName: (defaultValues as any).productName,
+      category: (defaultValues as any).category,
+      description: (defaultValues as any).description,
+      price: (defaultValues as any).price,
+      discount: (defaultValues as any).discount,
+      isAvailable: (defaultValues as any).isAvailable,
+      tax: (defaultValues as any).tax,
+    };
+    return formattedData;
+  };
+
+  const handleFilesDropped = async (files: any) => {
+    const formData1 = new FormData();
+    formData1.append("file", files[0]);
+    formData1.append("upload_preset", "iu8dkp2y");
+    formData1.append("folder", "nosh");
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dh4anygjz/image/upload", formData1)
+      .then((res) => {
+        setProductURI(res.data.url);
+      })
+      .catch((error) => {
+        console.log("failed to upload in cloudnary");
+        window.alert("Failed to upload image in cloud..!");
+      });
+  };
+  const onSubmitClicked = () => {
+    if (!forUpdate) {
+      const preparedPayload = {
+        ...formData,
+        id: "I" + generateUID(),
+        tax: 0,
+        url: productURI,
+      };
+      axios
+        .post("http://34.235.166.147:5000/api/admin/v1/add-item", preparedPayload)
+        .then((response) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Successfully Item added to inventory..!",
+            showAlert: true,
+          });
+          navigate("/inventory");
+        })
+        .catch((error) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to added Item to inventory..!",
+            showAlert: true,
+          });
+        });
+    } else {
+      const data = prepareData();
+      const payload = { ...data, ...formData };
+      axios
+        .put("http://34.235.166.147:5000/api/admin/v1/update-item", payload)
+        .then((response) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Successfully Item added to inventory..!",
+            showAlert: true,
+          });
+          navigate("/inventory");
+        })
+        .catch((error) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to added Item to inventory..!",
+            showAlert: true,
+          });
+        });
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
       <h2>Inventory Management</h2>
