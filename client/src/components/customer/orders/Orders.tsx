@@ -28,7 +28,26 @@ import {
     const PER_PAGE = 10;
     const pageCount = Math.ceil(data.length / PER_PAGE);
   
-
+    const handlePageClick = (selected: any) => {
+        const offset = currentPage * PER_PAGE;
+        const currentPageData = data.slice(offset, offset + PER_PAGE);
+        setData(currentPageData);
+        setCurrentPage(selected);
+      };
+    
+      useEffect(() => {
+        setData(data.slice(0, 8));
+        axios
+          .get("http://34.235.166.147:5000/api/admin/v1/get-items")
+          .then((response) => {
+            setData(response.data.items);
+            setItemsData(response.data.items);
+            localStorage.setItem("orders",JSON.stringify([]))
+          })
+          .catch((error) => {
+            console.log("Error while retreiveing items: ", error);
+          });
+      }, []);
 return(
     <div>
         <Flex direction={"column"}>
