@@ -1,6 +1,15 @@
-
+import {
+  Flex,
+  HStack,
+  Text,
+  Image,
+  InputGroup,
+  InputLeftAddon,
+  Input,
+  InputRightAddon,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { faker } from "@faker-js/faker";
 import { OrderInfo } from "../orders/OrderItem";
 
 interface CartItemProps {
@@ -10,6 +19,23 @@ interface CartItemProps {
 }
 
 const CartItem = (props: CartItemProps) => {
+  const { item, setCartInfo, cartInfo } = props;
+
+  const prepareData = (option: string) => {
+    let updatedData;
+    if (option === "add") {
+      updatedData = cartInfo?.map((product) => {
+        if (product.productName === item.productName) {
+        
+      });
+    } else {
+      updatedData = cartInfo?.map((product) => {
+        if (product.productName === item.productName) {
+        } 
+      });
+    }
+    localStorage.setItem("orders", JSON.stringify(updatedData))
+    setCartInfo(updatedData);
 
   };
 
