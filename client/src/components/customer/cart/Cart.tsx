@@ -27,25 +27,24 @@ const Cart = () => {
   const navigate = useNavigate();
   const [cartInfo, setCartInfo] = useState(cartData);
 
-
   useEffect(() => {
     const amount = cartData?.reduce((acc: any, item: OrderInfo) => {
-      return acc +( item?.quantity * item?.price);
+      return acc + item?.quantity * item?.price;
     }, 0);
     setTotalAmount(amount);
-    setTaxAmount(amount/8);
-  }, [cartData.length]);
+    setTaxAmount(amount / 8);
+  }, [cartData]);
 
-  useEffect(()=>{
-    setCartInfo(cartInfo)
-  },[cartInfo])
+  useEffect(() => {
+    setCartInfo(cartData);
+  }, [cartData]);
 
   const onSubmitClicked = () => {
     setCartInfo(cartData);
     localStorage.setItem("orders", JSON.stringify({}));
     localStorage.setItem("orders", JSON.stringify(cartData));
-    setAppStoreData({ ...AppStoreData, finalCartData: cartInfo });
-    navigate("/payment")
+    setAppStoreData({ ...AppStoreData, finalCartData: cartData });
+    navigate("/payment");
   };
 
   return (
