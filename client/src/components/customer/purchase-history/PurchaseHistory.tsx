@@ -1,20 +1,11 @@
-import {
-  Button,
-  Flex,
-  HStack,
-  IconButton,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, HStack, Image, Text } from "@chakra-ui/react";
 import purchase from "../../../assets/purchase-history.jpg";
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { RewardsTestData } from "../../../test-data/admin/rewards";
-import { purchase_history } from "../../../test-data/customer/purchase-history";
 import axios from "axios";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 
 export interface DataType {
   key: React.Key;
@@ -24,40 +15,36 @@ export interface DataType {
   price: string;
 }
 const PurchaseHistory = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [completeOrderDetails, setCompletedOrderDetails] = useState([]);
   const [rewardsData, setRewardsData] = useState<DataType[]>([]);
-  const [showCreateRewardModal, setShowCreateRewardModal] =
-    useState<boolean>(false);
+  const navigate = useNavigate();
+
+  
   const columns: ColumnsType<DataType> = [
     {
       title: "Order ID",
       dataIndex: "orderID",
-      render: (text: string) => <a>{text}</a>,
+      render: (text: string) => <a>{(text as string).toUpperCase()}</a>,
     },
     {
       title: "Name",
       dataIndex: "name",
+      render: (text: string) => <div>{_.capitalize(text)}</div>,
     },
     {
       title: "Number Of Items",
       dataIndex: "numberOfItems",
+      render: (text: string) => (
+        <div>
+          <b>{_.capitalize(text)}</b>
+        </div>
+      ),
     },
     {
       title: "Price $",
       dataIndex: "price",
     },
-    {
-      title: "Action",
-      key: "action",
-      width: "45px",
-      render: (_, record) => (
-        <HStack>
-          <Button colorScheme={"orange"} rounded="full">
-            Reorder
-          </Button>
-        </HStack>
-      ),
-    },
+    
   ];
 
   const prepareData = (data: any) => {
@@ -67,57 +54,40 @@ const PurchaseHistory = () => {
         orderID: item.orderId,
         name: item.firstName + " " + item.lastName,
         numberOfItems: item.orderDetails.length,
-        price: Number(item.totalAmount)/100
+        price: Number(item.totalAmount) / 100,
       };
     });
     return toReturn;
   };
   useEffect(() => {
-    // const formattedData = purchase_history.reduce(
-    //   (accumulator: any, currentValue) => {
-    //     return [
-    //       ...accumulator,
-    //       {
-    //         key: currentValue.orderID,
-    //         ...currentValue,
-    //       },
-    //     ];
-    //   },
-    //   []
-    // );
+    const userID = JSON.parse(
+      localStorage?.getItem("userInfo") || ("{}" as string)
+    );
     axios
       .get("http://localhost:5000/api/customer/v1/get-purchase-history", {
         params: {
-          id: "cheryalabhanu99@gmail.com",
+          id: userID?.email,
         },
       })
       .then((response) => {
-        console.log("********** response of order", response.data.orders);
+        setCompletedOrderDetails(response.data.orders);
         setRewardsData(prepareData(response.data.orders));
-
       })
       .catch((error) => {
-        console.log("************** error", error);
+        console.log("error", error);
       });
   }, []);
 
   //
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+
 
   return (
     <Flex direction={"column"} justifyContent="center">
       <Flex justifyContent={"center"} direction="column" alignItems={"center"}>
         <Image
           src={purchase}
-          width={"100%"}
-          height="72"
+          
           filter={"auto"}
           brightness="75%"
         />
@@ -130,24 +100,13 @@ const PurchaseHistory = () => {
           zIndex={10}
           shadow="base"
         >
-          <Text
-            fontSize={"2xl"}
-            fontWeight="semibold"
-            fontFamily={"'Nunito', sans-serif"}
-          >
+          <Text>
             Purchase History
           </Text>
         </Flex>
       </Flex>
       <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm" my="6" mx="4">
         <Table
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                // setUserProfile(record);
-              },
-            };
-          }}
           style={{ width: "100%" }}
           size="large"
           rowSelection={rowSelection as any}
