@@ -15,6 +15,7 @@ export interface DataType {
   price: string;
 }
 const PurchaseHistory = () => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [completeOrderDetails, setCompletedOrderDetails] = useState([]);
   const [rewardsData, setRewardsData] = useState<DataType[]>([]);
   const navigate = useNavigate();
@@ -78,8 +79,15 @@ const PurchaseHistory = () => {
       });
   }, []);
 
-  //
+  
 
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
 
   return (
