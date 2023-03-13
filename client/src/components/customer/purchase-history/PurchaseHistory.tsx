@@ -20,6 +20,16 @@ const PurchaseHistory = () => {
   const [rewardsData, setRewardsData] = useState<DataType[]>([]);
   const navigate = useNavigate();
 
+  const onReorderClicked = (id: any) => {
+    const precartData = completeOrderDetails?.filter(
+      (item: any) => item.orderId === id
+    );
+    localStorage.setItem(
+      "orders",
+      JSON.stringify((precartData[0] as any)?.orderDetails)
+    );
+    navigate("/payment")
+  };
   
   const columns: ColumnsType<DataType> = [
     {
@@ -45,7 +55,22 @@ const PurchaseHistory = () => {
       title: "Price $",
       dataIndex: "price",
     },
-    
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <Button
+            colorScheme={"orange"}
+            rounded="full"
+            onClick={() => onReorderClicked((record as any)?.orderID)}
+          >
+            Reorder
+          </Button>
+        </HStack>
+      ),
+    },
   ];
 
   const prepareData = (data: any) => {
