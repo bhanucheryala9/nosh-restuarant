@@ -30,7 +30,6 @@ const PurchaseHistory = () => {
     );
     navigate("/payment")
   };
-  
   const columns: ColumnsType<DataType> = [
     {
       title: "Order ID",
@@ -100,11 +99,11 @@ const PurchaseHistory = () => {
         setRewardsData(prepareData(response.data.orders));
       })
       .catch((error) => {
-        console.log("error", error);
+        console.log("************** error", error);
       });
   }, []);
 
-  
+  //
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -114,13 +113,13 @@ const PurchaseHistory = () => {
     onChange: onSelectChange,
   };
 
-
   return (
     <Flex direction={"column"} justifyContent="center">
       <Flex justifyContent={"center"} direction="column" alignItems={"center"}>
         <Image
           src={purchase}
-          
+          width={"100%"}
+          height="72"
           filter={"auto"}
           brightness="75%"
         />
@@ -133,13 +132,24 @@ const PurchaseHistory = () => {
           zIndex={10}
           shadow="base"
         >
-          <Text>
+          <Text
+            fontSize={"2xl"}
+            fontWeight="semibold"
+            fontFamily={"'Nunito', sans-serif"}
+          >
             Purchase History
           </Text>
         </Flex>
       </Flex>
       <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm" my="6" mx="4">
         <Table
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                // setUserProfile(record);
+              },
+            };
+          }}
           style={{ width: "100%" }}
           size="large"
           rowSelection={rowSelection as any}
