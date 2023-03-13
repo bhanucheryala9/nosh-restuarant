@@ -1,9 +1,80 @@
-import React from 'react'
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  useDisclosure,
+  Text,
+  Divider,
+  HStack,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { OrderInfo } from "../orders/OrderItem";
+import CartItem from "./CartItem";
 
-export default function Cart() {
+const Cart = () => {
+
+
+
+
+
   return (
     <div>
-      
+      <Drawer
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader></DrawerHeader>
+          <DrawerBody>
+            <Flex>
+              <Text>
+              
+              </Text>
+              <Flex
+              >
+             
+                </Text>
+              </Flex>
+              <Divider  />
+
+                return (
+                  <CartItem
+                  />
+                );
+        
+
+              <Divider />
+              <Flex></Flex>
+                <HStack >
+                  <Text >
+                  </Text>
+                  <Text ></Text>
+                </HStack>
+                <HStack >
+                  <Text >
+                  </Text>
+                  <Text></Text>
+                </HStack>
+                <HStack>
+                  <Text></Text>
+                  <Text>
+                  </Text>
+                </HStack>
+                <Button
+                >
+                </Button>
+              </Flex>
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </div>
-  )
-}
+  );
+};
+
+export default Cart;
