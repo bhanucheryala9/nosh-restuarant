@@ -7,6 +7,7 @@ const usersSchema = new Schema({
   lastName: String,
   email: String,
   phoneNumber: String,
+  credits:Number,
   address: {
     addressLine1: String,
     addressLine2: String,

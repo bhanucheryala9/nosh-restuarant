@@ -24,7 +24,7 @@ import {
 import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
-import { InventoryRequestPayload, NotificationStatus } from "../../common/utils";
+import { generateUID, InventoryRequestPayload, NotificationStatus } from "../../common/utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNotification } from "../../../contexts/Notification";
@@ -61,10 +61,10 @@ const AddInventory = () => {
   };
 
   const onSubmitClicked = () => {
-    const preparedPayload = { ...formData, id: "sjhagdjhsaddghj" };
+    const preparedPayload = { ...formData, id: "I"+ generateUID() };
     console.log("payload of inventory", preparedPayload);
     axios
-      .post("http://localhost:5000/api/admin/add-item", preparedPayload)
+      .post("http://localhost:5000/api/admin/v1/add-item", preparedPayload)
       .then((response) => {
         setShowNotification({
           status: NotificationStatus.SUCCESS,
@@ -177,7 +177,7 @@ const AddInventory = () => {
                           required: "Price is required",
                         })}
                         onChange={(e) => {
-                          const data = { ...formData, price: e.target.value };
+                          const data = { ...formData, price: Number(e.target.value) };
                           setFormData(data as any);
                         }}
                       />

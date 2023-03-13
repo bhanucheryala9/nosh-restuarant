@@ -2,13 +2,15 @@ var express = require("express");
 var router = express.Router();
 var fs = require("fs");
 const usersService = require("../services/users-services.js");
+const inventoryService = require("../services/inventory-services.js");
+const rewardsService = require("../services/rewards-services.js");
 
 router.post("/add-employee", function (req, res, next) {
   const payload = req.body;
   fs.readFile("./data/admin/employee.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({message:"Failed to employee data...!"});
+      res.status(500).json({ message: "Failed to employee data...!" });
       return;
     }
     const previousData = JSON.parse(data);
@@ -21,10 +23,12 @@ router.post("/add-employee", function (req, res, next) {
       (err) => {
         if (err) {
           console.error(err);
-          res.status(500).json({message:"Failed to employee data...!"});
+          res.status(500).json({ message: "Failed to employee data...!" });
           return;
         }
-        res.status(200).json({message:"Successfully uploaded employee data...!"});
+        res
+          .status(200)
+          .json({ message: "Successfully uploaded employee data...!" });
       }
     );
   });
@@ -44,38 +48,37 @@ router.get("/employee-details", function (req, res, next) {
   fs.readFile("./data/admin/employee.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({message:"Failed to employee data...!"});
+      res.status(500).json({ message: "Failed to employee data...!" });
       return;
     }
-    res.status(200).json({employees: JSON.parse(data)});
+    res.status(200).json({ employees: JSON.parse(data) });
   });
 });
 
-
+/***
+ *
+ * Admin Module: Inventory routes
+ *
+ */
 router.post("/add-item", function (req, res, next) {
   const payload = req.body;
   fs.readFile("./data/admin/items.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({message:"Failed to add item data...!"});
+      res.status(500).json({ message: "Failed to add item data...!" });
       return;
     }
     const previousData = JSON.parse(data);
     const newItemData = [...previousData, payload];
     const updatedJsonData = JSON.stringify(newItemData);
-    fs.writeFile(
-      "./data/admin/items.json",
-      updatedJsonData,
-      "utf8",
-      (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).json({message:"Failed to add item...!"});
-          return;
-        }
-        res.status(200).json({message:"Successfully uploaded item...!"});
+    fs.writeFile("./data/admin/items.json", updatedJsonData, "utf8", (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to add item...!" });
+        return;
       }
-    );
+      res.status(200).json({ message: "Successfully uploaded item...!" });
+    });
   });
 });
 
@@ -83,38 +86,61 @@ router.get("/get-items", function (req, res, next) {
   fs.readFile("./data/admin/items.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({message:"Failed to fetch items data...!"});
+      res.status(500).json({ message: "Failed to fetch items data...!" });
       return;
     }
-    res.status(200).json({inventory: JSON.parse(data)});
+    res.status(200).json({ inventory: JSON.parse(data) });
   });
 });
+/**
+ *
+ *  Inventory V1
+ */
+router.post("/v1/add-item", async function (req, res, next) {
+  const payload = req.body;
+  try {
+    const items = await inventoryService.createInventory(payload);
+    res.json({ items: items, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+router.get("/v1/get-items", async function (req, res, next) {
+  try {
+    const items = await inventoryService.getInventoryItems();
+    res.json({ items: items, code: 200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
+/**
+ *
+ * Rewards Section
+ *
+ */
 
 router.post("/add-reward", function (req, res, next) {
   const payload = req.body;
   fs.readFile("./data/admin/promos.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({message:"Failed to add reward...!"});
+      res.status(500).json({ message: "Failed to add reward...!" });
       return;
     }
     const previousData = JSON.parse(data);
     const newItemData = [...previousData, payload];
     const updatedJsonData = JSON.stringify(newItemData);
-    fs.writeFile(
-      "./data/admin/promos.json",
-      updatedJsonData,
-      "utf8",
-      (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).json({message:"Failed to add reward...!"});
-          return;
-        }
-        res.status(200).json({message:"Successfully uploaded reward information...!"});
+    fs.writeFile("./data/admin/promos.json", updatedJsonData, "utf8", (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to add reward...!" });
+        return;
       }
-    );
+      res
+        .status(200)
+        .json({ message: "Successfully uploaded reward information...!" });
+    });
   });
 });
 
@@ -122,11 +148,38 @@ router.get("/get-rewards", function (req, res, next) {
   fs.readFile("./data/admin/promos.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({message:"Failed to fetch rwards information...!"});
+      res
+        .status(500)
+        .json({ message: "Failed to fetch rwards information...!" });
       return;
     }
-    res.status(200).json({rewards: JSON.parse(data)});
+    res.status(200).json({ rewards: JSON.parse(data) });
   });
+});
+
+/**
+ * 
+ *  Rewards V1 Sections
+ * 
+ */
+router.post("/v1/add-reward", async function (req, res, next) {
+  const payload = req.body;
+  try {
+    const rewards = await rewardsService.createRewards(payload);
+    res.json({ rewards: rewards, code:200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+router.get("/v1/get-rewards", async function (req, res, next) {
+  try {
+    const rewards = await rewardsService.getRewardsItems();
+    res.json({ rewards: rewards, code:200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

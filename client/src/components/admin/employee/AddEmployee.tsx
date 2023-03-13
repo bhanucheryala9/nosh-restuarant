@@ -56,6 +56,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
           Math.floor(Math.random() * 90000) +
           10000,
       joinedDate: Date.now(),
+      credits: 0,
       address: {
         ...formattedData?.address,
         zipcode: "12208",
@@ -63,7 +64,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
     } as any;
 
     axios
-      .post("http://localhost:5000/api/admin/add-employee", formattedData)
+      .post("http://localhost:5000/api/admin/v1/add-employee", formattedData)
       .then((response) => {
 
         try {

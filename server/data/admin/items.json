@@ -1,1 +1,42 @@
-[{"productName":"dfds","description":"dsfsd","price":"12","discount":"1","isAvailable":true,"tax":"1","category":"main-course","id":"sjhagdjhsaddghj"},{"productName":"chicken","description":"burger with chicken patte","price":"12","discount":"2","isAvailable":true,"tax":"1","category":"appetizers","id":"sjhagdjhsaddghj"},{"productName":"test-product","description":"testdescriptoi","price":"10","discount":"1","category":"biryani","isAvailable":true,"tax":"5","id":"sjhagdjhsaddghj"},{"productName":"mutton","description":"test desciption","price":"14","discount":"5","isAvailable":true,"category":"biryani","tax":"5","id":"sjhagdjhsaddghj"}]
+[
+  {
+    "productName": "dfds",
+    "description": "dsfsd",
+    "price": "12",
+    "discount": "1",
+    "isAvailable": true,
+    "tax": "1",
+    "category": "main-course",
+    "id": "sjhagdjhsaddghj"
+  },
+  {
+    "productName": "chicken",
+    "description": "burger with chicken patte",
+    "price": "12",
+    "discount": "2",
+    "isAvailable": true,
+    "tax": "1",
+    "category": "appetizers",
+    "id": "sjhagdjhsaddghj"
+  },
+  {
+    "productName": "test-product",
+    "description": "testdescriptoi",
+    "price": "10",
+    "discount": "1",
+    "category": "biryani",
+    "isAvailable": true,
+    "tax": "5",
+    "id": "sjhagdjhsaddghj"
+  },
+  {
+    "productName": "mutton",
+    "description": "test desciption",
+    "price": "14",
+    "discount": "5",
+    "isAvailable": true,
+    "category": "biryani",
+    "tax": "5",
+    "id": "sjhagdjhsaddghj"
+  }
+]

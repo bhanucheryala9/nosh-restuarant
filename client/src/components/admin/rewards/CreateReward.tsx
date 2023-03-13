@@ -47,7 +47,7 @@ const CreateReward = (props: CreateRewardProps) => {
   const onSubmitClicked = () => {
     const preparedPayload = { ...formData, id: "R"+ generateUID() };
     axios
-      .post("http://localhost:5000/api/admin/add-reward", preparedPayload)
+      .post("http://localhost:5000/api/admin/v1/add-reward", preparedPayload)
       .then((response) => {
         setIsModalOpen(false);
         setShowNotification({

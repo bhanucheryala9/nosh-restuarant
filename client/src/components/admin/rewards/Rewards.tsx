@@ -128,7 +128,7 @@ const Rewards = () => {
   }
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/admin/get-rewards")
+      .get("http://localhost:5000/api/admin/v1/get-rewards")
       .then((response) => {
         setRewardsData(prepareData(response.data.rewards));
       })
