@@ -36,9 +36,12 @@ const Cart = () => {
               
               </Text>
               <Flex
-              >
-             
-                </Text>
+              ><Text fontSize={"lg"} textColor="white">
+              Balance
+            </Text>
+            <Text fontSize={"4xl"} fontWeight="semibold" textColor="white">
+              $200
+            </Text>
               </Flex>
               <Divider  />
 
