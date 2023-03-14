@@ -65,7 +65,14 @@ const Cart = () => {
                 </Text>
               </Flex>
               <Divider mb="4" />
-             
+              {cartInfo.map((item: any, index: number) => {
+                return (
+                  <CartItem
+                    item={item}
+                    setCartInfo={setCartInfo as any}
+                    cartInfo={cartInfo}
+                    key={index}
+                  />
                 );
               })}
 
