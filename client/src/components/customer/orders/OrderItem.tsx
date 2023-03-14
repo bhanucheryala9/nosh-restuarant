@@ -56,6 +56,35 @@ import {
       const [error, setError] = useState();
       const [image, setImage] = useState();
     
+    const {
+        id,
+        productName,
+        description,
+        category,
+        price,
+        discount,
+        isAvailable,
+        tax,
+        url,
+      } = props;
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState();
+      const [image, setImage] = useState();
+      useEffect(() => {
+        const fetchImage = async () => {
+          try {
+            const response = await import(
+              `../../../assets/orders/${"chickenpakora.jpg"}`
+            ); // change relative path to suit your needs
+            setImage(response.default);
+          } catch (err) {
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchImage();
+      }, []);
 return(
     <Card maxW={"72"} key={id}>
         {!isAvailable && (
