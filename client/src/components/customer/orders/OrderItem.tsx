@@ -115,7 +115,20 @@ return(
           <Text>{description}</Text>
         </Stack>
       </CardBody>
-
+      <CardFooter justifyContent="space-between" alignItems={"center"}>
+        <Text fontSize={"lg"} fontWeight="semibold">
+          ${price}
+        </Text>
+        <Button
+          variant={"solid"}
+          colorScheme={isAvailable ? "orange" : "gray"}
+          disabled={!isAvailable}
+          rounded={"full"}
+          onClick={onItemClicked}
+        >
+          Add to cart
+        </Button>
+      </CardFooter>
         
     </Card>
 );
