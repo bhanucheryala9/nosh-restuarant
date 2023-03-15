@@ -56,20 +56,7 @@ import {
       const [error, setError] = useState();
       const [image, setImage] = useState();
     
-    const {
-        id,
-        productName,
-        description,
-        category,
-        price,
-        discount,
-        isAvailable,
-        tax,
-        url,
-      } = props;
-      const [loading, setLoading] = useState(true);
-      const [error, setError] = useState();
-      const [image, setImage] = useState();
+    
       useEffect(() => {
         const fetchImage = async () => {
           try {
@@ -85,6 +72,38 @@ import {
     
         fetchImage();
       }, []);
+      const onItemClicked = () => {
+        const cart = JSON.parse(localStorage.getItem("orders") || "");
+        const filterData =
+          cart.length > 0
+            ? cart.findIndex((item: any) => item.productName === productName) !== -1
+              ? cart.map((item: any) =>
+                  item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+                )
+              : [
+                  ...cart,
+                  {
+                    id: id,
+                    productName: productName,
+                    category: category,
+                    price: price,
+                    quantity: 1,
+                    url: url,
+                  },
+                ]
+            : [
+                {
+                  id: id,
+                  productName: productName,
+                  category: category,
+                  price: price,
+                  quantity: 1,
+                  url: url,
+                },
+              ];
+        localStorage.setItem("orders", JSON.stringify(filterData));
+        // setCartData(filterData);
+      };
 return(
     <Card maxW={"72"} key={id}>
         {!isAvailable && (
