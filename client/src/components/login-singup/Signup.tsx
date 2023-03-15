@@ -3,10 +3,16 @@ import { Button, Divider, Form, Input } from "antd";
 import { useAuth } from "../../contexts/AuthContext";
 import AlertMessage from "../common/AlertMessage";
 import { useState } from "react";
-import { AlertMessageProps, AlertStatus, NotificationStatus } from "../common/utils";
+import {
+  AlertMessageProps,
+  AlertStatus,
+  generateUID,
+  NotificationStatus,
+} from "../common/utils";
 import { Link, useNavigate } from "react-router-dom";
 import lgn from "../../assets/loginPage.jpg";
 import { useNotification } from "../../contexts/Notification";
+import axios from "axios";
 
 interface UserInformation {
   email: string;
@@ -40,23 +46,38 @@ const SignUp = () => {
       try {
         signUp(email, pwd)
           .then(() => {
-            setShowNotification({
-              status: NotificationStatus.SUCCESS,
-              alertMessage: "User account successfully created..!",
-              showAlert: true,
-            });
-            navigate("/");
+            axios
+              .post("http://localhost:5000/api/admin/v1/add-employee", {
+                id: "C"+generateUID(),
+                email: email,
+                type: "customer"
+              })
+              .then((response) => {
+                setShowNotification({
+                  status: NotificationStatus.SUCCESS,
+                  alertMessage: "employee account successfully created..!",
+                  showAlert: true,
+                });
+                navigate("/")
+              })
+              .catch((error) => {
+                setShowNotification({
+                  status: NotificationStatus.ERROR,
+                  alertMessage: "Failed to create employee login..!",
+                  showAlert: true,
+                });
+              });            
           })
           .catch(() => {
             setShowNotification({
-              status: NotificationStatus.SUCCESS,
+              status: NotificationStatus.ERROR,
               alertMessage: "Failed to create user account..!",
               showAlert: true,
             });
           });
       } catch {
         setShowNotification({
-          status: NotificationStatus.SUCCESS,
+          status: NotificationStatus.ERROR,
           alertMessage: "Failed to create user account..!",
           showAlert: true,
         });
@@ -107,7 +128,10 @@ const SignUp = () => {
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password placeholder="Enter Password" className="text-orange-600 focus:border-orange-700" />
+            <Input.Password
+              placeholder="Enter Password"
+              className="text-orange-600 focus:border-orange-700"
+            />
           </Form.Item>
 
           <Form.Item
@@ -124,14 +148,20 @@ const SignUp = () => {
             <Button
               htmlType="submit"
               className="login-form-button bg-orange-500 hover:bg-orange-600 outline-none text-white font-semibold shadow-md"
-
             >
               Sign Up
             </Button>
           </Form.Item>
           <Form.Item>
             <p className="flex justify-center cursor-pointer">
-              Already have an account? <Link to={"/"} className="text-orange-600 hover:text-orange-600 hover:font-semibold ml-1"> Login In</Link>
+              Already have an account?{" "}
+              <Link
+                to={"/"}
+                className="text-orange-600 hover:text-orange-600 hover:font-semibold ml-1"
+              >
+                {" "}
+                Login In
+              </Link>
             </p>
           </Form.Item>
         </Form>

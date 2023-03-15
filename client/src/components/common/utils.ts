@@ -1,5 +1,9 @@
 import { ReactNode } from "react";
 
+export const resetLocalStorage = () => {
+  localStorage.setItem("userInfo", JSON.stringify({}));
+  localStorage.setItem("isUserLoggedIn", "no");
+};
 export enum AlertStatus {
   SUCCESS = "success",
   ERROR = "error",
@@ -16,8 +20,7 @@ export enum NotificationStatus {
   SUCCESS = "success",
   ERROR = "error",
   WARNING = "warning",
-  DEFAULT ="default"
-
+  DEFAULT = "default",
 }
 
 export interface NotificationProps {
@@ -105,6 +108,39 @@ export const NAV_ITEMS: Array<NavItem> = [
     ],
   },
 ];
+export const ADMIN_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Manage Employee",
+    href: "/employee",
+  },
+  {
+    label: "Manage Inventory",
+    children: [
+      {
+        label: "Add Inventory",
+        subLabel: "Create inventory",
+        href: "/add-inventory",
+      },
+      {
+        label: "View Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
+      },
+    ],
+  },
+  {
+    label: "Offers",
+    href: "/rewards",
+  },
+  {
+    label: "Sales",
+    href: "/sales",
+  },
+];
 
 /**  Api response structures */
 export interface EmployeeRequestPayload {
@@ -117,7 +153,7 @@ export interface EmployeeRequestPayload {
   phoneNumber: number;
   subtype: string;
   salary: number;
-  about?:string;
+  about?: string;
   address: {
     addressLine1: string;
     addressLine2: string;
@@ -131,10 +167,10 @@ export interface InventoryRequestPayload {
   productName: string;
   category: string;
   description: string;
-  price:number;
-  discount:number;
-  isAvailable:boolean;
-  tax:number;
+  price: number;
+  discount: number;
+  isAvailable: boolean;
+  tax: number;
 }
 
 export interface RewardsRequestPayload {
@@ -142,16 +178,15 @@ export interface RewardsRequestPayload {
   rewardType: string;
   code: string;
   discountPercentage: number;
-  maxDiscountAmount:number;
-  minOrderPrice:number;
-  appliesTo:string;
-  appliedCategory:string[] |string;
+  maxDiscountAmount: number;
+  minOrderPrice: number;
+  appliesTo: string;
+  appliedCategory: string[] | string;
 }
 
-
-export const generateUID = () =>{
-  return Math.floor(Math.random() * 90000) + 10000
-}
+export const generateUID = () => {
+  return Math.floor(Math.random() * 90000) + 10000;
+};
 // {
 //   label: "Employee",
 //   children: [

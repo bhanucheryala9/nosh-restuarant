@@ -99,8 +99,8 @@ const Inventory = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get("http://localhost:5000/api/admin/get-items").then((response) => {
-      setInventoryData(prepareData(response.data.inventory));
+    axios.get("http://localhost:5000/api/admin/v1/get-items").then((response) => {
+      setInventoryData(prepareData(response.data.items));
       setIsLoading(false);
     }).catch((error)=>{
         setIsLoading(false);

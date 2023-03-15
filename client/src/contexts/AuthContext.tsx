@@ -1,5 +1,6 @@
 import firebase from "firebase/auth";
 import react, { createContext, useContext, useEffect, useState } from "react";
+import { resetLocalStorage } from "../components/common/utils";
 import { auth } from "../firebase";
 
 interface AuthContextProps {
@@ -41,6 +42,7 @@ const AuthProvider = (props: {
   };
 
   const logOut = () => {
+    resetLocalStorage()
     return auth.signOut();
   };
   useEffect(() => {

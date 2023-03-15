@@ -54,6 +54,44 @@ router.get("/employee-details", function (req, res, next) {
     res.status(200).json({ employees: JSON.parse(data) });
   });
 });
+router.get("/v1/get-employee-details", async function (req, res, next) {
+  try {
+    const users = await usersService.getsUsers();
+    res.json({ employees: users, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/v1/get-user-details", async function (req, res, next) {
+  const id = req.query.id;
+  try {
+    const userDetails = await usersService.getUsersByID(id);
+    res.json({ userInfo: userDetails, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete("/v1/delete-employee", async function (req, res, next) {
+  const id = req.query.id;
+  try {
+    const userDetails = await usersService.deleteUserByID(id);
+    res.json({ employees: userDetails, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put("/v1/update-employee", async function (req, res, next) {
+  const payload = req.body;
+  try {
+    const users = await usersService.updateUserByID(payload);
+    res.json({ users: users, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 /***
  *
@@ -158,25 +196,24 @@ router.get("/get-rewards", function (req, res, next) {
 });
 
 /**
- * 
+ *
  *  Rewards V1 Sections
- * 
+ *
  */
 router.post("/v1/add-reward", async function (req, res, next) {
   const payload = req.body;
   try {
     const rewards = await rewardsService.createRewards(payload);
-    res.json({ rewards: rewards, code:200, status: "success" });
+    res.json({ rewards: rewards, code: 200, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-
 router.get("/v1/get-rewards", async function (req, res, next) {
   try {
     const rewards = await rewardsService.getRewardsItems();
-    res.json({ rewards: rewards, code:200, status: "success" });
+    res.json({ rewards: rewards, code: 200, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Link,  Stack, useColorModeValue, Text, Flex, Icon } from "@chakra-ui/react";
-import { NavItem, NAV_ITEMS } from "../common/utils";
+import { NavItem } from "../common/utils";
 
 const DesktopSubHeader = ({ label, href, subLabel }: NavItem) => {
     return (

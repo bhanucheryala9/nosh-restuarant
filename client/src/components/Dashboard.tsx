@@ -23,15 +23,19 @@ import "./dashboard.css";
 import Cart from "./customer/cart/Cart";
 import Loader from "./common/Loader";
 import { CSSProperties, useEffect, useState } from "react";
+import { useUser } from "../contexts/UserContext";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { userData } = useUser();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(true);
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
   return (
     <Flex direction={"column"}>
       {!isLoading && <Loader />}
