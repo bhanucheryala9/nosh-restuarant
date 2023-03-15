@@ -62,7 +62,7 @@ const Inventory = () => {
     setSearchText("");
   };
 
-   const getColumnSearchProps = (
+  const getColumnSearchProps = (
     dataIndex: DataIndex
   ): ColumnType<InventoryColumns> => ({
     filterDropdown: ({
@@ -110,6 +110,64 @@ const Inventory = () => {
         </Space>
       </div>
     ),
+    filterIcon: (filtered: boolean) => (
+      <AiOutlineSearch style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record: any) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
+
+  const prepareData = (data: InventoryColumns[]) => {
+    const formattedData = data.reduce((accumulator: any, currentValue) => {
+      return [
+        ...accumulator,
+        {
+          id: currentValue.id,
+          productName: currentValue.productName,
+          description: currentValue.description,
+          price: currentValue.price,
+          discount: currentValue.discount,
+          isAvailable: currentValue.isAvailable,
+          tax: currentValue.tax,
+          category: currentValue.category,
+        },
+      ];
+    }, []);
+    return formattedData;
+  };
+  const onDeleteClicked = (data: any) => {
+    console.log(" data for deleteinh", data);
+    axios
+      .delete("http://34.235.166.147:5000/api/admin/v1/delete-item", {
+        params: {
+          id: data.id,
+        },
+      })
+      .then((response: any) => {
+        setInventoryData(prepareData(response.data.items));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Successfully deleted item!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive items information..!",
+          showAlert: true,
+        });
+      });
+  };
 
   return (
     <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
