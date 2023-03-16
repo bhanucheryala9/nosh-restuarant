@@ -36,7 +36,7 @@ export interface OrderInfo {
   category: string;
   price: number;
   quantity: number;
-  url:string
+  url: string;
 }
 const OrderItem = (props: OrderItemsProps) => {
   const {
@@ -69,25 +69,24 @@ const OrderItem = (props: OrderItemsProps) => {
 
     fetchImage();
   }, []);
-  const { cartData, setCartData } = useCart();
+  // const { cartData, setCartData } = useCart();
   const onItemClicked = () => {
+    const cart = JSON.parse(localStorage.getItem("orders") || "");
     const filterData =
-      cartData.length > 0
-        ? cartData.findIndex(
-            (item: any) => item.productName === productName
-          ) !== -1
-          ? cartData.map((item: any) =>
+      cart.length > 0
+        ? cart.findIndex((item: any) => item.productName === productName) !== -1
+          ? cart.map((item: any) =>
               item.id === id ? { ...item, quantity: item.quantity + 1 } : item
             )
           : [
-              ...cartData,
+              ...cart,
               {
                 id: id,
                 productName: productName,
                 category: category,
                 price: price,
                 quantity: 1,
-                url: url
+                url: url,
               },
             ]
         : [
@@ -97,14 +96,14 @@ const OrderItem = (props: OrderItemsProps) => {
               category: category,
               price: price,
               quantity: 1,
-              url: url
+              url: url,
             },
           ];
-    console.log("********* data clicked for cart", filterData);
-    setCartData(filterData);
+    localStorage.setItem("orders", JSON.stringify(filterData));
+    // setCartData(filterData);
   };
   return (
-    <Card maxW={{ base: "full", lg: "sm" }} key={id}>
+    <Card maxW={"72"} key={id}>
       {!isAvailable && (
         <CornerRibbon
           position="top-right" // OPTIONAL, default as "top-right"
@@ -122,7 +121,8 @@ const OrderItem = (props: OrderItemsProps) => {
           filter="auto"
           brightness="70%"
           maxHeight={"56"}
-          minW={{ base: "full", lg: "xs" }}
+          maxW={"100%"}
+          minW="100%"
           src={url}
           alt="Green double couch with wooden legs"
           borderRadius="lg"
