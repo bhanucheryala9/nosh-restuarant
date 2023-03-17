@@ -12,15 +12,33 @@ import {
   Divider,
   HStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../../../contexts/AppStoreContext";
 import { useCart } from "../../../contexts/CartContext";
 import { OrderInfo } from "../orders/OrderItem";
 import CartItem from "./CartItem";
 
 const Cart = () => {
-  const {isCartOpen, setIsCartOpen, cartData} = useCart();
-  const [cartInfo, setCartInfo] = useState<Array<OrderInfo>>(cartData)
-  console.log("******************* cart items", cartData)
+  const { isCartOpen, setIsCartOpen, cartData } = useCart();
+  const [cartInfo, setCartInfo] = useState<Array<OrderInfo>>(cartData);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const { AppStoreData, setAppStoreData } = useAppStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const amount = cartData?.reduce((acc: any, item: OrderInfo) => {
+      return acc + item?.quantity * item?.price;
+    }, 0);
+    setTotalAmount(amount);
+  }, []);
+  const onSubmitClicked = () => {
+    setCartInfo(cartData);
+    localStorage.setItem("orders", JSON.stringify({}));
+    localStorage.setItem("orders", JSON.stringify(cartData));
+    setAppStoreData({ ...AppStoreData, finalCartData: cartInfo });
+    navigate("/payment")
+  };
 
   return (
     <div>
@@ -31,7 +49,7 @@ const Cart = () => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton _focus={{ outline:"none"}} />
+          <DrawerCloseButton _focus={{ outline: "none" }} />
           <DrawerHeader>{` Your Cart`}</DrawerHeader>
           <DrawerBody>
             <Flex
@@ -65,8 +83,15 @@ const Cart = () => {
                 </Text>
               </Flex>
               <Divider mb="4" />
-              {cartData.map((item:any) => {
-                return <CartItem {...item}/>;
+              {cartData.map((item: any, index: number) => {
+                return (
+                  <CartItem
+                    item={item}
+                    setCartInfo={setCartInfo}
+                    cartInfo={cartInfo}
+                    key={index}
+                  />
+                );
               })}
 
               <Divider my="6" />
@@ -79,9 +104,20 @@ const Cart = () => {
                 </HStack>
                 <HStack justifyContent={"space-between"} mt="2">
                   <Text>Total</Text>
-                  <Text textColor={"orange.500"} fontWeight="semibold" fontSize={"2xl"}>$200</Text>
+                  <Text
+                    textColor={"orange.500"}
+                    fontWeight="semibold"
+                    fontSize={"2xl"}
+                  >
+                    ${totalAmount}
+                  </Text>
                 </HStack>
-                <Button colorScheme={"orange"} width="100%" mt="3">
+                <Button
+                  colorScheme={"orange"}
+                  width="100%"
+                  mt="3"
+                  onClick={onSubmitClicked}
+                >
                   Proceed to Pay
                 </Button>
               </Flex>

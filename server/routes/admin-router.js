@@ -151,7 +151,25 @@ router.get("/v1/get-items", async function (req, res, next) {
     res.status(500).json({ error: err.message });
   }
 });
+router.delete("/v1/delete-item", async function (req, res, next) {
+  const id = req.query.id;
+  try {
+    const items = await inventoryService.deleteInventoryItemByID(id);
+    res.json({ items: items, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
+router.put("/v1/update-item", async function (req, res, next) {
+  const payload = req.body;
+  try {
+    const item = await inventoryService.updateInventoryItemID(payload);
+    res.json({ items: item, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 /**
  *
  * Rewards Section
@@ -214,6 +232,26 @@ router.get("/v1/get-rewards", async function (req, res, next) {
   try {
     const rewards = await rewardsService.getRewardsItems();
     res.json({ rewards: rewards, code: 200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete("/v1/delete-reward", async function (req, res, next) {
+  const id = req.query.id;
+  try {
+    const rewards = await rewardsService.deleteRewardsItemByID(id);
+    res.json({ rewards: rewards, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put("/v1/update-reward", async function (req, res, next) {
+  const payload = req.body;
+  try {
+    const rewards = await rewardsService.updateRewardsItemID(payload);
+    res.json({ rewards: rewards, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

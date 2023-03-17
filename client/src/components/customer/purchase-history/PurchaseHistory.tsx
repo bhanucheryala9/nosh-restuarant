@@ -6,6 +6,7 @@ import { ColumnsType } from "antd/es/table";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { RewardsTestData } from "../../../test-data/admin/rewards";
 import { purchase_history } from "../../../test-data/customer/purchase-history";
+import axios from "axios";
 
 export interface DataType {
     key: React.Key;
@@ -63,7 +64,19 @@ const PurchaseHistory = () => {
       []
     );
     setRewardsData(formattedData);
+    axios.get("http://localhost:5000/api/customer/v1/get-purchase-history",{
+      params:{
+        id: "cheryalabhanu99@gmail.com"
+      }
+    }).then((response)=>{
+      console.log("********** response of order", response.data.orders)
+    }).catch((error)=>{
+      console.log("************** error", error)
+    })
   }, []);
+
+  // 
+
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);

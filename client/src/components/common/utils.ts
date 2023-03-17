@@ -182,6 +182,8 @@ export interface RewardsRequestPayload {
   minOrderPrice: number;
   appliesTo: string;
   appliedCategory: string[] | string;
+  startTime?: Date | string;
+  endTime?: Date | string
 }
 
 export const generateUID = () => {

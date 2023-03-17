@@ -10,6 +10,16 @@ const rewardsSchema = new Schema({
   minOrderPrice: Number,
   appliesTo: String,
   appliedCategory: String,
+  startTime: {
+    required: false,
+    type: String,
+    default: Date.now,
+  },
+  endTime: {
+    required: false,
+    type: String,
+    default: Date.now,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -28,8 +28,8 @@ interface OrderItemsProps {
 }
 
 export interface OrderInfo {
-  itemID: string;
-  itemName: string;
+  id: string;
+  productName: string;
   category: string;
   price: number;
   quantity: number;
@@ -56,38 +56,38 @@ const OrderItem = (props: OrderItemsProps) => {
     fetchImage();
   }, []);
   const { cartData, setCartData } = useCart();
-  // const onItemClicked = () => {
-  //   const filterData =
-  //     cartData.length > 0
-  //       ? cartData.findIndex((item: any) => item.itemName === ItemName) !== -1
-  //         ? cartData.map((item: any) =>
-  //             item.itemID === ItemId
-  //               ? { ...item, quantity: item.quantity + 1 }
-  //               : item
-  //           )
-  //         : [
-  //             ...cartData,
-  //             {
-  //               itemID: ItemId,
-  //               itemName: ItemName,
-  //               category: category,
-  //               price: price,
-  //               quantity: 1,
-  //             },
-  //           ]
-  //       : [
-  //           {
-  //             itemID: ItemId,
-  //             itemName: ItemName,
-  //             category: category,
-  //             price: price,
-  //             quantity: 1,
-  //           },
-  //         ];
+  const onItemClicked = () => {
+    const filterData =
+      cartData.length > 0
+        ? cartData.findIndex((item: any) => item.productName === productName) !== -1
+          ? cartData.map((item: any) =>
+              item.id === id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          : [
+              ...cartData,
+              {
+                id: id,
+                productName: productName,
+                category: category,
+                price: price,
+                quantity: 1,
+              },
+            ]
+        : [
+            {
+              id: id,
+              productName: productName,
+              category: category,
+              price: price,
+              quantity: 1,
+            },
+          ];
 
-  //   console.log(" filterd data", filterData);
-  //   setCartData(filterData);
-  // };
+    console.log(" filterd data", filterData);
+    setCartData(filterData);
+  };
   return (
     <Card maxW={{ base: "full", lg: "sm" }} key={id}>
       <CardBody>
@@ -115,7 +115,7 @@ const OrderItem = (props: OrderItemsProps) => {
           variant={"solid"}
           colorScheme="orange"
           rounded={"full"}
-          // onClick={onItemClicked}
+          onClick={onItemClicked}
         >
           Add to cart
         </Button>

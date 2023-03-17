@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   Card,
   Flex,
@@ -24,14 +24,26 @@ import {
 import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
-import { generateUID, InventoryRequestPayload, NotificationStatus } from "../../common/utils";
+import {
+  generateUID,
+  InventoryRequestPayload,
+  NotificationStatus,
+} from "../../common/utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNotification } from "../../../contexts/Notification";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../../../contexts/AppStoreContext";
 
-const AddInventory = () => {
+interface AddInventoryProps {
+  children?: ReactNode;
+  isUpdate?: boolean;
+  setIsUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const AddInventory = (props: AddInventoryProps) => {
   const [formData, setFormData] = useState<InventoryRequestPayload>();
+  const [defaultValues, setDefaultValues] = useState({});
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
   const {
     handleSubmit,
     register,
@@ -39,8 +51,13 @@ const AddInventory = () => {
   } = useForm();
   const navigate = useNavigate();
   const { setShowNotification } = useNotification();
+  const { AppStoreData } = useAppStore();
 
-  const props: UploadProps = {
+  useEffect(() => {
+    setDefaultValues(AppStoreData?.inventoryData?.inventoryUpdateData);
+    setForUpdate(AppStoreData?.inventoryData?.forUpdate);
+  }, []);
+  const file_props: UploadProps = {
     name: "file",
     multiple: true,
     action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
@@ -59,28 +76,63 @@ const AddInventory = () => {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
+  const prepareData = () => {
+    const formattedData = {
+      id: (defaultValues as any).id,
+      productName: (defaultValues as any).productName,
+      category: (defaultValues as any).category,
+      description: (defaultValues as any).description,
+      price: (defaultValues as any).price,
+      discount: (defaultValues as any).discount,
+      isAvailable: (defaultValues as any).isAvailable,
+      tax: (defaultValues as any).tax,
+    };
+    return formattedData;
+  };
 
   const onSubmitClicked = () => {
-    const preparedPayload = { ...formData, id: "I"+ generateUID() };
-    console.log("payload of inventory", preparedPayload);
-    axios
-      .post("http://localhost:5000/api/admin/v1/add-item", preparedPayload)
-      .then((response) => {
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Successfully Item added to invetory..!",
-          showAlert: true,
+    if (!forUpdate) {
+      const preparedPayload = { ...formData, id: "I" + generateUID() };
+      console.log("payload of inventory", preparedPayload);
+      axios
+        .post("http://localhost:5000/api/admin/v1/add-item", preparedPayload)
+        .then((response) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Successfully Item added to invetory..!",
+            showAlert: true,
+          });
+          navigate("/inventory");
+        })
+        .catch((error) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to added Item to invetory..!",
+            showAlert: true,
+          });
         });
-        navigate("/inventory");
-
-      })
-      .catch((error) => {
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Failed to added Item to invetory..!",
-          showAlert: true,
+    } else {
+      const data = prepareData();
+      const payload = { ...data, ...formData };
+      console.log("******* update mode:", payload);
+      axios
+        .put("http://localhost:5000/api/admin/v1/update-item", payload)
+        .then((response) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Successfully Item added to invetory..!",
+            showAlert: true,
+          });
+          navigate("/inventory");
+        })
+        .catch((error) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to added Item to invetory..!",
+            showAlert: true,
+          });
         });
-      });
+    }
   };
 
   return (
@@ -134,6 +186,7 @@ const AddInventory = () => {
                       {...register("productName", {
                         required: "Product Name is required",
                       })}
+                      defaultValue={(defaultValues as any)?.productName}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -151,6 +204,7 @@ const AddInventory = () => {
                     <Textarea
                       placeholder="Enter product summary here.."
                       {...register("description")}
+                      defaultValue={(defaultValues as any)?.description}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -173,11 +227,15 @@ const AddInventory = () => {
                       <Input
                         placeholder="Enter amount"
                         type={"number"}
+                        defaultValue={(defaultValues as any)?.price}
                         {...register("price", {
                           required: "Price is required",
                         })}
                         onChange={(e) => {
-                          const data = { ...formData, price: Number(e.target.value) };
+                          const data = {
+                            ...formData,
+                            price: Number(e.target.value),
+                          };
                           setFormData(data as any);
                         }}
                       />
@@ -191,6 +249,7 @@ const AddInventory = () => {
                     <Input
                       placeholder="Enter discount"
                       type="number"
+                      defaultValue={(defaultValues as any)?.discount}
                       {...register("discount", {
                         required: "Discount is required",
                       })}
@@ -210,6 +269,7 @@ const AddInventory = () => {
                       {...register("isAvailable", {
                         required: "Is available is required",
                       })}
+                      defaultValue={(defaultValues as any)?.isAvailable}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -243,7 +303,7 @@ const AddInventory = () => {
                   mx="4"
                   my="4"
                 />
-                <Dragger {...props} style={{ width: "100%" }}>
+                <Dragger {...file_props} style={{ width: "100%" }}>
                   <Flex alignItems={"center"} direction="column" py="4" px="8">
                     <p className="ant-upload-drag-icon">
                       <FaInbox width={40} height={40} />
@@ -279,6 +339,7 @@ const AddInventory = () => {
                     <FormLabel fontSize={"xs"}>Product Category</FormLabel>
                     <Select
                       placeholder="Select option"
+                      defaultValue={(defaultValues as any)?.category}
                       {...register("category", {
                         required: "Category is required",
                       })}
@@ -318,6 +379,7 @@ const AddInventory = () => {
                     <Input
                       placeholder="Enter tax percentage"
                       type="number"
+                      defaultValue={(defaultValues as any)?.tax}
                       {...register("tax", {
                         required: "Tax is required",
                       })}

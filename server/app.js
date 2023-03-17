@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
+var bodyParser = require("body-parser")
+
 const mongoose = require("mongoose");
 
 
@@ -11,7 +13,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin-router')
-
+var customerRouter = require('./routes/customer-router')
 var app = express();
 
 
@@ -36,6 +38,8 @@ db.once("open", function () {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors())
@@ -46,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/customer', customerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

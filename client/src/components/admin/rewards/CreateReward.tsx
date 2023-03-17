@@ -23,47 +23,107 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { ReactNode, useState } from "react";
-import { generateUID, NotificationStatus, RewardsRequestPayload } from "../../common/utils";
+import {
+  generateUID,
+  NotificationStatus,
+  RewardsRequestPayload,
+} from "../../common/utils";
 import { uuid } from "uuidv4";
 import { useForm } from "react-hook-form";
 import { useNotification } from "../../../contexts/Notification";
-
+import { DatePicker } from "antd";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css";
+import { DateRangePicker, DateRange } from "react-date-range";
 interface CreateRewardProps {
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
   children?: ReactNode;
+  defaultData?: any;
+  forUpdate?: boolean;
+  setForUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const CreateReward = (props: CreateRewardProps) => {
-  const { isModalOpen, setIsModalOpen } = props;
+  const { isModalOpen, setIsModalOpen, defaultData, forUpdate, setForUpdate } =
+    props;
   const [formData, setFormData] = useState<RewardsRequestPayload>();
-  const [showField, setShowField] = useState<string>('all');
+  const [showField, setShowField] = useState<string>("all");
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
   const { setShowNotification } = useNotification();
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
+
+
+  const prepareData = () => {
+    const formattedData = {
+      id: (defaultData as any).id,
+      rewardType: (defaultData as any).rewardType,
+      code: (defaultData as any).code,
+      discountPercentage: (defaultData as any).discountPercentage,
+      maxDiscountAmount: (defaultData as any).maxDiscountAmount,
+      minOrderPrice: (defaultData as any).minOrderPrice,
+      appliesTo: (defaultData as any).appliesTo,
+      appliedCategory: (defaultData as any).appliedCategory,
+    };
+    return formattedData;
+  };
 
   const onSubmitClicked = () => {
-    const preparedPayload = { ...formData, id: "R"+ generateUID() };
-    axios
-      .post("http://localhost:5000/api/admin/v1/add-reward", preparedPayload)
-      .then((response) => {
-        setIsModalOpen(false);
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Reward created successfully..!",
-          showAlert: true,
+    if (!forUpdate) {
+      const preparedPayload = { ...formData, id: "R" + generateUID() };
+      axios
+        .post("http://localhost:5000/api/admin/v1/add-reward", preparedPayload)
+        .then((response) => {
+          setIsModalOpen(false);
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Reward created successfully..!",
+            showAlert: true,
+          });
+        })
+        .catch((error) => {
+          setIsModalOpen(false);
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to create Reward..!",
+            showAlert: true,
+          });
         });
-      })
-      .catch((error) => {
-        setIsModalOpen(false);
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Failed to create Reward..!",
-          showAlert: true,
+    } else {
+      const data = prepareData();
+      const preparedPayload = { ...data, ...formData };
+      axios
+        .put(
+          "http://localhost:5000/api/admin/v1/update-reward",
+          preparedPayload
+        )
+        .then((response) => {
+          setForUpdate(false);
+          setIsModalOpen(false);
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Reward created successfully..!",
+            showAlert: true,
+          });
+        })
+        .catch((error) => {
+          setIsModalOpen(false);
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to create Reward..!",
+            showAlert: true,
+          });
         });
-      });
+    }
   };
   return (
     <React.Fragment>
@@ -71,7 +131,7 @@ const CreateReward = (props: CreateRewardProps) => {
         closeOnOverlayClick={false}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        size="2xl"
+        size="3xl"
       >
         <ModalOverlay />
         <ModalContent>
@@ -81,7 +141,9 @@ const CreateReward = (props: CreateRewardProps) => {
             <Divider />
             <ModalBody p={8}>
               <Grid
-                templateRows={showField==="category"? "repeat(6, 1fr)":"repeat(5, 1fr)"}
+                templateRows={
+                  showField === "category" ? "repeat(6, 1fr)" : "repeat(5, 1fr)"
+                }
                 templateColumns="repeat(2, 1fr)"
                 gap={4}
               >
@@ -96,6 +158,7 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Select
                       placeholder="Reward Type"
+                      defaultValue={defaultData?.rewardType}
                       {...register("rewardType", {
                         required: "Reward type is required",
                       })}
@@ -130,6 +193,7 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Input
                       placeholder="Promo Code"
+                      defaultValue={defaultData?.code}
                       {...register("code", {
                         required: "Reward Code is required",
                       })}
@@ -157,6 +221,7 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Input
                       type="number"
+                      defaultValue={defaultData?.discountPercentage}
                       placeholder="Enter discount"
                       {...register("discountPercentage", {
                         required: "Discount Percentage is required",
@@ -186,6 +251,7 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Input
                       type="number"
+                      defaultValue={defaultData?.maxDiscountAmount}
                       placeholder="Max Discount Amount"
                       {...register("maxDiscountAmount", {
                         required: "Max Disount is required",
@@ -221,6 +287,7 @@ const CreateReward = (props: CreateRewardProps) => {
                       />
                       <Input
                         type="number"
+                        defaultValue={defaultData?.minOrderPrice}
                         placeholder="Min Order Price"
                         {...register("minOrderPrice", {
                           required: "Min Order Price is required",
@@ -250,6 +317,7 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormLabel>
                     <Select
                       placeholder="Reward Applies"
+                      defaultValue={defaultData?.appliesTo}
                       {...register("appliesTo", {
                         required: "Applies To is required",
                       })}
@@ -274,8 +342,56 @@ const CreateReward = (props: CreateRewardProps) => {
                     </FormErrorMessage>
                   </FormControl>
                 </GridItem>
-               {showField === "category" && <GridItem rowSpan={1} colSpan={2}>
-                  <FormControl >
+                {showField === "category" && (
+                  <GridItem rowSpan={1} colSpan={2}>
+                    <FormControl>
+                      <FormLabel
+                        fontSize={"xs"}
+                        textColor="gray.600"
+                        fontWeight={"semibold"}
+                      >
+                        Select Category:
+                      </FormLabel>
+                      <Select
+                        placeholder="Select Category"
+                        defaultValue={defaultData?.appliedCategory}
+                        {...register("appliedCategory")}
+                        onChange={(e) => {
+                          const data = {
+                            ...formData,
+                            appliedCategory: e.target.value,
+                          };
+                          setFormData(data as any);
+                        }}
+                      >
+                        <option
+                          value="appetizers"
+                          style={{ padding: "0 10px" }}
+                        >
+                          Appetizers
+                        </option>
+                        <option value="biryani" style={{ padding: "0 10px" }}>
+                          Biryani
+                        </option>
+                        <option value="soups" style={{ padding: "0 10px" }}>
+                          Soups
+                        </option>
+                        <option value="indo-chinese">Indo Chinese</option>
+                        <option
+                          value="main-course"
+                          style={{ padding: "0 10px" }}
+                        >
+                          Main Course
+                        </option>
+                        <option value="beverages" style={{ padding: "0 10px" }}>
+                          Beverages
+                        </option>
+                      </Select>
+                    </FormControl>
+                  </GridItem>
+                )}
+                <GridItem rowSpan={1} colSpan={2}>
+                  <FormControl>
                     <FormLabel
                       fontSize={"xs"}
                       textColor="gray.600"
@@ -283,36 +399,27 @@ const CreateReward = (props: CreateRewardProps) => {
                     >
                       Select Category:
                     </FormLabel>
-                    <Select
-                      placeholder="Select Category"
-                      {...register("appliedCategory")}
-                      onChange={(e) => {
-                        const data = {
+                    <DateRange
+                      onChange={(item: any) => {
+                        setFormData({
                           ...formData,
-                          appliedCategory: e.target.value,
-                        };
-                        setFormData(data as any);
+                          startTime: new Date(
+                            item?.selection?.startDate
+                          ).getTime(),
+                          endTime: new Date(item?.selection?.endDate).getTime(),
+                        } as any);
+                        setState([item.selection] as any);
                       }}
-                    >
-                      <option value="appetizers" style={{ padding: "0 10px" }}>
-                        Appetizers
-                      </option>
-                      <option value="biryani" style={{ padding: "0 10px" }}>
-                        Biryani
-                      </option>
-                      <option value="soups" style={{ padding: "0 10px" }}>
-                        Soups
-                      </option>
-                      <option value="indo-chinese">Indo Chinese</option>
-                      <option value="main-course" style={{ padding: "0 10px" }}>
-                        Main Course
-                      </option>
-                      <option value="beverages" style={{ padding: "0 10px" }}>
-                        Beverages
-                      </option>
-                    </Select>
+                      showSelectionPreview={true}
+                      moveRangeOnFirstSelection={false}
+                      months={2}
+                      ranges={state}
+                      direction="horizontal"
+                      preventSnapRefocus={true}
+                      calendarFocus="backwards"
+                    />
                   </FormControl>
-                </GridItem>}
+                </GridItem>
               </Grid>
             </ModalBody>
             <Divider />
