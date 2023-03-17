@@ -2,8 +2,8 @@ import {
   Flex,
   Grid,
   GridItem,
-  HStack,
   Image,
+  Input,
   Tab,
   TabList,
   TabPanel,
@@ -12,8 +12,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import OrdersBanner from "../../../assets/orders.jpg";
-import Cart from "../cart/Cart";
 import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
 import { Orders_Catergory } from "../../common/utils";
@@ -23,6 +21,7 @@ import axios from "axios";
 
 const Orders = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [seachfood, setSearchFood] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [data, setData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
@@ -43,11 +42,13 @@ const Orders = () => {
       .then((response) => {
         setData(response.data.items);
         setItemsData(response.data.items);
+        localStorage.setItem("orders",JSON.stringify([]))
       })
       .catch((error) => {
         console.log("Error while retreiveing items: ", error);
       });
   }, []);
+
 
   return (
     <div>
@@ -103,15 +104,26 @@ const Orders = () => {
             {Orders_Catergory.map((index, item) => {
               return (
                 <TabPanel bg={"white"} key={index}>
-                  <Text
-                    fontSize={"2xl"}
-                    fontWeight="semibold"
-                    textColor={"orange.500"}
-                    mx="4"
-                    my="4"
-                  >
-                    Menu
-                  </Text>
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text
+                      fontSize={"2xl"}
+                      fontWeight="semibold"
+                      textColor={"orange.500"}
+                      mx="4"
+                      my="4"
+                    >
+                      Menu
+                    </Text>
+                    {/* <Input
+                      type="text"
+                      placeholder="search food"
+                      width="48"
+                      onChange={(e) => {
+                        setSearchFood(e.target.value);
+                      }}
+                    /> */}
+                  </Flex>
+
                   <Grid
                     mt="4"
                     templateRows={{
@@ -122,13 +134,11 @@ const Orders = () => {
                       base: "repeat(1, 1fr)",
                       lg: "repeat(4, 1fr)",
                     }}
-                    gap={{ base: 3, lg: 8 }}
+                    gap={{ base: 3, lg: 5 }}
                   >
                     {data &&
                       data
-                        ?.filter(
-                          (item: any) => item.category === selectedCategory
-                        )
+                        ?.filter((item: any) => item.isAvailable === true)
                         .map((orders, index) => {
                           return (
                             <GridItem
