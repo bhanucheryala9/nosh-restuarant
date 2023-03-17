@@ -27,7 +27,6 @@ import Inventory from "./components/admin/inventory/Inventory";
 import Test from "./components/Test";
 import UserProvider, { useUser } from "./contexts/UserContext";
 import AppStoreProvider from "./contexts/AppStoreContext";
-import StripeContainer from "./components/customer/payments/StripeContainer";
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -57,7 +56,6 @@ function App() {
                       <Route path="/signup" element={<SignUp />} />
                       <Route path="/orders" element={<Orders />} />
                       <Route path="/sales" element={<SalesDashboard />} />
-                      <Route path="/payments" element={<StripeContainer />} />
                       <Route
                         path="/purchase-history"
                         element={<PurchaseHistory />}

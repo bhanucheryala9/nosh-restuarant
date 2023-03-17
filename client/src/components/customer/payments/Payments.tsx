@@ -16,7 +16,6 @@ import {
 import payments from "../../../assets/payments.jpg";
 import { useForm } from "react-hook-form";
 import { SiAmazonpay } from "react-icons/si";
-import StripeContainer from "./StripeContainer";
 import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements } from "@stripe/react-stripe-js";
 import PaymentForm from "./PaymentForm";
