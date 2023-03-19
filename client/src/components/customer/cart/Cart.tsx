@@ -13,6 +13,9 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../../../contexts/AppStoreContext";
+import { useCart } from "../../../contexts/CartContext";
 import { OrderInfo } from "../orders/OrderItem";
 import CartItem from "./CartItem";
 
@@ -24,6 +27,21 @@ const Cart = () => {
   const navigate = useNavigate();
   const [cartInfo, setCartInfo] = useState([]);
 
+  useEffect(() => {
+    const amount = cartInfo?.reduce((acc: any, item: OrderInfo) => {
+      return acc + item?.quantity * item?.price;
+    }, 0);
+    setTotalAmount(amount);
+    setTaxAmount(amount / 8);
+  }, [cartInfo]);
+
+  useEffect(()=>{
+    const cartdata = JSON.parse(localStorage.getItem("orders") ||"")
+    setCartInfo(cartdata)
+  },[localStorage.getItem("orders")])
+  // useEffect(() => {
+  //   setCartInfo(cartData);
+  // }, [cartData]);
 
   const onSubmitClicked = () => {
     localStorage.setItem("orders", JSON.stringify(cartInfo));
@@ -31,8 +49,6 @@ const Cart = () => {
     // setAppStoreData({ ...AppStoreData, finalCartData: cartData });
     navigate("/payment");
   };
-
-
 
   return (
     <div>
