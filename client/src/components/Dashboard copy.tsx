@@ -1,6 +1,16 @@
 import React from 'react'
 
-function Dashboard copy() {
+const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { userData } = useUser();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
      <Flex direction={"column"}>
       {!isLoading && <Loader />}
@@ -211,6 +221,72 @@ function Dashboard copy() {
           </GridItem>
         </Grid>
       </Flex>
+
+      <Text
+          fontFamily={"'Nunito', sans-serif"}
+          fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+          fontWeight={"semibold"}
+          mt="6"
+        >
+          Food Suggestion
+        </Text>
+        <Text
+          fontFamily={"'Nunito', sans-serif"}
+          fontSize={{ base: "sm", lg: "lg" }}
+          mt="2"
+          mb="6"
+        >
+          choose your own taste
+        </Text>
+        <Flex>
+          {usersFood["test@gmail.com"].map((item) => {
+            return (
+              <Flex
+                border={"1px solid"}
+                borderColor="orange.500"
+                px="4"
+                py="6"
+                borderRadius={"lg"}
+                direction={"column"}
+                alignItems="center"
+                mx="2"
+                mt="4"
+                _hover={{
+                  backgroundColor: "orange.50",
+                }}
+                cursor="pointer"
+              >
+                <Image
+                  filter="auto"
+                  brightness="70%"
+                  maxHeight={"56"}
+                  minW={{ base: "full", lg: "xs" }}
+                  src={item.url !== "" ? item.url : biryani}
+                  alt="Green double couch with wooden legs"
+                  borderRadius="lg"
+                />
+                <Text
+                  fontSize={"2xl"}
+                  fontWeight="semibold"
+                  mt="6"
+                  letterSpacing={"wide"}
+                >
+                  {item.productName}
+                </Text>
+                <Text
+                  fontSize={"3xl"}
+                  fontWeight="bold"
+                  my="2"
+                  letterSpacing={"wide"}
+                  textColor="orange.500"
+                >
+                  ${item.price}
+                </Text>
+                <Divider />
+                <Button my="4" width={"xs"} colorScheme="orange">
+                  Add to Cart
+                </Button>
+              </Flex>
   )
 }
 
