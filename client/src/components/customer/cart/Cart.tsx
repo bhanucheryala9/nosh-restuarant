@@ -17,8 +17,20 @@ import { OrderInfo } from "../orders/OrderItem";
 import CartItem from "./CartItem";
 
 const Cart = () => {
+  const { isCartOpen, setIsCartOpen,  } = useCart();
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [tax, setTaxAmount] = useState<number>(0);
+  const { AppStoreData, setAppStoreData } = useAppStore();
+  const navigate = useNavigate();
+  const [cartInfo, setCartInfo] = useState([]);
 
 
+  const onSubmitClicked = () => {
+    localStorage.setItem("orders", JSON.stringify(cartInfo));
+    setIsCartOpen(false);
+    // setAppStoreData({ ...AppStoreData, finalCartData: cartData });
+    navigate("/payment");
+  };
 
 
 
