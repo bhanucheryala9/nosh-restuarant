@@ -1,7 +1,7 @@
 import React from "react";
 
 function Tracking() {
-  returnreturn(
+  return (
     <React.Fragment>
       <Flex w="100%" justifyContent="center" alignItems="center">
         <Flex
