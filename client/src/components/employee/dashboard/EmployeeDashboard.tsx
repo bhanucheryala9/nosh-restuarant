@@ -1,26 +1,22 @@
 import {
     Button,
-    Code,
     Flex,
     Grid,
     GridItem,
     HStack,
     StackDivider,
     Text,
-    Box,
+    Image,
     VStack,
   } from "@chakra-ui/react";
-  import { Divider, UploadProps } from "antd";
-  import Dragger from "antd/es/upload/Dragger";
+  import { Divider, Empty } from "antd";
   import axios from "axios";
-  import React, { createRef, useEffect, useState } from "react";
-  import Dropzone from "react-dropzone";
-  import { FaInbox } from "react-icons/fa";
-  import { Segmented, Space } from "antd";
+  import React, { useEffect, useState } from "react";
+  import { Segmented } from "antd";
   import { useNavigate } from "react-router-dom";
   import _ from "lodash";
   import { useNotification } from "../../../contexts/Notification";
-  
+  import ta from "time-ago";
   interface EOrdersColumns {
     orderId: string;
     firstName: string;
@@ -38,6 +34,7 @@ import {
       category: string;
       price: number;
       quantity: number;
+      url: string;
     }>;
     totalAmount: number;
     orderStatus: string;
@@ -56,6 +53,7 @@ import {
       category: string;
       price: number;
       quantity: number;
+      url: string;
     }>;
     noOfItems: number;
     totalAmount: number;
@@ -63,14 +61,12 @@ import {
     createdAt: Date | string;
   }
   const EmployeeDashboard = () => {
-    const [segmentValue, setSegmentValue] = useState<string>("New");
+    const [segmentValue, setSegmentValue] = useState<string>("processing");
     const [eordersData, setEOrdersData] = useState<EOrdersColumns[]>([]);
     const [selectedOrder, setSelectedOrder] = useState<EOrdersColumns>();
     const [tableData, setTableData] = useState<EorderTableColumns[]>([]);
-    const [orderChangeDetails, setOrderChangeDetails] = useState({
-      orderId: "",
-      orderStatus: "processing",
-    });
+    const [ordersData, setOrdersData] = useState<EOrdersColumns[]>([]);
+  
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [forUpdate, setForUpdate] = useState<boolean>(false);
     const [toUpdateData, setToUpdateData] = useState();
@@ -103,8 +99,12 @@ import {
       axios
         .get("http://localhost:5000/api/admin/v1/get-orders")
         .then((response) => {
-          setEOrdersData(response.data.items);
-          setSelectedOrder(response.data.items[0]);
+          const item = response.data?.items?.filter(
+            (item: any) => item.orderStatus === segmentValue
+          );
+          setEOrdersData(item);
+          setOrdersData(response.data.items);
+          setSelectedOrder(item[0]);
           setTableData(prepareData(response.data.items));
           setIsLoading(false);
         })
@@ -112,6 +112,14 @@ import {
           setIsLoading(false);
         });
     }, []);
+  
+    useEffect(() => {
+      const updatedData = ordersData?.filter(
+        (item) => item.orderStatus === segmentValue
+      );
+      setEOrdersData(updatedData);
+      setSelectedOrder(updatedData[0]);
+    }, [segmentValue]);
   
     const onStatusUpdateClicked = () => {
       const status =
@@ -121,12 +129,37 @@ import {
           ? "ready"
           : "ready";
       const payload = { ...selectedOrder, orderStatus: status };
-      console.log("*********** updated status payload:", payload);
       setIsLoading(true);
       axios
         .put("http://localhost:5000/api/admin/v1/update-order-status", payload)
         .then((response) => {
-          setEOrdersData(response.data.items);
+          const item = response.data?.items?.filter(
+            (item: any) => item.orderStatus === segmentValue
+          );
+          setEOrdersData(item);
+          setOrdersData(response.data.items);
+          setSelectedOrder(item[0]);
+          setTableData(prepareData(response.data.items));
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setIsLoading(false);
+        });
+    };
+  
+    const onCancelClicked = () => {
+      const status = "cancel";
+      const payload = { ...selectedOrder, orderStatus: status };
+      setIsLoading(true);
+      axios
+        .put("http://localhost:5000/api/admin/v1/update-order-status", payload)
+        .then((response) => {
+          const item = response.data?.items?.filter(
+            (item: any) => item.orderStatus === segmentValue
+          );
+          setEOrdersData(item);
+          setOrdersData(response.data.items);
+          setSelectedOrder(item[0]);
           setTableData(prepareData(response.data.items));
           setIsLoading(false);
         })
@@ -166,6 +199,7 @@ import {
                   { label: "New", value: "processing" },
                   { label: "Preparing", value: "preparing" },
                   { label: "Ready", value: "ready" },
+                  { label: "Cancelled", value: "cancel" },
                 ]}
                 onChange={(value) => {
                   setSegmentValue(value as string);
@@ -194,7 +228,7 @@ import {
                           </Text>
                           <Text fontSize={"xs"} textColor={"gray.500"}>
                             {" "}
-                            a few min ago
+                            {ta.ago(data.createdAt)}
                           </Text>
                         </VStack>
                         <Text fontSize={"xl"} fontWeight={"bold"}>
@@ -214,93 +248,127 @@ import {
               py="4"
               px="8"
             >
-              <Text
-                fontSize={"2xl"}
-                fontWeight={"semibold"}
-                textColor={"orange.600"}
-              >
-                Order Info{" "}
-              </Text>
-              <HStack
-                divider={<StackDivider borderColor="gray.300" />}
-                gap={4}
-                my="4"
-                width={"100%"}
-              >
-                <VStack
-                  minW={"30%"}
-                  alignItems={"start"}
-                  gap={0}
-                  justifyContent={"start"}
-                  justifyItems={"start"}
-                >
-                  <Text fontSize={"xs"} textColor={"gray.600"}>
-                    Order ID
+              {selectedOrder?.orderId !== undefined ? (
+                <>
+                  {" "}
+                  <Text
+                    fontSize={"2xl"}
+                    fontWeight={"semibold"}
+                    textColor={"orange.600"}
+                  >
+                    Order Info{" "}
                   </Text>
-                  <Text fontSize={"md"} fontWeight={"semibold"}>
-                    {selectedOrder?.orderId?.toUpperCase()}
-                  </Text>
-                </VStack>
-                <VStack minW={"30%"} alignItems={"start"}>
-                  <Text fontSize={"xs"} textColor={"gray.600"}>
-                    Address
-                  </Text>
-                  <Text fontSize={"md"} fontWeight={"semibold"}>
-                    {selectedOrder?.address?.addressLine1},{" "}
-                    {selectedOrder?.address.city}
-                  </Text>
-                </VStack>
-                <VStack minW={"35%"} alignItems={"start"}>
-                  <Text fontSize={"xs"} textColor={"gray.600"}>
-                    Personal Details
-                  </Text>
-                  <Text fontSize={"md"} fontWeight={"semibold"}>
-                    {selectedOrder?.lastName}
-                  </Text>
-                </VStack>
-              </HStack>
-              <Flex width={"100%"} mt="10" direction={"column"}>
-                {selectedOrder?.orderDetails?.map((item) => {
-                  return (
-                    <VStack width={"100%"} py="2">
-                      <Flex justifyContent={"space-between"} width={"100%"}>
-                        <Text fontSize={"large"} fontWeight={"semibold"}>
-                          {item.productName}
-                        </Text>
-                        <HStack gap={20}>
-                          <Text fontSize={"md"}>Quantity: {item.quantity}</Text>
-                          <Text fontSize={"lg"} fontWeight={"semibold"}>
-                            Price: ${item.price}
-                          </Text>
-                        </HStack>
-                      </Flex>
-                      <Divider />
+                  <HStack
+                    divider={<StackDivider borderColor="gray.300" />}
+                    gap={4}
+                    my="4"
+                    width={"100%"}
+                  >
+                    <VStack
+                      minW={"30%"}
+                      alignItems={"start"}
+                      gap={0}
+                      justifyContent={"start"}
+                      justifyItems={"start"}
+                    >
+                      <Text fontSize={"xs"} textColor={"gray.600"}>
+                        Order ID
+                      </Text>
+                      <Text fontSize={"md"} fontWeight={"semibold"}>
+                        {selectedOrder?.orderId?.toUpperCase()}
+                      </Text>
                     </VStack>
-                  );
-                })}
-                <Flex mt="4" direction={"column"} alignItems={"end"}>
-                  <Text fontSize={"lg"} fontWeight={"semibold"}>
-                    Total Price: $
-                    {((selectedOrder?.totalAmount || 0) / 100).toFixed(2)}
-                  </Text>
-                  <Button
-                    colorScheme="orange"
-                    mt="6"
-                    maxW={"40"}
-                    onClick={onStatusUpdateClicked}
-                  >
-                    Accept Order
-                  </Button>
-                  <Button
-                    colorScheme="orange"
-                    mt="6"
-                    maxW={"40"}
-                    onClick={onStatusUpdateClicked}
-                  >
-                    Accept Order
-                  </Button>
+                    <VStack minW={"30%"} alignItems={"start"}>
+                      <Text fontSize={"xs"} textColor={"gray.600"}>
+                        Address
+                      </Text>
+                      <Text fontSize={"md"} fontWeight={"semibold"}>
+                        {selectedOrder?.address?.addressLine1},{" "}
+                        {selectedOrder?.address.city}
+                      </Text>
+                    </VStack>
+                    <VStack minW={"35%"} alignItems={"start"}>
+                      <Text fontSize={"xs"} textColor={"gray.600"}>
+                        Personal Details
+                      </Text>
+                      <Text fontSize={"md"} fontWeight={"semibold"}>
+                        {_.capitalize(selectedOrder?.lastName)}
+                      </Text>
+                    </VStack>
+                  </HStack>
+                  <Flex width={"100%"} mt="10" direction={"column"}>
+                    {selectedOrder?.orderDetails?.map((item) => {
+                      return (
+                        <VStack width={"100%"} py="2">
+                          <Flex justifyContent={"space-between"} width={"100%"}>
+                            <Flex alignItems={"center"}>
+                              <Image
+                                src={item.url}
+                                width={"12"}
+                                h={"12"}
+                                borderRadius={"xl"}
+                              />
+                              <Text
+                                fontSize={"large"}
+                                fontWeight={"semibold"}
+                                ml="4"
+                              >
+                                {item.productName}
+                              </Text>
+                            </Flex>
+  
+                            <HStack gap={20}>
+                              <Text fontSize={"md"}>
+                                Quantity: {item.quantity}
+                              </Text>
+                              <Text fontSize={"lg"} fontWeight={"semibold"}>
+                                Price: ${item.price}
+                              </Text>
+                            </HStack>
+                          </Flex>
+                          <Divider />
+                        </VStack>
+                      );
+                    })}
+                    <Flex mt="4" direction={"column"} alignItems={"end"}>
+                      <Text fontSize={"lg"} fontWeight={"semibold"}>
+                        Total Price: $
+                        {((selectedOrder?.totalAmount || 0) / 100).toFixed(2)}
+                      </Text>
+  
+                      {segmentValue !== "cancel" && segmentValue !== "ready" && (
+                        <Flex mt="6" alignItems="center">
+                          <Button
+                            colorScheme="red"
+                            mt="6"
+                            maxW={"40"}
+                            onClick={onCancelClicked}
+                          >
+                            Cancel Order
+                          </Button>
+                          <Button
+                            colorScheme="green"
+                            mt="6"
+                            ml="4"
+                            maxW={"40"}
+                            onClick={onStatusUpdateClicked}
+                          >
+                            {segmentValue === "processing"
+                              ? "Accept Order"
+                              : segmentValue === "preparing"
+                              ? "Ready Order"
+                              : "ready"}
+                          </Button>
+                        </Flex>
+                      )}
+                    </Flex>
+                  </Flex>
+                </>
+              ) : (
+                <Flex py="10" alignItems="center" justifyContent="center">
+                  <Empty />
                 </Flex>
-              </Flex>
+              )}
             </GridItem>
           </Grid>
         </Flex>
