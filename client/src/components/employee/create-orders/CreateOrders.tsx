@@ -73,6 +73,103 @@ const CreateOrders = () => {
       });
       return data1;
     };
+    useEffect(() => {
+        axios
+          .get("http://34.235.166.147:5000/api/admin/v1/get-items")
+          .then((response) => {
+            setOrders(prepareData(response.data.items));
+            setItemsData(prepareData(response.data.items))
+          })
+          .catch((error) => {
+            console.log("Error while retreiveing items: ", error);
+          });
+      }, []);
+    
+      const orderItem = (item: any) => {
+        return (
+          <>
+            <Flex
+              bg="gray.100"
+              borderRadius={"2xl"}
+              direction={"column"}
+              maxW={"300px"}
+            >
+              <Image
+                src={item.url}
+                width={"300px"}
+                height={"200px"}
+                borderRadius={"xl"}
+              />
+              <Flex mt="2" mb="3" mx="4" direction={"column"}>
+                <Text fontSize={"lg"} fontWeight={"semibold"} my="2">
+                  {_.capitalize(item.productName)}
+                </Text>
+                <Text fontSize={"xs"} fontWeight={"semibold"} mt="-1" mb="2">
+                  {_.capitalize(item.description.slice(0, 35)) + "...."}
+                </Text>
+    
+                <Flex justifyContent={"space-between"} alignItems={"center"}>
+                  <Text fontSize={"xl"} fontWeight={"bold"}>
+                    ${item.price}
+                  </Text>
+                  {item.quantity === 0 ? (
+                    <Button
+                      colorScheme="orange"
+                      rounded={"full"}
+                      borderRadius={"full"}
+                      size={"md"}
+                      onClick={() => handleCart(item, "add")}
+                    >
+                      order
+                    </Button>
+                  ) : (
+                    <HStack>
+                      <Button
+                        colorScheme="orange"
+                        rounded={"full"}
+                        size={"sm"}
+                        onClick={() => handleCart(item, "minus")}
+                      >
+                        -
+                      </Button>
+                      <Text fontSize={"md"} fontWeight={"semibold"}>
+                        {item.quantity}
+                      </Text>
+                      <Button
+                        colorScheme="orange"
+                        rounded={"full"}
+                        size={"sm"}
+                        onClick={() => handleCart(item, "add")}
+                      >
+                        +
+                      </Button>
+                    </HStack>
+                  )}
+                </Flex>
+              </Flex>
+            </Flex>
+          </>
+        );
+      };
+    
+      const onPayClicked = () => {
+        const payload = ((orders as any) || [])
+          .filter((item: any) => item.quantity !== 0)
+          .map((food: any) => {
+            return {
+              category: food.category,
+              id: food.id,
+              price: food.price,
+              productName: food.productName,
+              quantity: food.quantity,
+              url: food.url,
+            };
+          });
+    
+        localStorage.setItem("orders", JSON.stringify(payload));
+        navigate("/payment");
+      };
+    
   
     return(
         <Flex direction={"column"} mx="6" my="6">
