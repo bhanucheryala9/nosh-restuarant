@@ -100,7 +100,122 @@ const SalesDashboard = () => {
     });
     const [showCreateRewardModal, setShowCreateRewardModal] =
     useState<boolean>(false);
-
+    const prepareData = (data: EOrdersColumns[]) => {
+        const stats = data.reduce(
+          (accumulator: any, currentValue) => {
+            if (currentValue.orderStatus === "processing") {
+              return { ...accumulator, processing: 1 + accumulator.processing };
+            } else if (currentValue.orderStatus === "ready") {
+              return { ...accumulator, ready: 1 + accumulator.ready };
+            } else if (currentValue.orderStatus === "preparing") {
+              return { ...accumulator, preparing: 1 + accumulator.preparing };
+            } else {
+              return accumulator;
+            }
+          },
+          {
+            total: data.length || 0,
+            ready: 0,
+            processing: 0,
+            preparing: 0,
+          }
+        );
+        setOrderStats(stats);
+        const formattedData = data.reduce((accumulator: any, currentValue) => {
+          return [
+            ...accumulator,
+            {
+              id: currentValue.orderId,
+              orderId: currentValue.orderId,
+              name: currentValue.lastName + " " + currentValue.firstName,
+              email: currentValue.email,
+              orderDetails: currentValue.orderDetails,
+              noOfItems: currentValue.orderDetails?.length || 0,
+              totalAmount: currentValue.totalAmount,
+              orderStatus: currentValue.orderStatus,
+              createdAt: currentValue.createdAt,
+            },
+          ];
+        }, []);
+        return formattedData;
+      };
+      const columns: ColumnsType<EorderTableColumns> = [
+        {
+          title: "Id",
+          dataIndex: "orderId",
+          render: (text) => (
+            <>
+              <Link>{(text as string).toUpperCase()}</Link>
+            </>
+          ),
+        },
+        {
+          title: "Name",
+          dataIndex: "name",
+          render: (text) => <div>{_.capitalize(text)}</div>,
+        },
+        {
+          title: "No of Items",
+          dataIndex: "noOfItems",
+        },
+        {
+          title: "Amount",
+          dataIndex: "totalAmount",
+          render: (text) => <>${text / 100}</>,
+        },
+        {
+          title: "Order Status",
+          dataIndex: "orderStatus",
+          render: (text) => (
+            <>
+              {
+                <Tag
+                  size={"md"}
+                  key={"text"}
+                  borderRadius="full"
+                  variant="solid"
+                  colorScheme={getStatusColors(text)}
+                  p="1"
+                >
+                  <TagLabel mx="4">{_.upperCase(text)}</TagLabel>
+                </Tag>
+              }
+            </>
+          ),
+        },
+      ];
+      useEffect(() => {
+        const formattedData = admin_orders.reduce(
+          (accumulator: any, currentValue) => {
+            return [
+              ...accumulator,
+              {
+                key: currentValue.orderID,
+                ...currentValue,
+              },
+            ];
+          },
+          []
+        );
+    
+        setIsLoading(true);
+        axios
+          .get("http://34.235.166.147:5000/api/admin/v1/get-orders")
+          .then((response) => {
+            setEOrdersData(response.data.items);
+            setTableData(prepareData(response.data.items));
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setIsLoading(false);
+          });
+        setRewardsData(formattedData);
+      }, []);
+    
+      const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+      };
+    
 return(
 <>
 <Flex mx={{ base: "4", lg: "10" }} mt="6" direction={"column"}>
