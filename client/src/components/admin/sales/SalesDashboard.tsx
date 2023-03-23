@@ -215,7 +215,101 @@ const SalesDashboard = () => {
       const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
       };
+      const data = [
+        {
+          name: "Jan 2021",
+          "Product A": 3432,
+          "Procuct B": 2342,
+        },
+        {
+          name: "Feb 2021",
+          "Product A": 2342,
+          "Procuct B": 7746,
+        },
+        {
+          name: "Mar 2021",
+          "Product A": 4565,
+          "Procuct B": 2556,
+        },
+        {
+          name: "Apr 2021",
+          "Product A": 6654,
+          "Procuct B": 4465,
+        },
+        {
+          name: "May 2021",
+          "Product A": 8765,
+          "Procuct B": 5553,
+        },
+        {
+          name: "May 2021",
+          "Product A": 3432,
+          "Procuct B": 2342,
+        },
+        {
+          name: "Jun 2021",
+          "Product A": 2342,
+          "Procuct B": 7746,
+        },
+        {
+          name: "Jul 2021",
+          "Product A": 4565,
+          "Procuct B": 2556,
+        },
+      ];
     
+      const colors = ["red", "green", "yellow", "blue"];
+    
+      const orderStats1 = [
+        {
+          name: "Total",
+          quantity: "20",
+        },
+        {
+          name: "Processing",
+          quantity: "10",
+        },
+        {
+          name: "Preparing",
+          quantity: "5",
+        },
+        {
+          name: "Ready for Pickup",
+          quantity: "5",
+        },
+      ];
+    
+      const getStatusComponent = () => {
+        return Object.entries(orderStats || {}).map((item, index) => {
+          return (
+            <GridItem colSpan={1} rowSpan={1}>
+              <Flex
+                bg="white"
+                shadow="base"
+                px="8"
+                py="5"
+                rounded="lg"
+                alignItems={"center"}
+              >
+                <HStack mx={10} gap={6}>
+                  <Icon
+                    color={`${colors[index]}.500`}
+                    aria-label="Send email"
+                    as={ChatIcon}
+                    boxSize="12"
+                  />
+                  <Stat>
+                    <StatLabel fontSize={"md"}>{_.capitalize(item[0])}</StatLabel>
+                    <StatNumber textColor={`${colors[index]}.600`} fontSize={"3xl"}>
+                      {item[1]}
+                    </StatNumber>
+                  </Stat>
+                </HStack>
+              </Flex>
+            </GridItem>
+          );
+        });
+      };
 return(
 <>
 <Flex mx={{ base: "4", lg: "10" }} mt="6" direction={"column"}>
