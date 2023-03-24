@@ -131,10 +131,9 @@ const AddInventory = (props: AddInventoryProps) => {
         });
     }
   };
-  
+
   return (
-    <div>
-      <h2>Inventory Management</h2>
+    <React.Fragment>
       <form onSubmit={handleSubmit(onSubmitClicked)}>
         <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
           <Flex justifyContent={"space-between"}>
@@ -151,83 +150,143 @@ const AddInventory = (props: AddInventoryProps) => {
               Add Product
             </Button>
           </Flex>
+
+          <Grid
+            my={4}
+            templateRows={{ base: "repeat(8, 1fr)", lg: "repeat(2, 1fr)" }}
+            templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(7, 1fr)" }}
+            gap={4}
+          >
+            <GridItem colSpan={{ base: 1, lg: 4 }} rowSpan={{ base: 4, lg: 2 }}>
+              <Flex
+                bg="white"
+                pt="4"
+                pb="10"
+                px="6"
+                borderRadius={"md"}
+                w="100%"
+                direction={"column"}
+              >
+                <Code
+                  bg="gray.50"
+                  children="Genaral Information"
+                  p="2"
+                  width={"99%"}
+                  mx="1"
+                  my="4"
+                />
+                <form>
+                  <FormControl mt="4" isInvalid={!!errors["productName"]}>
+                    <FormLabel fontSize={"xs"}>Product Name</FormLabel>
+                    <Input
+                      placeholder="Enter product name"
+                      {...register("productName", {
+                        required: "Product Name is required",
+                      })}
+                      defaultValue={(defaultValues as any)?.productName}
+                      onChange={(e) => {
+                        const data = {
+                          ...formData,
+                          productName: e.target.value,
+                        };
+                        setFormData(data as any);
+                      }}
+                    />
+                    
+                  </FormControl>
+                  <FormControl mt="4" isInvalid={!!errors["price"]}>
+                    <FormLabel fontSize={"xs"}>Price</FormLabel>
+                    <InputGroup>
+                      <InputLeftElement
+                        pointerEvents="none"
+                        color="gray.300"
+                        fontSize="1.2em"
+                        children="$"
+                      />
+                      <Input
+                        placeholder="Enter amount"
+                        type={"number"}
+                        defaultValue={(defaultValues as any)?.price}
+                        {...register("price", {
+                          required: "Price is required",
+                        })}
+                        onChange={(e) => {
+                          const data = {
+                            ...formData,
+                            price: Number(e.target.value),
+                          };
+                          setFormData(data as any);
+                        }}
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>
+                      {errors["price"]?.message as string}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl mt="4" isInvalid={!!errors["discount"]}>
+                    <FormLabel fontSize={"xs"}>Discount</FormLabel>
+                    <Input
+                      placeholder="Enter discount"
+                      type="number"
+                      defaultValue={(defaultValues as any)?.discount}
+                      {...register("discount", {
+                        required: "Discount is required",
+                      })}
+                      onChange={(e) => {
+                        const data = { ...formData, discount: e.target.value };
+                        setFormData(data as any);
+                      }}
+                    />
+                  
+
+                <Flex direction="column" p="4" width={"100%"}>
+                  <FormControl mt="4" isInvalid={!!errors["category"]}>
+                    <FormLabel fontSize={"xs"}>Product Category</FormLabel>
+                    <Select
+                      placeholder="Select option"
+                      defaultValue={(defaultValues as any)?.category}
+                      {...register("category", {
+                        required: "Category is required",
+                      })}
+                      onChange={(e) => {
+                        const data = { ...formData, category: e.target.value };
+                        setFormData(data as any);
+                      }}
+                    >
+                      <option value="appetizers" style={{ padding: "0 10px" }}>
+                        Appetizers
+                      </option>
+                      <option value="biryani" style={{ padding: "0 10px" }}>
+                        Biryani
+                      </option>
+                      <option value="soups" style={{ padding: "0 10px" }}>
+                        Soups
+                      </option>
+                      <option
+                        value="indo-chinese"
+                        style={{ padding: "0 10px" }}
+                      >
+                        Indo Chinese
+                      </option>
+                      <option value="main-course" style={{ padding: "0 10px" }}>
+                        Main Course
+                      </option>
+                      <option value="beverages" style={{ padding: "0 10px" }}>
+                        Beverages
+                      </option>
+                    </Select>
+                    <FormErrorMessage>
+                      {errors["category"]?.message as string}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Flex>
+              </Flex>
+            </GridItem>
+          </Grid>
         </Flex>
       </form>
-
-      <FormControl mt="4" isInvalid={!!errors["price"]}>
-        <FormLabel fontSize={"xs"}>Price</FormLabel>
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents="none"
-            color="gray.300"
-            fontSize="1.2em"
-            children="$"
-          />
-          <Input
-            placeholder="Enter amount"
-            type={"number"}
-            defaultValue={(defaultValues as any)?.price}
-            {...register("price", {
-              required: "Price is required",
-            })}
-            onChange={(e) => {
-              const data = {
-                ...formData,
-                price: Number(e.target.value),
-              };
-              setFormData(data as any);
-            }}
-          />
-        </InputGroup>
-        <FormErrorMessage>
-          {errors["price"]?.message as string}
-        </FormErrorMessage>
-      </FormControl>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-              <td>
-                <button onClick={() => handleRemoveItem(item.id)}>
-                  Remove
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <form onSubmit={handleAddItem}>
-        <h3>Add Item</h3>
-        <label>
-          Item:
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </label>
-        <label>
-          Quantity:
-          <input
-            type="number"
-            value={quantity}
-            onChange={(event) => setQuantity(event.target.value)}
-          />
-        </label>
-        <button type="submit">Add</button>
-      </form>
-    </div>
+    </React.Fragment>
   );
 };
 
-export default InventoryPage;
+export default AddInventory;
