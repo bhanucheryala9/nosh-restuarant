@@ -5,9 +5,10 @@ interface ProfileProps {
   email: string;
   bio?: string;
   avatar?: string;
+  website?: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ name, email, bio, avatar }) => {
+const Profile: React.FC<ProfileProps> = ({ name, email, bio, avatar, website }) => {
   return (
     <div className="profile">
       {avatar && (
@@ -19,6 +20,13 @@ const Profile: React.FC<ProfileProps> = ({ name, email, bio, avatar }) => {
       )}
       <h1 className="profile__name">{name}</h1>
       <p className="profile__email">{email}</p>
+      {website && (
+        <p className="profile__website">
+          <a href={website} target="_blank" rel="noopener noreferrer">
+            {website}
+          </a>
+        </p>
+      )}
       {bio && <p className="profile__bio">{bio}</p>}
     </div>
   );
