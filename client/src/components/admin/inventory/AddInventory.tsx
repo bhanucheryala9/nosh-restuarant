@@ -192,7 +192,25 @@ const AddInventory = (props: AddInventoryProps) => {
                         setFormData(data as any);
                       }}
                     />
-                    
+                    <FormErrorMessage>
+                      {errors["productName"]?.message as string}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl mt="4">
+                    <FormLabel fontSize={"xs"}>Description</FormLabel>
+                    <Textarea
+                      placeholder="Enter product summary here.."
+                      {...register("description")}
+                      defaultValue={(defaultValues as any)?.description}
+                      onChange={(e) => {
+                        const data = {
+                          ...formData,
+                          description: e.target.value,
+                        };
+
+                        setFormData(data as any);
+                      }}
+                    />
                   </FormControl>
                   <FormControl mt="4" isInvalid={!!errors["price"]}>
                     <FormLabel fontSize={"xs"}>Price</FormLabel>
@@ -237,7 +255,84 @@ const AddInventory = (props: AddInventoryProps) => {
                         setFormData(data as any);
                       }}
                     />
-                  
+                    <FormErrorMessage>
+                      {errors["discount"]?.message as string}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl mt="4" isInvalid={!!errors["isAvailable"]}>
+                    <FormLabel fontSize={"xs"}>Available</FormLabel>
+                    <Select
+                      placeholder="Change Availablity Status"
+                      {...register("isAvailable", {
+                        required: "Is available is required",
+                      })}
+                      defaultValue={(defaultValues as any)?.isAvailable}
+                      onChange={(e) => {
+                        const data = {
+                          ...formData,
+                          isAvailable: e.target.value === "yes" ? true : false,
+                        };
+                        setFormData(data as any);
+                      }}
+                    >
+                      <option value={"yes"}>Yes</option>
+                      <option value={"no"}>No</option>
+                    </Select>
+                    <FormErrorMessage>
+                      {errors["isAvailable"]?.message as string}
+                    </FormErrorMessage>
+                  </FormControl>
+                </form>
+              </Flex>
+            </GridItem>
+            <GridItem
+              colSpan={{ base: 1, lg: 3 }}
+              rowSpan={{ base: 2, lg: 1 }}
+              bg="white"
+              borderRadius={"md"}
+            >
+              <Flex p="4" direction={"column"} alignItems="center">
+                <Code
+                  bg="gray.50"
+                  children="PRODUCT IMAGES"
+                  p="2"
+                  width={"99%"}
+                  mx="4"
+                  my="4"
+                />
+                <Dropzone onDrop={(files) => handleFilesDropped(files)}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      {...getRootProps()}
+                      style={{
+                        border: "1px dashed #ED8936",
+                        padding: "4rem 7rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input {...getInputProps()} />
+                      <p>
+                        Drag 'n' drop some files here, or click to select files
+                      </p>
+                    </div>
+                  )}
+                </Dropzone>
+              </Flex>
+            </GridItem>
+            <GridItem
+              colSpan={{ base: 1, lg: 3 }}
+              rowSpan={{ base: 2, lg: 1 }}
+              bg="white"
+              borderRadius={"md"}
+            >
+              <Flex p="4" direction={"column"} alignItems="center">
+                <Code
+                  bg="gray.50"
+                  children="PRODUCT META INFO"
+                  p="2"
+                  width={"99%"}
+                  mx="4"
+                />
 
                 <Flex direction="column" p="4" width={"100%"}>
                   <FormControl mt="4" isInvalid={!!errors["category"]}>
