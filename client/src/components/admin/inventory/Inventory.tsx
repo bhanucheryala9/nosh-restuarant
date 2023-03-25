@@ -169,6 +169,123 @@ const Inventory = () => {
       });
   };
 
+  // const getActualData = (data:any) =>{
+  //   const userData  =  unformattedEmployeeData.filter((item:any)=> item.id.toLowerCase()=== data.id.toLowerCase());
+  //   return userData[0];
+  // }
+  const onUpdateClicked = (data: any) => {
+    setToUpdateData(data);
+    setForUpdate(true);
+    setAppStoreData({
+      ...AppStoreData,
+      inventoryData: {
+        inventoryUpdateData: data,
+        forUpdate: true,
+      },
+    });
+    navigate("/add-inventory");
+  };
+
+  const columns: ColumnsType<InventoryColumns> = [
+    {
+      title: "Product Name",
+      dataIndex: "productName",
+      ...getColumnSearchProps("productName"),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      sorter: (a, b) => a.price - b.price,
+    },
+    {
+      title: "Discount %",
+      dataIndex: "discount",
+      sorter: (a, b) => a.discount - b.discount,
+    },
+    {
+      title: "Is Available",
+      dataIndex: "isAvailable",
+      filters: [
+        {
+          text: "Yes",
+          value: true,
+        },
+        {
+          text: "No",
+          value: false,
+        },
+      ],
+      onFilter: (value: any, record) => record.isAvailable === value,
+      render: (text) => (
+        <>
+          {text ? (
+            <Tag
+              size={"md"}
+              key={"yes"}
+              borderRadius="full"
+              variant="solid"
+              colorScheme="green"
+              p="1"
+            >
+              <TagLabel mx="4">Yes</TagLabel>
+            </Tag>
+          ) : (
+            <Tag
+              size={"md"}
+              key={"no"}
+              borderRadius="full"
+              variant="solid"
+              colorScheme="red"
+              p="1"
+            >
+              <TagLabel mx="4">No</TagLabel>
+            </Tag>
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <IconButton
+            aria-label="Search database"
+            onClick={() => {
+              onDeleteClicked(record);
+            }}
+            icon={<DeleteIcon />}
+            size="sm"
+          />
+          <IconButton
+            aria-label="Search database"
+            onClick={() => onUpdateClicked(record)}
+            icon={<EditIcon />}
+            size="sm"
+          />
+        </HStack>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get("http://34.235.166.147:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setInventoryData(prepareData(response.data.items));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
     <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
       {isLoading && <Loader />}
