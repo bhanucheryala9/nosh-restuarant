@@ -1,27 +1,91 @@
 import React from "react";
 
 function Dashboard() {
-  const getTrendingItem = (item: any) => {
+
+   const handleCart = (data: any, operation: string, categ: string) => {
+     const updatedData = presentdata?.map((item: any) => {
+       if (operation === "add") {
+         if (item.productName === data.productName) {
+           return {
+             ...item,
+             quantity: item.quantity + 1,
+           };
+         } else {
+           return item;
+         }
+       } else {
+         if (item.productName === data.productName) {
+           return {
+             ...item,
+             quantity: item.quantity - 1,
+           };
+         } else {
+           return item;
+         }
+       }
+     });
+
+     setPresentation(updatedData as any);
+     (dashboardCart as any)[categ] = updatedData;
+     createCart(dashboardCart);
+   };
+
+
+  useEffect(() => {
+    if (selectedCat === 0) {
+      setPresentation((dashboardCart as any)?.budget);
+    } else if (selectedCat === 1) {
+      setPresentation((dashboardCart as any)?.favorite);
+    } else if (selectedCat === 2) {
+      setPresentation((dashboardCart as any)?.ready);
+    } else {
+      setPresentation((dashboardCart as any)?.trending);
+    }
+  }, [dashboardCart, selectedCat]);
+
+  const getCategoriesItem = (index: number) => {
     return (
-      <>
-        <Flex
-          my="2"
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <VStack alignItems="start">
-            <Text fontSize="xl" fontWeight="semibold">
-              {item?.productName}
+      <Flex
+        bg={selectedCat === index ? "orange.400" : "gray.100"}
+        my="2"
+        py="2"
+        px="4"
+        borderRadius="xl"
+        justifyContent="space-between"
+        alignItems="center"
+        cursor="pointer"
+        onClick={() => setSelectedCat(index)}
+      >
+        <Flex direction="row" alignItems="center">
+          {/* <IconButton
+            colorScheme="orange"
+            aria-label="Call Segun"
+            size="lg"
+            icon={<PhoneIcon />}
+          /> */}
+          <Flex alignItems="start" direction="column" py="2" mx="3">
+            <Text
+              fontSize="lg"
+              fontWeight="semibold"
+              textColor={selectedCat === index ? "white" : "black"}
+            >
+              {catergoryLabels[index].label}
             </Text>
-            <Text textColor="orange.500" fontWeight="semibold">
-              ${item?.price}
-            </Text>
-          </VStack>
-          <Image src={item?.url} width="80px" height="80px" borderRadius="xl" />
+            {/* <Text
+              fontSize="md"
+              textColor={selectedCat === index ? "white" : "gray.600"}
+            >
+              {catergoryLabels[index].count} foods
+            </Text> */}
+          </Flex>
         </Flex>
-        <Divider />
-      </>
+        <Icon
+          as={ArrowRightIcon}
+          boxSize={3}
+          mr="4"
+          textColor={selectedCat === index ? "white" : "black"}
+        />
+      </Flex>
     );
   };
 
@@ -99,6 +163,30 @@ function Dashboard() {
           </Flex>
         </Flex>
       </Flex>
+    );
+  };
+
+  const getTrendingItem = (item: any) => {
+    return (
+      <>
+        <Flex
+          my="2"
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <VStack alignItems="start">
+            <Text fontSize="xl" fontWeight="semibold">
+              {item?.productName}
+            </Text>
+            <Text textColor="orange.500" fontWeight="semibold">
+              ${item?.price}
+            </Text>
+          </VStack>
+          <Image src={item?.url} width="80px" height="80px" borderRadius="xl" />
+        </Flex>
+        <Divider />
+      </>
     );
   };
 
