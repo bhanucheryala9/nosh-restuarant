@@ -168,6 +168,63 @@ const Dashboard = () => {
               alignItems="start"
               justifyContent={"center"}
             >
+               <Box maxW={"md"}>
+                <Text
+                  textColor={"orange.600"}
+                  fontSize={"xl"}
+                  fontWeight={"semibold"}
+                >
+                  Vegetable Pakoras
+                </Text>
+                <Text fontSize={"md"}>
+                  Deep-fried fritters made with a mixture of vegetables, gram
+                  flour, and spices. They are crispy on the outside and soft on
+                  the inside, and are usually served with mint chutney or
+                  tamarind chutney.
+                </Text>
+              </Box>
+              <Box maxW={"md"} mt="5">
+                <Text
+                  textColor={"orange.600"}
+                  fontSize="xl"
+                  fontWeight={"semibold"}
+                >
+                  Dahi Bhalla
+                </Text>
+                <Text fontSize={"md"}>
+                  Soft and fluffy lentil dumplings soaked in sweetened yogurt
+                  and topped with tamarind chutney, green chutney, and spices.
+                  It is a perfect blend of sweet and tangy flavors.
+                </Text>
+              </Box>
+              <Box maxW={"md"} mt="5">
+                <Text
+                  textColor={"orange.600"}
+                  fontSize="xl"
+                  fontWeight={"semibold"}
+                >
+                  Samosas
+                </Text>
+                <Text fontSize={"md"}>
+                  Triangular-shaped pastries filled with spiced potatoes, peas,
+                  or meat. They are usually deep-fried and served with chutney
+                  or ketchup.
+                </Text>
+              </Box>
+              <Box maxW={"md"} mt="5">
+                <Text
+                  textColor={"orange.600"}
+                  fontSize="xl"
+                  fontWeight={"semibold"}
+                >
+                  Chilli Chicken
+                </Text>
+                <Text fontSize={"md"}>
+                  A Chinese-inspired dish made with crispy fried chicken tossed
+                  in a spicy and tangy sauce. It is usually served with onion
+                  rings and lemon wedges.
+                </Text>
+              </Box>
            
             </Flex>
           </GridItem>
