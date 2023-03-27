@@ -1,35 +1,196 @@
-import React from "react";
+import {
+  Flex,
+  HStack,
+  Text,
+  Image,
+  Divider,
+  Button,
+  Grid,
+  GridItem,
+  VStack,
+  Icon,
+} from "@chakra-ui/react";
+import "./dashboard.css";
+import Loader from "./common/Loader";
+import { useCallback, useEffect, useState } from "react";
+import biryani from "../assets/biryani.jpg";
+import banner from "../assets/banner.jpg";
+import banner2 from "../assets/banner-2.jpg";
 
-function Dashboard() {
+import usersFood from "../test-data/customer/user-specific.json";
+import { ArrowRightIcon } from "@chakra-ui/icons";
+import _, { upperCase } from "lodash";
+import axios from "axios";
 
-   const handleCart = (data: any, operation: string, categ: string) => {
-     const updatedData = presentdata?.map((item: any) => {
-       if (operation === "add") {
-         if (item.productName === data.productName) {
-           return {
-             ...item,
-             quantity: item.quantity + 1,
-           };
-         } else {
-           return item;
-         }
-       } else {
-         if (item.productName === data.productName) {
-           return {
-             ...item,
-             quantity: item.quantity - 1,
-           };
-         } else {
-           return item;
-         }
-       }
-     });
+const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedCat, setSelectedCat] = useState(0);
+  const [data, setData] = useState([]);
+  const [dataforDashboard, setdataforDashboard] = useState([]);
+  const [dashboardCart, setDashboardCart] = useState();
+  const [presentdata, setPresentation] = useState([]);
+  const [cart, setCart] = useState([]);
 
-     setPresentation(updatedData as any);
-     (dashboardCart as any)[categ] = updatedData;
-     createCart(dashboardCart);
-   };
+  const getCategoryIndexMapper = (index: number) => {
+    if (index === 0) {
+      return "budget";
+    } else if (index === 1) {
+      return "favorite";
+    } else if (index === 3) {
+      return "ready";
+    } else if (index === 4) {
+      return "trending";
+    } else {
+      return "recent";
+    }
+  };
 
+  const createCart = useCallback(
+    (datas: any) => {
+      const items: any = [];
+      Object.entries(datas || {})?.map((item: any) => {
+        return item[1]
+          ?.filter((order: any) => order.quantity !== 0)
+          .map((food: any) => {
+            items.push({
+              category: food.category,
+              id: food.id,
+              price: food.price,
+              productName: food.productName,
+              quantity: food.quantity,
+              url: food.url,
+            });
+          });
+      });
+      localStorage.setItem("orders", JSON.stringify(items));
+      //   category: food.category,
+      //         id: food.id,
+      //         price: food.price,
+      //         productName: food.productName,
+      //         quantity: food.quantity,
+      //         url: food.url,
+      // }
+    },
+    [dashboardCart]
+  );
+
+  const catergoryLabels = [
+    {
+      label: "Budget Friendly",
+      count: 12,
+    },
+    {
+      label: "Restuarant Favorite",
+      count: 14,
+    },
+    {
+      label: "Fastest Near You",
+      count: 22,
+    },
+    {
+      label: "Recommended Items",
+      count: 18,
+    },
+  ];
+
+  const handleCart = (data: any, operation: string, categ: string) => {
+    const updatedData = presentdata?.map((item: any) => {
+      if (operation === "add") {
+        if (item.productName === data.productName) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        } else {
+          return item;
+        }
+      } else {
+        if (item.productName === data.productName) {
+          return {
+            ...item,
+            quantity: item.quantity - 1,
+          };
+        } else {
+          return item;
+        }
+      }
+    });
+
+    setPresentation(updatedData as any);
+    (dashboardCart as any)[categ] = updatedData;
+    createCart(dashboardCart);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const getRandomItem = (arr: any) => {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    const item = arr[randomIndex];
+    return item;
+  };
+  const prepareData = (payload: any) => {
+    const data1 = payload.map((item: any) => {
+      return { ...item, quantity: 0 };
+    });
+    return data1;
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://34.235.166.147:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setData(prepareData(response.data.items));
+        prepareCart(prepareData(response.data.items));
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
+  }, []);
+
+  const prepareCart = useCallback(
+    (cartdata: any) => {
+      const makedata = cartdata;
+      const budget = makedata?.filter((item: any) => Number(item.price) < 10);
+      const trendings: any = [];
+      for (let i = 0; i < 10; i++) {
+        trendings.push(getRandomItem(makedata));
+      }
+      const trending = trendings.filter(
+        (item: any, index: any) => trendings.indexOf(item) === index
+      );
+      const readyfor = makedata
+        ?.filter(
+          (item: any) =>
+            item.category === "appetizers" || item.category === "main-course"
+        )
+        .slice(0, 8);
+      const restu: any = [];
+      for (let i = 0; i < 10; i++) {
+        restu.push(getRandomItem(makedata));
+      }
+      const fav = restu.filter(
+        (item: any, index: any) => restu.indexOf(item) === index
+      );
+      const finalData = {
+        recent: trending.slice(0, 8),
+        trending: trending.slice(0, 8),
+        favorite: fav.slice(0, 8),
+        budget: budget.slice(0, 8),
+        ready: readyfor.slice(0, 8),
+      };
+      setDashboardCart(finalData as any);
+    },
+    [data]
+  );
+
+  useEffect(() => {
+    prepareCart(data);
+  }, [data]);
 
   useEffect(() => {
     if (selectedCat === 0) {
@@ -272,5 +433,5 @@ function Dashboard() {
       </Flex>
     </Flex>
   );
-}
+};
 export default Dashboard;
