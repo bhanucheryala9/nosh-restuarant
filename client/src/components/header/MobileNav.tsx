@@ -9,15 +9,28 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { NavItem, NAV_ITEMS, ADMIN_NAV_ITEMS } from "../common/utils";
+import {
+  NavItem,
+  NAV_ITEMS,
+  ADMIN_NAV_ITEMS,
+  CLIENT_NAV_ITEMS,
+} from "../common/utils";
 import { useUser } from "../../contexts/UserContext";
+import { useEffect, useState } from "react";
 
 const MobileHeader = () => {
-  const { isUserLoggedIn, userData } = useUser();
-  const nav =
-    isUserLoggedIn && userData.type === "customer"
-      ? ADMIN_NAV_ITEMS
-      : NAV_ITEMS;
+  const [nav, setNav] = useState(NAV_ITEMS);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userInfo") as string);
+    const customerTypeNav =
+      userData.type === "customer"
+        ? CLIENT_NAV_ITEMS
+        : userData.type === "admin"
+        ? ADMIN_NAV_ITEMS
+        : NAV_ITEMS;
+    setNav(customerTypeNav);
+  }, []);
 
   return (
     <Stack

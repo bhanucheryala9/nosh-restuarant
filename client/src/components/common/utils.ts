@@ -142,6 +142,25 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
+export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Order Now",
+    href: "/orders",
+  },
+  {
+    label: "Purchase History",
+    href: "/purchase-history",
+  },
+  {
+    label: "Restuarent Tour",
+    href: "/tour",
+  },
+];
+
 /**  Api response structures */
 export interface EmployeeRequestPayload {
   id: string;
@@ -183,7 +202,7 @@ export interface RewardsRequestPayload {
   appliesTo: string;
   appliedCategory: string[] | string;
   startTime?: Date | string;
-  endTime?: Date | string
+  endTime?: Date | string;
 }
 
 export const generateUID = () => {

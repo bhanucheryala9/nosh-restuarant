@@ -13,27 +13,30 @@ const AppLayout = (props: AppLayoutProp) => {
   const { setUserData, setUserLoggedIn } = useUser();
   const [showHeader, setShowHeader] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   const userInfo = JSON.parse(localStorage?.getItem("userInfo") || "{}" as string);
-  //   const isLoggedIn =
-  //     (localStorage.getItem("isUserLoggedIn")||"" as string) === "yes"
-  //       ? true
-  //       : false;
-  //   setShowHeader(isLoggedIn);
-  //   setUserData(userInfo);
-  //   setUserLoggedIn(isLoggedIn);
-  // }, [showHeader]);
+  useEffect(() => {
+    const userInfo = JSON.parse(
+      localStorage?.getItem("userInfo") || ("{}" as string)
+    );
+    const isLoggedIn =
+      (localStorage.getItem("isUserLoggedIn") || ("" as string)) === "yes"
+        ? true
+        : false;
+    setShowHeader(isLoggedIn);
+    setUserData(userInfo);
+    setUserLoggedIn(isLoggedIn);
+  }, []);
 
-  const reload = () =>{
+  const reload = () => {
     setShowHeader(showHeader);
-  }
- 
+  };
+
   return (
     <React.Fragment>
-      {/* {showHeader && <Header />} */}
-      <Header />
+      {showHeader ? <Header /> : null}
+      {/* <Header /> */}
       <Box minH={"85vh"}>{children}</Box>
-      {showHeader && <Footer />}
+      {<>{reload}</>}
+      {showHeader ? <Footer /> : null}
       <Cart />
     </React.Fragment>
   );

@@ -55,6 +55,7 @@ const LoginPage = () => {
             })
             .then((response) => {
               localStorage.setItem("isUserLoggedIn", "yes");
+              console.log("**************** user info:" ,response.data.userInfo[0])
               localStorage.setItem(
                 "userInfo",
                 JSON.stringify(response.data.userInfo[0])

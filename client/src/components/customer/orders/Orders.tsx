@@ -125,24 +125,20 @@ const Orders = () => {
                     gap={{ base: 3, lg: 8 }}
                   >
                     {data &&
-                      data
-                        ?.filter(
-                          (item: any) => item.category === selectedCategory
-                        )
-                        .map((orders, index) => {
-                          return (
-                            <GridItem
-                              colSpan={1}
-                              rowSpan={1}
-                              display="flex"
-                              alignItems={"center"}
-                              justifyContent="end"
-                              key={index}
-                            >
-                              <OrderItem {...(orders as any)} />
-                            </GridItem>
-                          );
-                        })}
+                      data.map((orders, index) => {
+                        return (
+                          <GridItem
+                            colSpan={1}
+                            rowSpan={1}
+                            display="flex"
+                            alignItems={"center"}
+                            justifyContent="end"
+                            key={index}
+                          >
+                            <OrderItem {...(orders as any)} />
+                          </GridItem>
+                        );
+                      })}
                   </Grid>
                 </TabPanel>
               );
