@@ -230,10 +230,61 @@ const Dashboard = () => {
           </GridItem>
         </Grid>
       </Flex>
-
-     
-       
+      <Flex direction={"column"} position="relative">
+        <Flex
+          direction={"column"}
+          position="absolute"
+          top={{ base: "20%", lg: "40%" }}
+          left="10%"
+          zIndex={1000}
+        >
+          <Text fontSize={{ sm: "md", lg: "xl" }} textShadow="0 1px 2px black">
+            Enjoy Great Recipe
+          </Text>
+          <Text
+            fontSize={{ sm: "lg", lg: "4xl" }}
+            fontWeight="semibold"
+            textColor={"orange.500"}
+            textShadow="0 2px 2px black"
+          >
+            Simple And Delicious Food
+          </Text>
+        </Flex>
+        <Box filter="auto" brightness="80%">
+          <img
+            src={section3}
+            alt="welcome screen"
+            style={{ minWidth: "100%" }}
+          />
+        </Box>
     </Flex>
+    <Flex direction={"column"} position="relative">
+        <Flex
+          direction={"column"}
+          position="absolute"
+          top={{ base: "20%", lg: "40%" }}
+          left="10%"
+          zIndex={1000}
+        >
+          <Text fontSize={{ sm: "md", lg: "xl" }} textShadow="0 1px 2px black">
+            Enjoy Great Recipe
+          </Text>
+          <Text
+            fontSize={{ sm: "lg", lg: "4xl" }}
+            fontWeight="semibold"
+            textColor={"orange.500"}
+            textShadow="0 2px 2px black"
+          >
+            Simple And Delicious Food
+          </Text>
+        </Flex>
+        <Box filter="auto" brightness="80%">
+          <img
+            src={section3}
+            alt="welcome screen"
+            style={{ minWidth: "100%" }}
+          />
+        </Box>
   );
 };
 export default Dashboard;
