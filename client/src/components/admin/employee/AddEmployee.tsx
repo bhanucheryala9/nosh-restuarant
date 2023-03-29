@@ -1,43 +1,42 @@
 import {
-    Button,
-    Divider,
-    FormControl,
-    FormErrorMessage,
-    FormLabel,
-    Grid,
-    GridItem,
-    HStack,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    Select,
-    Textarea,
-  } from "@chakra-ui/react";
-  import axios from "axios";
-  import React, { ReactNode, useState } from "react";
-  import { useForm } from "react-hook-form";
-  import { useAuth } from "../../../contexts/AuthContext";
-  import { useNotification } from "../../../contexts/Notification";
-  import { EmployeeRequestPayload, NotificationStatus } from "../../common/utils";
-  
-  interface AddEmployeeProps {2
-    isModalOpen: boolean;
-    setIsModalOpen: (isModalOpen: boolean) => void;
-    children?: ReactNode;
-    defaultData?: any;
-    isUpdate: boolean;
-    setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>
-  }
+  Button,
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Select,
+  Textarea,
+} from "@chakra-ui/react";
+import axios from "axios";
+import React, { ReactNode, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useNotification } from "../../../contexts/Notification";
+import { EmployeeRequestPayload, NotificationStatus } from "../../common/utils";
 
-  const AddEmployee=(props: AddEmployeeProps)=>{
-    const { isModalOpen, setIsModalOpen, defaultData, isUpdate, setIsUpdate } = props;
+interface AddEmployeeProps {2
+  isModalOpen: boolean;
+  setIsModalOpen: (isModalOpen: boolean) => void;
+  children?: ReactNode;
+  defaultData?: any;
+  isUpdate: boolean;
+  setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>
+}
+const AddEmployee = (props: AddEmployeeProps) => {
+  const { isModalOpen, setIsModalOpen, defaultData, isUpdate, setIsUpdate } = props;
   const { signUp } = useAuth();
   const { setShowNotification } = useNotification();
   const [formData, setFormData] = useState<EmployeeRequestPayload>();
@@ -153,8 +152,9 @@ import {
         });
     }
   };
-    return(
-<React.Fragment>
+
+  return (
+    <React.Fragment>
       <Modal
         closeOnOverlayClick={false}
         isOpen={isModalOpen}
@@ -494,15 +494,23 @@ import {
                   </FormControl>
                 </GridItem>
               </Grid>
-              </ModalBody>
-              <Divider />
-                <ModalFooter>
-                    </ModalContent>
-                    </form>
-                    </Modal>
-                    </React.Fragment>
+            </ModalBody>
+            <Divider />
+            <ModalFooter>
+              <FormControl>
+                <HStack float={"right"}>
+                  <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                  <Button colorScheme="orange" mr={3} type="submit">
+                    Save Employee Details
+                  </Button>
+                </HStack>
+              </FormControl>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
+    </React.Fragment>
+  );
+};
 
-
-    );
-  };
-  export default AddEmployee;
+export default AddEmployee;
