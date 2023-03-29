@@ -1,26 +1,48 @@
 import {
   Avatar,
   Box,
+  Card,
+  CardBody,
   Flex,
+  Heading,
+  HStack,
+  Stack,
   Text,
   Image,
+  Divider,
+  Button,
+  CardFooter,
+  ButtonGroup,
   Grid,
   GridItem,
 } from "@chakra-ui/react";
 import welcome from "../assets/welcome-4.jpg";
 import section2 from "../assets/section-2.jpg";
 import section3 from "../assets/section-3.jpg";
+import "./dashboard.css";
+import Cart from "./customer/cart/Cart";
 import Loader from "./common/Loader";
 import { CSSProperties, useEffect, useState } from "react";
+import { useUser } from "../contexts/UserContext";
+import biryani from "../assets/biryani.jpg";
+import usersFood from "../test-data/customer/user-specific.json";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { userData } = useUser();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Flex direction={"column"}>
       {!isLoading && <Loader />}
       <Flex style={{ background: "rgba(0, 0, 0, 0.5)" }} position="relative">
-      <Box filter="auto" brightness="35%" overflow={"hidden"}>
+        <Box filter="auto" brightness="35%" overflow={"hidden"}>
           <img
             src={welcome}
             alt="welcome screen"
@@ -31,7 +53,6 @@ const Dashboard = () => {
             }}
           />
         </Box>
-
         <Box
           position="absolute"
           top={{ lg: "20%", base: "20%" }}
@@ -60,7 +81,7 @@ const Dashboard = () => {
         </Box>
       </Flex>
       <Flex px="6" py="6" bg="white" alignItems="center" direction={"column"}>
-      <Text
+        <Text
           fontFamily={"'Nunito', sans-serif"}
           fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
           fontWeight={"semibold"}
@@ -73,7 +94,6 @@ const Dashboard = () => {
         >
           Incredibly Tasty Indian Dish
         </Text>
-
         <Grid
           my={{ base: "6", lg: "4" }}
           templateRows={{ base: "repeat(5, 1fr)", lg: "repeat(1, 1fr)" }}
@@ -149,7 +169,6 @@ const Dashboard = () => {
                   usually served with rice or naan bread.
                 </Text>
               </Box>
-             
             </Flex>
           </GridItem>
           <GridItem colSpan={{ base: 2, lg: 1 }} rowSpan={{ base: 1, lg: 1 }}>
@@ -168,7 +187,7 @@ const Dashboard = () => {
               alignItems="start"
               justifyContent={"center"}
             >
-               <Box maxW={"md"}>
+              <Box maxW={"md"}>
                 <Text
                   textColor={"orange.600"}
                   fontSize={"xl"}
@@ -225,7 +244,6 @@ const Dashboard = () => {
                   rings and lemon wedges.
                 </Text>
               </Box>
-           
             </Flex>
           </GridItem>
         </Grid>
@@ -257,34 +275,85 @@ const Dashboard = () => {
             style={{ minWidth: "100%" }}
           />
         </Box>
-    </Flex>
-    <Flex direction={"column"} position="relative">
-        <Flex
-          direction={"column"}
-          position="absolute"
-          top={{ base: "20%", lg: "40%" }}
-          left="10%"
-          zIndex={1000}
+      </Flex>
+      <Flex
+        direction={"column"}
+        p="4"
+        mb="6"
+        alignItems={"center"}
+        px="6"
+        bg="white"
+      >
+        <Text
+          fontFamily={"'Nunito', sans-serif"}
+          fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+          fontWeight={"semibold"}
+          mt="6"
         >
-          <Text fontSize={{ sm: "md", lg: "xl" }} textShadow="0 1px 2px black">
-            Enjoy Great Recipe
-          </Text>
-          <Text
-            fontSize={{ sm: "lg", lg: "4xl" }}
-            fontWeight="semibold"
-            textColor={"orange.500"}
-            textShadow="0 2px 2px black"
-          >
-            Simple And Delicious Food
-          </Text>
+          Food Suggestion
+        </Text>
+        <Text
+          fontFamily={"'Nunito', sans-serif"}
+          fontSize={{ base: "sm", lg: "lg" }}
+          mt="2"
+          mb="6"
+        >
+          choose your own taste
+        </Text>
+        <Flex>
+          {usersFood["test@gmail.com"].map((item) => {
+            return (
+              <Flex
+                border={"1px solid"}
+                borderColor="orange.500"
+                px="4"
+                py="6"
+                borderRadius={"lg"}
+                direction={"column"}
+                alignItems="center"
+                mx="2"
+                mt="4"
+                _hover={{
+                  backgroundColor: "orange.50",
+                }}
+                cursor="pointer"
+              >
+                <Image
+                  filter="auto"
+                  brightness="70%"
+                  maxHeight={"56"}
+                  minW={{ base: "full", lg: "xs" }}
+                  src={item.url !== "" ? item.url : biryani}
+                  alt="Green double couch with wooden legs"
+                  borderRadius="lg"
+                />
+                <Text
+                  fontSize={"2xl"}
+                  fontWeight="semibold"
+                  mt="6"
+                  letterSpacing={"wide"}
+                >
+                  {item.productName}
+                </Text>
+                <Text
+                  fontSize={"3xl"}
+                  fontWeight="bold"
+                  my="2"
+                  letterSpacing={"wide"}
+                  textColor="orange.500"
+                >
+                  ${item.price}
+                </Text>
+                <Divider />
+                <Button my="4" width={"xs"} colorScheme="orange">
+                  Add to Cart
+                </Button>
+              </Flex>
+            );
+          })}
         </Flex>
-        <Box filter="auto" brightness="80%">
-          <img
-            src={section3}
-            alt="welcome screen"
-            style={{ minWidth: "100%" }}
-          />
-        </Box>
+      </Flex>
+    </Flex>
   );
 };
 export default Dashboard;
