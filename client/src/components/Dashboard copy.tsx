@@ -1,4 +1,31 @@
-import React from 'react'
+import {
+  Avatar,
+  Box,
+  Card,
+  CardBody,
+  Flex,
+  Heading,
+  HStack,
+  Stack,
+  Text,
+  Image,
+  Divider,
+  Button,
+  CardFooter,
+  ButtonGroup,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
+import welcome from "../assets/welcome-4.jpg";
+import section2 from "../assets/section-2.jpg";
+import section3 from "../assets/section-3.jpg";
+import "./dashboard.css";
+import Cart from "./customer/cart/Cart";
+import Loader from "./common/Loader";
+import { CSSProperties, useEffect, useState } from "react";
+import { useUser } from "../contexts/UserContext";
+import biryani from "../assets/biryani.jpg";
+import usersFood from "../test-data/customer/user-specific.json";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -12,7 +39,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-     <Flex direction={"column"}>
+    <Flex direction={"column"}>
       {!isLoading && <Loader />}
       <Flex style={{ background: "rgba(0, 0, 0, 0.5)" }} position="relative">
         <Box filter="auto" brightness="35%" overflow={"hidden"}>
@@ -221,8 +248,43 @@ const Dashboard = () => {
           </GridItem>
         </Grid>
       </Flex>
-
-      <Text
+      <Flex direction={"column"} position="relative">
+        <Flex
+          direction={"column"}
+          position="absolute"
+          top={{ base: "20%", lg: "40%" }}
+          left="10%"
+          zIndex={1000}
+        >
+          <Text fontSize={{ sm: "md", lg: "xl" }} textShadow="0 1px 2px black">
+            Enjoy Great Recipe
+          </Text>
+          <Text
+            fontSize={{ sm: "lg", lg: "4xl" }}
+            fontWeight="semibold"
+            textColor={"orange.500"}
+            textShadow="0 2px 2px black"
+          >
+            Simple And Delicious Food
+          </Text>
+        </Flex>
+        <Box filter="auto" brightness="80%">
+          <img
+            src={section3}
+            alt="welcome screen"
+            style={{ minWidth: "100%" }}
+          />
+        </Box>
+      </Flex>
+      <Flex
+        direction={"column"}
+        p="4"
+        mb="6"
+        alignItems={"center"}
+        px="6"
+        bg="white"
+      >
+        <Text
           fontFamily={"'Nunito', sans-serif"}
           fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
           fontWeight={"semibold"}
@@ -287,7 +349,11 @@ const Dashboard = () => {
                   Add to Cart
                 </Button>
               </Flex>
-  )
-}
-
-export default Dashboard copy
+            );
+          })}
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+export default Dashboard;
