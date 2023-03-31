@@ -1,6 +1,38 @@
 import React from "react";
 
 function Tracking() {
+  const getData = () => {
+    const orderID = localStorage.getItem("orderID");
+    axios
+      .get(
+        "http://34.235.166.147:5000/api/customer/v1/get-order-details-by-id",
+        {
+          params: {
+            id: orderID,
+          },
+        }
+      )
+      .then((response) => {
+        setTrackOrder(response.data.orders);
+        const status = response.data?.orders?.orderStatus;
+        setStepDetails(getCurrentStep(status));
+      })
+      .catch((error) => {
+        console.log("************** error", error);
+      });
+  };
+  console.log("******* canlled", stepDetails);
+
+  useEffect(() => {
+    const intervalCall = setInterval(() => {
+      getData();
+    }, 2000);
+    return () => {
+      // clean up
+      clearInterval(intervalCall);
+    };
+  }, []);
+
   return (
     <React.Fragment>
       <Flex w="100%" justifyContent="center" alignItems="center">

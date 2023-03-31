@@ -1,6 +1,44 @@
-import React from "react";
+import {
+  Box,
+  Link as CLink,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Stack,
+  useColorModeValue,
+  Text,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useUser } from "../../contexts/UserContext";
+import {
+  ADMIN_NAV_ITEMS,
+  CLIENT_NAV_ITEMS,
+  EMPLOYEE_NAV,
+  NAV_ITEMS,
+  TOUR_NAV_ITEMS,
+} from "../common/utils";
+import DesktopSubHeader from "./DesktopSubHeader";
+import { Link } from "react-router-dom";
 
-function DesktopHeader() {
+const DesktopHeader = () => {
+  const linkColor = useColorModeValue("gray.600", "gray.200");
+  const linkHoverColor = useColorModeValue("gray.800", "white");
+  const popoverContentBgColor = useColorModeValue("white", "gray.800");
+
+  const [nav, setNav] = useState(NAV_ITEMS);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userInfo") as string);
+    const customerTypeNav =
+      userData?.type === "customer"
+        ? CLIENT_NAV_ITEMS
+        : userData.type === "admin"
+        ? ADMIN_NAV_ITEMS
+        : userData.type === "employee"
+        ? EMPLOYEE_NAV
+        : NAV_ITEMS;
+    setNav(customerTypeNav);
+  }, []);
+
   return (
     <Stack direction={"row"} spacing={4} mt={1}>
       {(JSON.parse(localStorage.getItem("userInfo") as string)?.type ===
@@ -57,6 +95,6 @@ function DesktopHeader() {
       ))}
     </Stack>
   );
-}
+};
 
 export default DesktopHeader;

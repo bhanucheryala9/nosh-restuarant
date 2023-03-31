@@ -1,6 +1,53 @@
-import React from "react";
+import {
+  Flex,
+  Text,
+  Stack,
+  Collapse,
+  Icon,
+  Link,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  NavItem,
+  NAV_ITEMS,
+  ADMIN_NAV_ITEMS,
+  CLIENT_NAV_ITEMS,
+} from "../common/utils";
+import { useUser } from "../../contexts/UserContext";
+import { useEffect, useState } from "react";
 
-function MobileNav() {
+const MobileHeader = () => {
+  const [nav, setNav] = useState(NAV_ITEMS);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userInfo") as string);
+    const customerTypeNav =
+      userData.type === "customer"
+        ? CLIENT_NAV_ITEMS
+        : userData.type === "admin"
+        ? ADMIN_NAV_ITEMS
+        : NAV_ITEMS;
+    setNav(customerTypeNav);
+  }, []);
+
+  return (
+    <Stack
+      bg={useColorModeValue("white", "gray.800")}
+      p={4}
+      display={{ md: "none" }}
+    >
+      {nav.map((navItem) => (
+        <MobileNavItem key={navItem.label} {...navItem} />
+      ))}
+    </Stack>
+  );
+};
+
+const MobileNavItem = ({ label, children, href }: NavItem) => {
+  const { isOpen, onToggle } = useDisclosure();
+
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
@@ -49,7 +96,6 @@ function MobileNav() {
       </Collapse>
     </Stack>
   );
-}
+};
 
-export default MobileNav;
-Nav;
+export default MobileHeader;
