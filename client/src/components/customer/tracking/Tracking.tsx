@@ -1,6 +1,76 @@
-import React from "react";
+import { Button, Flex, HStack, Text, VStack, Image } from "@chakra-ui/react";
+import { Divider, Steps } from "antd";
+import axios from "axios";
+import React, { createRef, useCallback, useEffect, useState } from "react";
+import orderPlaced from "../../..//assets/order-placed.jpg";
+import accepted from "../../..//assets/accepted.jpg";
+import preparing from "../../..//assets/preparing.jpg";
+import ready from "../../..//assets/ready.jpg";
+import { ImCancelCircle } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
+const Tracking = () => {
+  const [trackorder, setTrackOrder] = useState();
+  const [stepDetails, setStepDetails] = useState(0);
 
-function Tracking() {
+  const statuses = ["processing", "preparing", "ready"];
+  const navigate = useNavigate();
+
+  const getCurrentStep = (status: string) => {
+    const num = statuses.indexOf(status);
+    if (num === -1) {
+      return -1;
+    } else {
+      return num + 1;
+    }
+  };
+
+  const statusProps = [
+    {
+      title: (
+        <Flex alignItems="center">
+          <Image src={orderPlaced} h="50px" w="50px" />{" "}
+          <Text ml="2" fontWeight="semibold" fontSize="md">
+            {" "}
+            Order Placed
+          </Text>
+        </Flex>
+      ),
+    },
+    {
+      title: (
+        <Flex alignItems="center">
+          <Image src={accepted} h="50px" w="50px" />{" "}
+          <Text ml="2" fontWeight="semibold">
+            {" "}
+            Order Accepted
+          </Text>
+        </Flex>
+      ),
+    },
+    {
+      title: (
+        <Flex alignItems="center">
+          <Image src={preparing} h="50px" w="50px" />{" "}
+          <Text ml="2" fontWeight="semibold">
+            {" "}
+            Preparing
+          </Text>
+        </Flex>
+      ),
+    },
+    {
+      title: (
+        <Flex alignItems="center">
+          <Image src={ready} h="50px" w="50px" />{" "}
+          <Text ml="2" fontWeight="semibold">
+            {" "}
+            Ready
+          </Text>
+        </Flex>
+      ),
+    },
+  ];
+
   const getData = () => {
     const orderID = localStorage.getItem("orderID");
     axios
@@ -32,6 +102,17 @@ function Tracking() {
       clearInterval(intervalCall);
     };
   }, []);
+
+  const onDaskClicked = () => {
+    const user = JSON.parse(localStorage.getItem("userInfo") || "");
+    if (user.type === "admin") {
+      navigate("/employee");
+    } else if (user.type === "employee") {
+      navigate("/employee-orders");
+    } else {
+      navigate("/dashboard");
+    }
+  };
 
   return (
     <React.Fragment>
@@ -93,6 +174,6 @@ function Tracking() {
       </Flex>
     </React.Fragment>
   );
-}
+};
 
 export default Tracking;
