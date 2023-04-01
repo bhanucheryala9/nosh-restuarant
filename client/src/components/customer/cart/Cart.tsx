@@ -21,17 +21,25 @@ import CartItem from "./CartItem";
 
 const Cart = () => {
   const { isCartOpen, setIsCartOpen, cartData } = useCart();
-  const [cartInfo, setCartInfo] = useState<Array<OrderInfo>>(cartData);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [tax, setTaxAmount] = useState<number>(0);
   const { AppStoreData, setAppStoreData } = useAppStore();
   const navigate = useNavigate();
+  const [cartInfo, setCartInfo] = useState(cartData);
+
 
   useEffect(() => {
     const amount = cartData?.reduce((acc: any, item: OrderInfo) => {
-      return acc + item?.quantity * item?.price;
+      return acc +( item?.quantity * item?.price);
     }, 0);
     setTotalAmount(amount);
-  }, []);
+    setTaxAmount(amount/8);
+  }, [cartData.length]);
+
+  useEffect(()=>{
+    setCartInfo(cartInfo)
+  },[cartInfo])
+
   const onSubmitClicked = () => {
     setCartInfo(cartData);
     localStorage.setItem("orders", JSON.stringify({}));
@@ -83,7 +91,7 @@ const Cart = () => {
                 </Text>
               </Flex>
               <Divider mb="4" />
-              {cartData.map((item: any, index: number) => {
+              {cartInfo.map((item: any, index: number) => {
                 return (
                   <CartItem
                     item={item}
@@ -100,7 +108,7 @@ const Cart = () => {
                   <Text fontSize={"sm"} textColor="gray.700">
                     Tax
                   </Text>
-                  <Text fontSize={"sm"}>$3</Text>
+                  <Text fontSize={"sm"}>${tax}</Text>
                 </HStack>
                 <HStack justifyContent={"space-between"} mt="2">
                   <Text>Total</Text>

@@ -3,6 +3,8 @@ import { ReactNode } from "react";
 export const resetLocalStorage = () => {
   localStorage.setItem("userInfo", JSON.stringify({}));
   localStorage.setItem("isUserLoggedIn", "no");
+  localStorage.setItem("orders", JSON.stringify([]));
+
 };
 export enum AlertStatus {
   SUCCESS = "success",

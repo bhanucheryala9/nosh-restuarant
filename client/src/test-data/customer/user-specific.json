@@ -1,0 +1,29 @@
+{
+    "test@gmail.com": {
+        
+            "_id": {
+                "$oid": "64114cf24649410110154327"
+            },
+            "id": "I91278",
+            "productName": "chicken biryani ",
+            "description": "test biryani with desciption..",
+            "price": "10",
+            "discount": {
+                "$numberInt": "10"
+            },
+            "isAvailable": true,
+            "tax": {
+                "$numberInt": "0"
+            },
+            "category": "appetizers",
+            "createdAt": {
+                "$date": {
+                    "$numberLong": "1678855410059"
+                }
+            },
+            "__v": {
+                "$numberInt": "0"
+            }
+        
+    }
+}

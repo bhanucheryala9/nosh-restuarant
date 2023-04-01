@@ -21,7 +21,6 @@ import {
   InputLeftElement,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
 import {
@@ -34,6 +33,7 @@ import { useForm } from "react-hook-form";
 import { useNotification } from "../../../contexts/Notification";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../../../contexts/AppStoreContext";
+import Dropzone from "react-dropzone";
 
 interface AddInventoryProps {
   children?: ReactNode;
@@ -44,6 +44,8 @@ const AddInventory = (props: AddInventoryProps) => {
   const [formData, setFormData] = useState<InventoryRequestPayload>();
   const [defaultValues, setDefaultValues] = useState({});
   const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [productURI, setProductURI] = useState<string>("");
+
   const {
     handleSubmit,
     register,
@@ -57,25 +59,7 @@ const AddInventory = (props: AddInventoryProps) => {
     setDefaultValues(AppStoreData?.inventoryData?.inventoryUpdateData);
     setForUpdate(AppStoreData?.inventoryData?.forUpdate);
   }, []);
-  const file_props: UploadProps = {
-    name: "file",
-    multiple: true,
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        console.log(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        console.log(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
-  };
+
   const prepareData = () => {
     const formattedData = {
       id: (defaultValues as any).id,
@@ -90,9 +74,29 @@ const AddInventory = (props: AddInventoryProps) => {
     return formattedData;
   };
 
+  const handleFilesDropped = async (files: any) => {
+    const formData1 = new FormData();
+    formData1.append("file", files[0]);
+    formData1.append("upload_preset", "iu8dkp2y");
+    formData1.append("folder", "nosh");
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dh4anygjz/image/upload", formData1)
+      .then((res) => {
+        setProductURI(res.data.url);
+      })
+      .catch((error) => {
+        console.log("failed to upload in cloudnary");
+        window.alert("Failed to upload image in cloud..!");
+      });
+  };
   const onSubmitClicked = () => {
     if (!forUpdate) {
-      const preparedPayload = { ...formData, id: "I" + generateUID() };
+      const preparedPayload = {
+        ...formData,
+        id: "I" + generateUID(),
+        tax: 0,
+        url: productURI,
+      };
       console.log("payload of inventory", preparedPayload);
       axios
         .post("http://localhost:5000/api/admin/v1/add-item", preparedPayload)
@@ -303,20 +307,23 @@ const AddInventory = (props: AddInventoryProps) => {
                   mx="4"
                   my="4"
                 />
-                <Dragger {...file_props} style={{ width: "100%" }}>
-                  <Flex alignItems={"center"} direction="column" py="4" px="8">
-                    <p className="ant-upload-drag-icon">
-                      <FaInbox width={40} height={40} />
-                    </p>
-                    <p className="ant-upload-text">
-                      Click or drag file to this area to upload
-                    </p>
-                    <p className="ant-upload-hint">
-                      Support for a single or bulk upload. Strictly prohibit
-                      from uploading company data or other band files
-                    </p>
-                  </Flex>
-                </Dragger>
+                <Dropzone onDrop={(files) => handleFilesDropped(files)}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      {...getRootProps()}
+                      style={{
+                        border: "1px dashed #ED8936",
+                        padding: "4rem 7rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input {...getInputProps()} />
+                      <p>
+                        Drag 'n' drop some files here, or click to select files
+                      </p>
+                    </div>
+                  )}
+                </Dropzone>
               </Flex>
             </GridItem>
             <GridItem
@@ -374,7 +381,7 @@ const AddInventory = (props: AddInventoryProps) => {
                       {errors["category"]?.message as string}
                     </FormErrorMessage>
                   </FormControl>
-                  <FormControl mt="4" isInvalid={!!errors["tax"]}>
+                  {/* <FormControl mt="4" isInvalid={!!errors["tax"]}>
                     <FormLabel fontSize={"xs"}>Tax Percentage</FormLabel>
                     <Input
                       placeholder="Enter tax percentage"
@@ -391,7 +398,7 @@ const AddInventory = (props: AddInventoryProps) => {
                     <FormErrorMessage>
                       {errors["tax"]?.message as string}
                     </FormErrorMessage>
-                  </FormControl>
+                  </FormControl> */}
                 </Flex>
               </Flex>
             </GridItem>

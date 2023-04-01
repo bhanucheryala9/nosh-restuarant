@@ -23,6 +23,7 @@ interface OrderItemsProps {
   discount: number;
   isAvailable: boolean;
   tax: number;
+  url: string,
   category: string;
   createdAt: string | Date;
 }
@@ -35,13 +36,12 @@ export interface OrderInfo {
   quantity: number;
 }
 const OrderItem = (props: OrderItemsProps) => {
-  const { id, productName, description, category, price, discount, isAvailable, tax,  } =
+  const { id, productName, description, category, price, discount, isAvailable, tax, url  } =
     props;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const [image, setImage] = useState();
 
-  // console.log("*************** item id:", ItemId, ItemName)
   useEffect(() => {
     const fetchImage = async () => {
       try {
@@ -85,7 +85,6 @@ const OrderItem = (props: OrderItemsProps) => {
             },
           ];
 
-    console.log(" filterd data", filterData);
     setCartData(filterData);
   };
   return (
@@ -96,7 +95,7 @@ const OrderItem = (props: OrderItemsProps) => {
           brightness="70%"
           maxHeight={"56"}
           minW={{ base: "full", lg: "xs" }}
-          src={image}
+          src={url}
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />

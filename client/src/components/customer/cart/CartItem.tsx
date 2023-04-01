@@ -9,7 +9,6 @@ import {
   InputRightAddon,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import biryani from "../../../assets/biryani.jpg";
 import { faker } from "@faker-js/faker";
 import { OrderInfo } from "../orders/OrderItem";
 
@@ -22,7 +21,27 @@ interface CartItemProps{
 const CartItem = (props: CartItemProps) => {
   const { item, setCartInfo, cartInfo} = props;
 
-  const prepareData = () =>{
+  const prepareData = (option: string) =>{
+    let updatedData;
+    if(option==='add'){
+       updatedData = cartInfo?.map((product)=> {
+        if (product.productName === item.productName){
+          return {...product, quantity: item.quantity+1}
+        }else{
+          return product
+        }
+      })
+
+      console.log("************ after adding", updatedData)
+    }else{
+      updatedData = cartInfo?.map((product)=> {
+        if (product.productName === item.productName){
+          return {...product, quantity: item.quantity-1}
+        }else{
+          return product
+        }
+    })}
+    setCartInfo(updatedData);
     
   }
 
@@ -48,9 +67,9 @@ const CartItem = (props: CartItemProps) => {
               colorScheme={"orange"}
               borderColor="orange.500"
             >
-              <InputLeftAddon children="-" onClick={prepareData}/>
-              <Input placeholder="0" defaultValue={0} w={10} />
-              <InputRightAddon children="+" />
+              <InputLeftAddon children="-" onClick={()=>prepareData("sub")}/>
+              <Input type={"number"} defaultValue={item.quantity} value={item.quantity} w={10} />
+              <InputRightAddon children="+" onClick={()=>prepareData("add")} />
             </InputGroup>
           </Text>
         </HStack>
