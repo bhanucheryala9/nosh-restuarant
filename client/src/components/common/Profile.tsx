@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Input,
   Text,
@@ -82,7 +81,7 @@ const Profile = () => {
   };
   return (
     <Flex direction={"column"} alignItems="center">
-      <Flex w={"100%"} height={"36"} bg="orange.400"></Flex>
+      {/* <Flex w={"100%"} height={"36"} bg="orange.400"></Flex> */}
       <form onSubmit={handleSubmit(onSubmitClicked)}>
         <Flex
           direction="column"
@@ -123,10 +122,19 @@ const Profile = () => {
               </FormLabel>
               <Input
                 type={"text"}
+                {...register("firstName", {
+                  required: "First Name is required",
+                })}
+                defaultValue={usersData?.firstName}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    firstName: e.target.value,
+                  };
+                  setFormData(userData as any);
+                }}
               />
-              <FormErrorMessage>
-                {errors["firstName"]?.message as string}
-              </FormErrorMessage>
+              
             </FormControl>
             <FormControl isInvalid={!!errors["lastName"]}>
               <FormLabel
@@ -138,10 +146,19 @@ const Profile = () => {
               </FormLabel>
               <Input
                 type={"text"}
+                {...register("lastName", {
+                  required: "Last Name is required",
+                })}
+                defaultValue={usersData?.lastName}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    lastName: e.target.value,
+                  };
+                  setFormData(userData as any);
+                }}
               />
-              <FormErrorMessage>
-                {errors["lastName"]?.message as string}
-              </FormErrorMessage>
+              
             </FormControl>
             <FormControl isInvalid={!!errors["email"]}>
               <FormLabel
@@ -153,10 +170,17 @@ const Profile = () => {
               </FormLabel>
               <Input
                 type={"email"}
+                defaultValue={usersData?.email}
+                isDisabled={true}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    email: e.target.value,
+                  };
+                  setFormData(userData as any);
+                }}
               />
-              <FormErrorMessage>
-                {errors["email"]?.message as string}
-              </FormErrorMessage>
+              
             </FormControl>
             <FormControl isInvalid={!!errors["phone"]}>
               <FormLabel
@@ -166,7 +190,21 @@ const Profile = () => {
               >
                 Mobile Number:
               </FormLabel>
-            
+              <Input
+                type={"number"}
+                {...register("phone", {
+                  required: "Mobile Number is required",
+                })}
+                defaultValue={usersData?.phoneNumber}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    phoneNumber: e.target.value,
+                  };
+                  setFormData(userData as any);
+                }}
+              />
+             
             </FormControl>
 
             <FormControl isInvalid={!!errors["addressLine1"]}>
@@ -177,8 +215,23 @@ const Profile = () => {
               >
                 Address Line 1:
               </FormLabel>
-             
-            
+              <Input
+                {...register("addressLine1", {
+                  required: "Address Line1 is required",
+                })}
+                defaultValue={usersData?.address?.addressLine1}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    address: {
+                      ...formData?.address,
+                      addressLine1: e.target.value,
+                    },
+                  };
+                  setFormData(userData as any);
+                }}
+              />
+              
             </FormControl>
 
             <FormControl>
@@ -189,7 +242,96 @@ const Profile = () => {
               >
                 Address Line 2:
               </FormLabel>
+              <Input
+                {...register("addressLine2")}
+                defaultValue={usersData?.address?.addressLine2}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    address: {
+                      ...formData?.address,
+                      addressLine2: e.target.value,
+                    },
+                  };
+                  setFormData(userData as any);
+                }}
+              />
+            </FormControl>
+            <FormControl isInvalid={!!errors["city"]}>
+              <FormLabel
+                fontSize={"xs"}
+                textColor="gray.600"
+                fontWeight={"semibold"}
+              >
+                City:
+              </FormLabel>
+              <Input
+                {...register("city", {
+                  required: "City is required",
+                })}
+                defaultValue={usersData?.address?.city}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    address: {
+                      ...formData?.address,
+                      city: e.target.value,
+                    },
+                  };
+                  setFormData(userData as any);
+                }}
+              />
               
+            </FormControl>
+            <FormControl isInvalid={!!errors["state"]}>
+              <FormLabel
+                fontSize={"xs"}
+                textColor="gray.600"
+                fontWeight={"semibold"}
+              >
+                State:
+              </FormLabel>
+              <Input
+                {...register("state", {
+                  required: "State is required",
+                })}
+                defaultValue={usersData?.address?.state}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    address: {
+                      ...formData?.address,
+                      state: e.target.value,
+                    },
+                  };
+                  setFormData(userData as any);
+                }}
+              />
+            
+            </FormControl>
+            <FormControl>
+              <FormLabel
+                fontSize={"xs"}
+                textColor="gray.600"
+                fontWeight={"semibold"}
+              >
+                About You:
+              </FormLabel>
+              <Textarea
+                placeholder="write short discription about you.."
+                {...register("about")}
+                // defaultValue={usersData?.about}
+                onChange={(e) => {
+                  const userData = {
+                    ...formData,
+                    about: e.target.value,
+                  };
+                  setFormData(userData as any);
+                }}
+              />
+              <Button colorScheme="orange" type="submit" my="4">
+                Save Details
+              </Button>
             </FormControl>
           </Flex>
         </Flex>
