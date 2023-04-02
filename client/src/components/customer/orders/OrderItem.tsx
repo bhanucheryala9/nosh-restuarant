@@ -2,6 +2,55 @@ import React from "react";
 import { connect } from "react-redux";
 
 export const OrderItem = (props) => {
+    useEffect(() => {
+      const fetchImage = async () => {
+        try {
+          const response = await import(
+            `../../../assets/orders/${"chickenpakora.jpg"}`
+          ); // change relative path to suit your needs
+          setImage(response.default);
+        } catch (err) {
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchImage();
+    }, []);
+    // const { cartData, setCartData } = useCart();
+    const onItemClicked = () => {
+      const cart = JSON.parse(localStorage.getItem("orders") || "");
+      const filterData =
+        cart.length > 0
+          ? cart.findIndex((item: any) => item.productName === productName) !==
+            -1
+            ? cart.map((item: any) =>
+                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+              )
+            : [
+                ...cart,
+                {
+                  id: id,
+                  productName: productName,
+                  category: category,
+                  price: price,
+                  quantity: 1,
+                  url: url,
+                },
+              ]
+          : [
+              {
+                id: id,
+                productName: productName,
+                category: category,
+                price: price,
+                quantity: 1,
+                url: url,
+              },
+            ];
+      localStorage.setItem("orders", JSON.stringify(filterData));
+      // setCartData(filterData);
+    };
   return (
     <Card maxW={"72"} key={id}>
       {!isAvailable && (
