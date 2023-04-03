@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   Text,
@@ -134,7 +135,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-              
+              <FormErrorMessage>
+                {errors["firstName"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!errors["lastName"]}>
               <FormLabel
@@ -158,7 +161,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-              
+              <FormErrorMessage>
+                {errors["lastName"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!errors["email"]}>
               <FormLabel
@@ -180,7 +185,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-              
+              <FormErrorMessage>
+                {errors["email"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!errors["phone"]}>
               <FormLabel
@@ -204,7 +211,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-             
+              <FormErrorMessage>
+                {errors["phone"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
 
             <FormControl isInvalid={!!errors["addressLine1"]}>
@@ -231,7 +240,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-              
+              <FormErrorMessage>
+                {errors["addressLine1"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
 
             <FormControl>
@@ -281,7 +292,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-              
+              <FormErrorMessage>
+                {errors["city"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!errors["state"]}>
               <FormLabel
@@ -307,7 +320,9 @@ const Profile = () => {
                   setFormData(userData as any);
                 }}
               />
-            
+              <FormErrorMessage>
+                {errors["state"]?.message as string}
+              </FormErrorMessage>
             </FormControl>
             <FormControl>
               <FormLabel
