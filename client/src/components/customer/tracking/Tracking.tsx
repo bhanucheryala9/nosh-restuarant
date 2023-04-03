@@ -55,24 +55,36 @@ const Tracking = () => {
 
   return (
     <React.Fragment>
-      <Flex >
-        <Flex>
-          <Text >
-            Check Your Status
-          </Text>
-          <Divider />
-          <HStack >
-            <Text>
+    <Flex w="100%" justifyContent="center" alignItems="center">
+      <Flex
+        bg="white"
+        rounded={"2xl"}
+        my="4"
+        mx="6"
+        px="10"
+        py="6"
+        maxW="60%"
+        direction="column"
+        alignItems="center"
+        shadow="md"
+      >
+        <Text textColor="orange.500" fontSize="2xl" fontWeight="semibold">
+          Check Your Status
+        </Text>
+        <Divider />
+        <HStack justifyContent="space-between" w="100%">
+        <Text>
+              Name:{" "}
+              {(trackorder as any)?.firstName +
+                " " +
+                (trackorder as any)?.lastName}
             </Text>
-            <Text> </Text>
-          </HStack>
-          <Flex>
-          
-          
-          
-        </Flex>
+            <Text> ORDER ID: #{(trackorder as any)?.orderId}</Text>
+        </HStack>
+   
       </Flex>
-    </React.Fragment>
+    </Flex>
+  </React.Fragment>
   );
 };
 
