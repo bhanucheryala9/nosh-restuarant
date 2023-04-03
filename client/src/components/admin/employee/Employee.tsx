@@ -38,8 +38,8 @@ export interface EmployeeDatatype {
   joinedDate: string;
   about?: string;
 }
-const Employee=()=>{
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+const Employee = () => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addEmployeeModal, setAddEmployeeModal] = useState<boolean>(false);
   const [unformattedEmployeeData, setunformattedEmployeeData] = useState([]);
   const [employeeData, setEmployeeData] = useState<Array<EmployeeDatatype>>([]);
@@ -68,6 +68,7 @@ const Employee=()=>{
     clearFilters();
     setSearchText("");
   };
+
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): ColumnType<EmployeeDatatype> => ({
@@ -207,22 +208,6 @@ const Employee=()=>{
       sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps("name"),
       render: (text: string) => {
-        useEffect(() => {
-            axios
-              .get("http://34.235.166.147:5000/api/admin/v1/get-employee-details")
-              .then((response: any) => {
-                setunformattedEmployeeData(response.data.employees);
-                setEmployeeData(prepareData(response.data.employees));
-              })
-              .catch(() => {
-                setShowNotification({
-                  status: NotificationStatus.ERROR,
-                  alertMessage: "Failed to retreive employees information..!",
-                  showAlert: true,
-                });
-              });
-          }, [addEmployeeModal]);
-        
         return (
           <HStack>
             <Avatar
@@ -314,9 +299,24 @@ const Employee=()=>{
   const { setShowNotification } = useNotification();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    axios
+      .get("http://34.235.166.147:5000/api/admin/v1/get-employee-details")
+      .then((response: any) => {
+        setunformattedEmployeeData(response.data.employees);
+        setEmployeeData(prepareData(response.data.employees));
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive employees information..!",
+          showAlert: true,
+        });
+      });
+  }, [addEmployeeModal]);
 
-    return(
-        <React.Fragment>
+  return (
+    <React.Fragment>
       <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
         <Text fontSize={"xl"} fontWeight="bold">
           Employees List
@@ -336,20 +336,10 @@ const Employee=()=>{
               direction={"column"}
             >
               <Flex justifyContent={"end"} mb="4">
-                {/* <InputGroup maxW="44" alignItems={"center"} rounded="md">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<SearchIcon color="gray.300" />}
-                  />
-                  <Input
-                    variant="filled"
-                    placeholder="Search.."
-                    size={{ base: "sm" }}
-                  />
-                </InputGroup> */}
+                
                 <Button
-                  size={{ base: "sm", lg: "md" }}
-                  colorScheme="orange"
+                  size={{  }}
+                  colorScheme=""
                   onClick={() => setAddEmployeeModal(true)}
                 >
                   Add Employee
@@ -370,6 +360,38 @@ const Employee=()=>{
                 columns={columns}
                 dataSource={employeeData}
               />
+            </Flex>
+          </GridItem>
+          <GridItem colSpan={2} bg="white" borderRadius={"md"}>
+            <Flex p="4">
+              <Avatar
+                size="xl"
+                name={userProfile?.name}
+               
+              />
+              <Flex mx="4" direction={"column"}>
+                <Text
+                  fontSize={"xl"}
+                  fontFamily="semibold"
+                  textColor={"orange.500"}
+                >
+                  {_.capitalize(userProfile?.name)}
+                </Text>
+                <Text textColor={"gray.700"}>
+                  {_.capitalize(userProfile?.employeeType)}
+                </Text>
+                <HStack mt="4" gap={4}>
+                  <HStack>
+                    <Icon as={EmailIcon} />
+
+                    <Link>Email</Link>
+                  </HStack>
+                  <HStack>
+                    <Icon as={PhoneIcon} />
+                    <Link>Call</Link>
+                  </HStack>
+                </HStack>
+              </Flex>
             </Flex>
             <Code
               bg="gray.50"
@@ -425,9 +447,10 @@ const Employee=()=>{
               </VStack>
             </Flex>
           </GridItem>
-          </Grid>
-          </Flex>
-          <AddEmployee
+        </Grid>
+      </Flex>
+
+      <AddEmployee
         isModalOpen={addEmployeeModal}
         setIsModalOpen={setAddEmployeeModal}
         defaultData={initialFormData}
@@ -435,7 +458,7 @@ const Employee=()=>{
         setIsUpdate={setForUpdate}
       />
     </React.Fragment>
-
-);
+  );
 };
+
 export default Employee;
