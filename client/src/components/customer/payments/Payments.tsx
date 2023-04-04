@@ -22,10 +22,12 @@ import PaymentForm from "./PaymentForm";
 import { useAppStore } from "../../../contexts/AppStoreContext";
 import { OrderInfo } from "../orders/OrderItem";
 import axios from "axios";
-import { generateUID } from "../../common/utils";
+import { NotificationStatus, generateUID } from "../../common/utils";
+import { useNotification } from "../../../contexts/Notification";
+import { useNavigate } from "react-router-dom";
 
 export interface OrdersInfo {
-  orderId: string,
+  orderId: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -46,35 +48,62 @@ export interface OrdersInfo {
 
 const Payments = () => {
   const [orderInfo, setOrdersInfo] = useState<OrdersInfo>();
-  const [finalAmount , setFinalAmount] = useState<number>(0);
-  const [getCardDetails, setCardDetails] = useState('');
+  const [finalAmount, setFinalAmount] = useState<number>(0);
+  const [getCardDetails, setCardDetails] = useState("");
   const PUBLIC_KEY =
     "pk_test_51MRoZSEJARdSUOyGpBTo9LW9MXKYWhEy5PGftOfHI3YasBUDzxcF4umdaepjM6l0MDduck6jfImEuZuZaWi94Iwz00SPobKMl7";
   const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
   const { AppStoreData, setAppStoreData } = useAppStore();
+  const { setShowNotification } = useNotification();
+
   const {
     handleSubmit,
     register,
     formState: { errors },
     getValues,
   } = useForm();
-  useEffect(()=>{
-    const amount = AppStoreData?.finalCartData?.reduce((acc: any, item: OrderInfo) => {
-      return acc + item?.quantity * item?.price;
-    }, 0);
-    setFinalAmount(amount)
-  },[])
+  useEffect(() => {
+    const amount = AppStoreData?.finalCartData?.reduce(
+      (acc: any, item: OrderInfo) => {
+        return acc + item?.quantity * item?.price;
+      },
+      0
+    );
+    setFinalAmount(amount);
+  }, []);
+
+  const navigate = useNavigate();
 
   const prepareData = () => {
     // orderDetails: AppStoreData?.finalCartData,
-    const orders = JSON.parse(localStorage.getItem("orders")as any);
-    const payload = {...orderInfo, orderId: "o"+generateUID(),paymentId: getCardDetails, orderDetails: orders, totalAmount: 100, orderStatus:"processing"};
-    axios.post("http://localhost:5000/api/customer/v1/place-order",payload).then((response)=>{
-      console.log("********** response of order", response.data.orders)
-    }).catch((error)=>{
-      console.log("************** error", error)
-    })
+    const userID = JSON.parse(
+      localStorage?.getItem("userInfo") || ("{}" as string)
+    );
+    const orders = JSON.parse(localStorage.getItem("orders") as any);
+    const payload = {
+      ...orderInfo,
+      orderId: "o" + generateUID(),
+      email: userID?.email,
+      paymentId: getCardDetails,
+      orderDetails: orders,
+      totalAmount: (finalAmount + finalAmount / 8) * 100,
+      orderStatus: "processing",
+    };
+    axios
+      .post("http://localhost:5000/api/customer/v1/place-order", payload)
+      .then((response) => {
+        console.log("********** response of order", response.data.orders);
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Orders Placed successfully..!",
+          showAlert: true,
+        });
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.log("************** error", error);
+      });
   };
 
   return (
@@ -343,7 +372,7 @@ const Payments = () => {
                   p="3"
                 >
                   <Elements stripe={stripeTestPromise}>
-                    <PaymentForm  setCardDetails={setCardDetails} />
+                    <PaymentForm setCardDetails={setCardDetails} />
                   </Elements>
                 </Box>
               </Box>
@@ -366,20 +395,20 @@ const Payments = () => {
                 <Flex width={"100%"} justifyContent="space-between" my="2">
                   <Text fontSize={"lg"}>Sub Total</Text>
                   <Text fontSize={"lg"} fontWeight="semibold">
-                    $20
+                    ${finalAmount}
                   </Text>
                 </Flex>
                 <Flex width={"100%"} justifyContent="space-between" my="2">
                   <Text fontSize={"lg"}>Tax</Text>
                   <Text fontSize={"lg"} fontWeight="semibold">
-                    $5
+                    ${finalAmount / 8}
                   </Text>
                 </Flex>
                 <Divider my="2" />
                 <Flex width={"100%"} justifyContent="space-between" my="2">
                   <Text fontSize={"lg"}>Total</Text>
                   <Text fontSize={"lg"} fontWeight="semibold">
-                    ${finalAmount}
+                    ${finalAmount + finalAmount / 8}
                   </Text>
                 </Flex>
                 <Divider my="2" />

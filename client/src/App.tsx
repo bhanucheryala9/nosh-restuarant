@@ -28,6 +28,9 @@ import Test from "./components/Test";
 import UserProvider, { useUser } from "./contexts/UserContext";
 import AppStoreProvider from "./contexts/AppStoreContext";
 import Tour from "./components/customer/tour/Tour";
+import EOrders from "./components/employee/orders/EOrders";
+import EInventory from "./components/employee/Inventory/EInventory";
+
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -57,6 +60,8 @@ function App() {
                       <Route path="/signup" element={<SignUp />} />
                       <Route path="/orders" element={<Orders />} />
                       <Route path="/sales" element={<SalesDashboard />} />
+                      <Route path="/employee-orders" element={<EOrders />} />
+                      <Route path="/employee-update-orders" element={<EInventory />} />=
                       <Route path="/tour" element={<Tour />} />
                       <Route
                         path="/purchase-history"
