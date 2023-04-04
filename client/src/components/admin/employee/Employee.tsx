@@ -17,18 +17,25 @@ import {
   InputLeftElement,
   Input,
   Icon,
+  IconButton,
 } from "@chakra-ui/react";
 import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
 import { EmployeeTestData } from "../../../test-data/admin/employee";
-import { EmailIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  DeleteIcon,
+  EditIcon,
+  EmailIcon,
+  PhoneIcon,
+  SearchIcon,
+} from "@chakra-ui/icons";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { useNotification } from "../../../contexts/Notification";
 import { NotificationStatus } from "../../common/utils";
 import { useNavigate } from "react-router-dom";
 
-interface EmployeeDatatype {
+export interface EmployeeDatatype {
   key: React.Key;
   id: string;
   name: string;
@@ -38,15 +45,81 @@ interface EmployeeDatatype {
   address: string;
   salary: string;
   joinedDate: string;
+  about?: string;
 }
 const Employee = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addEmployeeModal, setAddEmployeeModal] = useState<boolean>(false);
+  const [unformattedEmployeeData, setunformattedEmployeeData] = useState([]);
   const [employeeData, setEmployeeData] = useState<Array<EmployeeDatatype>>([]);
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<EmployeeDatatype>(
     employeeData[0]
   );
+  const [initialFormData , setInitialFormData] = useState()
+  const prepareData = (data: any) => {
+    const formattedData = data
+      .filter((item: any) => item.type === "employee")
+      .reduce((accumulator: any, currentValue: any) => {
+        return [
+          ...accumulator,
+          {
+            key: currentValue.id,
+            id: currentValue.id.toUpperCase(),
+            name: currentValue.lastName + " " + currentValue.firstName,
+            email: currentValue.email,
+            phoneNumber: currentValue.phoneNumber,
+            employeeType: currentValue.subtype,
+            about: currentValue.about,
+            address:
+              currentValue.address.addressLine1 +
+              ", " +
+              currentValue.address.city +
+              ", " +
+              currentValue.address.state,
+            salary: currentValue.salary,
+            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
+          },
+        ];
+      }, []);
+    // setEmployeeData(formattedData);
+    setUserProfile(formattedData[0]);
+    return formattedData;
+  };
+  const onDeleteClicked = (data: EmployeeDatatype) => {
+    axios
+      .delete("http://localhost:5000/api/admin/v1/delete-employee/", {
+        params: {
+          id: data.id.toLowerCase(),
+        },
+      })
+      .then((response: any) => {
+        setEmployeeData(prepareData(response.data.employees));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Employee info deleted successfully..!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive employees information..!",
+          showAlert: true,
+        });
+      });
+  };
 
+  const getActualData = (data:any) =>{
+    const userData  =  unformattedEmployeeData.filter((item:any)=> item.id.toLowerCase()=== data.id.toLowerCase());
+    return userData[0];
+  }
+  const onUpdateClicked = (data: EmployeeDatatype) => {
+    setInitialFormData(getActualData(data) as any);
+    setForUpdate(true);
+    setAddEmployeeModal(true)
+   
+  };
 
   const columns: ColumnsType<EmployeeDatatype> = [
     {
@@ -87,11 +160,11 @@ const Employee = () => {
       filters: [
         {
           text: "Manager",
-          value: "Manager",
+          value: "manager",
         },
         {
           text: "Employee",
-          value: "Employee",
+          value: "employee",
         },
       ],
       onFilter: (value: any, record) =>
@@ -119,6 +192,29 @@ const Employee = () => {
       title: "Salary/hr",
       dataIndex: "salary",
     },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <IconButton
+            aria-label="Search database"
+            onClick={() => {
+              onDeleteClicked(record);
+            }}
+            icon={<DeleteIcon />}
+            size="sm"
+          />
+          <IconButton
+            aria-label="Search database"
+            onClick={() => onUpdateClicked(record)}
+            icon={<EditIcon />}
+            size="sm"
+          />
+        </HStack>
+      ),
+    },
     // {
     //   title: "Joined Date",
     //   dataIndex: "joinedDate",
@@ -129,54 +225,25 @@ const Employee = () => {
   const { setShowNotification } = useNotification();
   const navigate = useNavigate();
 
-
-  const prepareData = (data: any) =>{
-    const formattedData = data.reduce(
-      (accumulator: any, currentValue: any) => {
-        return [
-          ...accumulator,
-          {
-            key: currentValue.id,
-            id: (currentValue.id).toUpperCase(),
-            name: currentValue.lastName + " " + currentValue.firstName,
-            email: currentValue.email,
-            phoneNumber: currentValue.phoneNumber,
-            employeeType: currentValue.subtype,
-            address:
-              currentValue.address.addressLine1 +
-              ", " +
-              currentValue.address.city +
-              ", " +
-              currentValue.address.state,
-            salary: currentValue.salary,
-            joinedDate: new Date(currentValue.joinedDate).toLocaleDateString(),
-          },
-        ];
-      },
-      []
-    );
-    // setEmployeeData(formattedData);
-    setUserProfile(formattedData[0]);
-    return formattedData;
-  }
-
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/admin/employee-details")
-      .then((response:any) => {
-          setEmployeeData(prepareData(response.data.employees));
-          setShowNotification({
-            status: NotificationStatus.SUCCESS,
-            alertMessage: "Employee info retreived successfully..!",
-            showAlert: true,
-          });
-      }).catch(()=>{
+      .get("http://localhost:5000/api/admin/v1/get-employee-details")
+      .then((response: any) => {
+        setunformattedEmployeeData(response.data.employees);
+        setEmployeeData(prepareData(response.data.employees));
+        // setShowNotification({
+        //   status: NotificationStatus.SUCCESS,
+        //   alertMessage: "Employee info retreived successfully..!",
+        //   showAlert: true,
+        // });
+      })
+      .catch(() => {
         setShowNotification({
           status: NotificationStatus.ERROR,
           alertMessage: "Failed to retreive employees information..!",
           showAlert: true,
         });
-      })
+      });
   }, [addEmployeeModal]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -239,7 +306,7 @@ const Employee = () => {
                 scroll={{ x: 400 }}
                 style={{ width: "100%" }}
                 size="large"
-                rowSelection={rowSelection as any}
+                // rowSelection={rowSelection as any}
                 columns={columns}
                 dataSource={employeeData}
               />
@@ -293,11 +360,7 @@ const Employee = () => {
                   <Text fontSize={"xs"} fontWeight="bold">
                     About me :
                   </Text>
-                  <Text>
-                    Hi I'm Johnathn Deo,has been the industry's standard dummy
-                    text ever since the 1500s, when an unknown printer took a
-                    galley of type.
-                  </Text>
+                  <Text>{userProfile?.about}</Text>
                 </Flex>
                 <Flex direction={"column"}>
                   <Text fontSize={"xs"} fontWeight="bold">
@@ -338,6 +401,9 @@ const Employee = () => {
       <AddEmployee
         isModalOpen={addEmployeeModal}
         setIsModalOpen={setAddEmployeeModal}
+        defaultData={initialFormData}
+        isUpdate={forUpdate}
+        setIsUpdate={setForUpdate}
       />
     </React.Fragment>
   );

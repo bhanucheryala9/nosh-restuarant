@@ -16,35 +16,36 @@ import React, { useEffect, useState } from "react";
 import Biryani from "../../../assets/biryani.jpg";
 import { useCart } from "../../../contexts/CartContext";
 interface OrderItemsProps {
-  ItemId: string;
-  ItemName: string;
-  ItemDescription: string;
-  category: string;
+  id: string;
+  productName: string;
+  description: string;
   price: number;
-  isVeg: boolean;
+  discount: number;
   isAvailable: boolean;
-  Mappingkey: string;
+  tax: number;
+  url: string,
+  category: string;
+  createdAt: string | Date;
 }
 
 export interface OrderInfo {
-  itemID: string;
-  itemName: string;
+  id: string;
+  productName: string;
   category: string;
   price: number;
   quantity: number;
 }
 const OrderItem = (props: OrderItemsProps) => {
-  const { ItemId, ItemName, ItemDescription, category, price, Mappingkey } =
+  const { id, productName, description, category, price, discount, isAvailable, tax, url  } =
     props;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const [image, setImage] = useState();
 
-  // console.log("*************** item id:", ItemId, ItemName)
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await import(`../../../assets/orders/${Mappingkey}`); // change relative path to suit your needs
+        const response = await import(`../../../assets/orders/${"chickenpakora.jpg"}`); // change relative path to suit your needs
         setImage(response.default);
       } catch (err) {
       } finally {
@@ -53,22 +54,22 @@ const OrderItem = (props: OrderItemsProps) => {
     };
 
     fetchImage();
-  }, [Mappingkey]);
+  }, []);
   const { cartData, setCartData } = useCart();
   const onItemClicked = () => {
     const filterData =
       cartData.length > 0
-        ? cartData.findIndex((item: any) => item.itemName === ItemName) !== -1
+        ? cartData.findIndex((item: any) => item.productName === productName) !== -1
           ? cartData.map((item: any) =>
-              item.itemID === ItemId
+              item.id === id
                 ? { ...item, quantity: item.quantity + 1 }
                 : item
             )
           : [
               ...cartData,
               {
-                itemID: ItemId,
-                itemName: ItemName,
+                id: id,
+                productName: productName,
                 category: category,
                 price: price,
                 quantity: 1,
@@ -76,34 +77,32 @@ const OrderItem = (props: OrderItemsProps) => {
             ]
         : [
             {
-              itemID: ItemId,
-              itemName: ItemName,
+              id: id,
+              productName: productName,
               category: category,
               price: price,
               quantity: 1,
             },
           ];
 
-
-    console.log(" filterd data", filterData);
     setCartData(filterData);
   };
   return (
-    <Card maxW={{ base: "full", lg: "sm" }} key={ItemName}>
+    <Card maxW={{ base: "full", lg: "sm" }} key={id}>
       <CardBody>
         <Image
           filter="auto"
           brightness="70%"
           maxHeight={"56"}
           minW={{ base: "full", lg: "xs" }}
-          src={image}
+          src={url}
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
         <Stack mt="6" spacing="3">
-          <Heading size="md">{ItemName}</Heading>
+          <Heading size="md">{productName}</Heading>
           <Text>
-            This is special chicken biryani which is made with multiple spicies.
+            {description}
           </Text>
         </Stack>
       </CardBody>

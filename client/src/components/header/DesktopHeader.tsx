@@ -1,5 +1,15 @@
-import { Box, Link, Popover, PopoverContent, PopoverTrigger, Stack, useColorModeValue } from "@chakra-ui/react";
-import { NAV_ITEMS } from "../common/utils";
+import {
+  Box,
+  Link,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useUser } from "../../contexts/UserContext";
+import { ADMIN_NAV_ITEMS, CLIENT_NAV_ITEMS, NAV_ITEMS } from "../common/utils";
 import DesktopSubHeader from "./DesktopSubHeader";
 
 const DesktopHeader = () => {
@@ -7,9 +17,24 @@ const DesktopHeader = () => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
+
+
+  
+  const [nav, setNav] = useState(NAV_ITEMS);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userInfo") as string);
+    const customerTypeNav =
+      userData.type === "customer"
+        ? CLIENT_NAV_ITEMS
+        : userData.type === "admin"
+        ? ADMIN_NAV_ITEMS
+        : NAV_ITEMS;
+    setNav(customerTypeNav);
+  }, []);
+
   return (
     <Stack direction={"row"} spacing={4} mt={1}>
-      {NAV_ITEMS.map((navItem) => (
+      {nav.map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>

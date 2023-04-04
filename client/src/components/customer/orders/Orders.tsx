@@ -19,12 +19,13 @@ import order from "../../../assets/orders.jpg";
 import { Orders_Catergory } from "../../common/utils";
 import _ from "lodash";
 import ReactPaginate from "react-paginate";
-import { orders_items } from "../../../test-data/customer/orders";
+import axios from "axios";
 
 const Orders = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [data, setData] = useState(orders_items);
+  const [data, setData] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
   const PER_PAGE = 10;
   const pageCount = Math.ceil(data.length / PER_PAGE);
 
@@ -36,7 +37,16 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    setData(orders_items.slice(0, 8));
+    setData(data.slice(0, 8));
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setData(response.data.items);
+        setItemsData(response.data.items);
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
   }, []);
 
   return (
@@ -52,13 +62,13 @@ const Orders = () => {
             bg={"white"}
             rounded="lg"
             py="4"
-            px={{base:"16",lg:"28"}}
+            px={{ base: "16", lg: "28" }}
             mt="-10"
             zIndex={10}
             shadow="base"
           >
             <Text
-              fontSize={{sm:"md",lg:"2xl"}}
+              fontSize={{ sm: "md", lg: "2xl" }}
               fontWeight="semibold"
               fontFamily={"'Nunito', sans-serif"}
             >
@@ -69,16 +79,18 @@ const Orders = () => {
         <Tabs
           variant="soft-rounded"
           colorScheme="orange"
-          mt={{base:"4",lg:"8"}}
-          mx={{base:"4",lg:"10"}}
-          size={{base:"sm", lg:"lg"}}
+          mt={{ base: "4", lg: "8" }}
+          mx={{ base: "4", lg: "10" }}
+          size={{ base: "sm", lg: "lg" }}
           onChange={(index) => {
             setSelectedCategory(Orders_Catergory[index]);
-            const redata = orders_items.filter(
-              (item) => item.category === Orders_Catergory[index]
+            const redata = itemsData.filter(
+              (item: any) => item.category === Orders_Catergory[index]
             );
             setData(
-              Orders_Catergory[index] === "all" ? orders_items.slice(0, 8) : redata.slice(0, 8)
+              Orders_Catergory[index] === "all"
+                ? itemsData.slice(0, 8)
+                : redata.slice(0, 8)
             );
           }}
         >
@@ -102,24 +114,31 @@ const Orders = () => {
                   </Text>
                   <Grid
                     mt="4"
-                    templateRows={{base:"repeat(8, 1fr)",lg:"repeat(2, 1fr)"}}
-                    templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(4, 1fr)"}}
-                    gap={{base:3,lg:8}}
+                    templateRows={{
+                      base: "repeat(8, 1fr)",
+                      lg: "repeat(2, 1fr)",
+                    }}
+                    templateColumns={{
+                      base: "repeat(1, 1fr)",
+                      lg: "repeat(4, 1fr)",
+                    }}
+                    gap={{ base: 3, lg: 8 }}
                   >
-                    {data.map((orders, index) => {
-                      return (
-                        <GridItem
-                          colSpan={1}
-                          rowSpan={1}
-                          display="flex"
-                          alignItems={"center"}
-                          justifyContent="end"
-                          key={index}
-                        >
-                          <OrderItem {...(orders as any)} />
-                        </GridItem>
-                      );
-                    })}
+                    {data &&
+                      data.map((orders, index) => {
+                        return (
+                          <GridItem
+                            colSpan={1}
+                            rowSpan={1}
+                            display="flex"
+                            alignItems={"center"}
+                            justifyContent="end"
+                            key={index}
+                          >
+                            <OrderItem {...(orders as any)} />
+                          </GridItem>
+                        );
+                      })}
                   </Grid>
                 </TabPanel>
               );

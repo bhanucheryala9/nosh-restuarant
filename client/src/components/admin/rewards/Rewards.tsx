@@ -24,29 +24,66 @@ import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { AiFillCodeSandboxSquare } from "react-icons/ai";
 import { Line, LineChart, XAxis, YAxis } from "recharts";
+import { useNotification } from "../../../contexts/Notification";
 import {
   RewardsTestData,
   statsChartData,
 } from "../../../test-data/admin/rewards";
-import { RewardsRequestPayload } from "../../common/utils";
+import { NotificationStatus, RewardsRequestPayload } from "../../common/utils";
 import CreateReward from "./CreateReward";
 export interface RewardDataType {
   key: React.Key;
   id: string;
   code: string;
   discountPercentage: number;
-  maxDiscountAmount:number;
-  appliesTo:string;
-  minOrderPrice:number;
+  maxDiscountAmount: number;
+  appliesTo: string;
+  minOrderPrice: number;
   rewardType: string;
-  appliedCategory:string[] |string;
+  appliedCategory: string[] | string;
 }
 
 const Rewards = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [rewardsData, setRewardsData] = useState<RewardDataType[]>([]);
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [toUpdateData, setToUpdateData] = useState();
   const [showCreateRewardModal, setShowCreateRewardModal] =
     useState<boolean>(false);
+  const { setShowNotification } = useNotification();
+
+
+
+  const onUpdateClicked = (data: any) => {
+    setToUpdateData(data);
+    setForUpdate(true);
+    setShowCreateRewardModal(true);
+  };
+
+  const onDeleteClicked = (data: any) => {
+    axios
+      .delete("http://localhost:5000/api/admin/v1/delete-reward", {
+        params: {
+          id: data.id,
+        },
+      })
+      .then((response: any) => {
+        setRewardsData(prepareData(response.data.rewards));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Successfully deleted item!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive rewards information..!",
+          showAlert: true,
+        });
+      });
+  };
+
   const columns: ColumnsType<RewardDataType> = [
     // {
     //   title: "Reward ID",
@@ -60,12 +97,11 @@ const Rewards = () => {
     {
       title: "Applies To",
       dataIndex: "appliesTo",
-      render:(text) => <div>{_.capitalize(text as string)}</div>
+      render: (text) => <div>{_.capitalize(text as string)}</div>,
     },
     {
       title: "Category",
       dataIndex: "appliedCategory",
-      
     },
     {
       title: "Discount %",
@@ -87,11 +123,15 @@ const Rewards = () => {
         <HStack>
           <IconButton
             aria-label="Search database"
+            onClick={() => {
+              onDeleteClicked(record);
+            }}
             icon={<DeleteIcon />}
             size="sm"
           />
           <IconButton
             aria-label="Search database"
+            onClick={() => onUpdateClicked(record)}
             icon={<EditIcon />}
             size="sm"
           />
@@ -100,10 +140,10 @@ const Rewards = () => {
     },
   ];
 
-  const prepareData = (data:RewardsRequestPayload[]) =>{
+  const prepareData = (data: RewardsRequestPayload[]) => {
     const formattedData = data.reduce(
-      (accumulator: any, currentValue:RewardsRequestPayload) => {
-        if(currentValue.appliedCategory){
+      (accumulator: any, currentValue: RewardsRequestPayload) => {
+        if (currentValue.appliedCategory) {
           return [
             ...accumulator,
             {
@@ -111,13 +151,13 @@ const Rewards = () => {
               ...currentValue,
             },
           ];
-        }else{
+        } else {
           return [
             ...accumulator,
             {
               key: currentValue.id,
               ...currentValue,
-              appliedCategory:"all"
+              appliedCategory: "all",
             },
           ];
         }
@@ -125,15 +165,14 @@ const Rewards = () => {
       []
     );
     return formattedData;
-  }
+  };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/admin/get-rewards")
+      .get("http://localhost:5000/api/admin/v1/get-rewards")
       .then((response) => {
         setRewardsData(prepareData(response.data.rewards));
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   }, [showCreateRewardModal]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -145,28 +184,24 @@ const Rewards = () => {
     onChange: onSelectChange,
   };
 
-  const StatusProps= [
+  const StatusProps = [
     {
-    name:"Total",
-    quantity: 15,
-
-  },
-  {
-    name:"Active",
-    quantity: 14,
-
-  },
-  {
-    name:"In Active",
-    quantity: 1,
-
-  },
-  {
-    name:"Scheduled",
-    quantity: 3,
-
-  },
-]
+      name: "Total",
+      quantity: 15,
+    },
+    {
+      name: "Active",
+      quantity: 14,
+    },
+    {
+      name: "In Active",
+      quantity: 1,
+    },
+    {
+      name: "Scheduled",
+      quantity: 3,
+    },
+  ];
 
   const gradientColor = [
     "linear-gradient(to top, #30c7ec 47%, #46aef7 70%)",
@@ -189,9 +224,9 @@ const Rewards = () => {
             bgGradient={gradientColor[index]}
             textColor={"white"}
             minH="36"
-            maxW={{base:"full"}}
+            maxW={{ base: "full" }}
             position={"relative"}
-            backdropFilter='brightness(10%)'
+            backdropFilter="brightness(10%)"
           >
             <LineChart
               width={280}
@@ -229,13 +264,13 @@ const Rewards = () => {
   };
   return (
     <React.Fragment>
-      <Flex mx={{base:"4",lg:"10"}} my="6" direction={"column"}>
+      <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
         <Flex justifyContent={"space-between"}>
-          <Text fontSize={{base:"lg",lg:"xl"}} fontWeight="bold">
+          <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
             Offers and Rewards
           </Text>
           <Button
-            size={{base:"sm", lg:"md"}}
+            size={{ base: "sm", lg: "md" }}
             colorScheme={"orange"}
             onClick={() => setShowCreateRewardModal(true)}
           >
@@ -246,9 +281,9 @@ const Rewards = () => {
 
         <Grid
           my="4"
-          templateRows={{base:"repeat(4, 1fr)",lg:"repeat(1, 1fr)"}}
-          templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(4, 1fr)"}}
-          gap={{base:3,lg:4}}
+          templateRows={{ base: "repeat(4, 1fr)", lg: "repeat(1, 1fr)" }}
+          templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(4, 1fr)" }}
+          gap={{ base: 3, lg: 4 }}
         >
           {getStatusComponent()}
         </Grid>
@@ -263,7 +298,7 @@ const Rewards = () => {
               };
             }}
             style={{ width: "100%" }}
-            scroll={{x:400}}
+            scroll={{ x: 400 }}
             size="large"
             rowSelection={rowSelection as any}
             columns={columns}
@@ -274,6 +309,9 @@ const Rewards = () => {
       <CreateReward
         isModalOpen={showCreateRewardModal}
         setIsModalOpen={setShowCreateRewardModal}
+        forUpdate={forUpdate}
+        setForUpdate={setForUpdate}
+        defaultData={toUpdateData}
       />
     </React.Fragment>
   );

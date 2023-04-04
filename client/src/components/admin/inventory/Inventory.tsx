@@ -1,10 +1,23 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { Flex, HStack, IconButton, Text } from "@chakra-ui/react";
-import { Table, Tag } from "antd";
+import {
+  Flex,
+  HStack,
+  IconButton,
+  Tag,
+  TagLabel,
+  Text,
+} from "@chakra-ui/react";
+import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNotification } from "../../../contexts/Notification";
 import Loader from "../../common/Loader";
+import { NotificationStatus } from "../../common/utils";
+import AddInventory from "./AddInventory";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../../../contexts/AppStoreContext";
+
 interface InventoryColumns {
   id: string;
   productName: string;
@@ -19,6 +32,72 @@ const Inventory = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [inventoryData, setInventoryData] = useState<InventoryColumns[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [toUpdateData, setToUpdateData] = useState();
+
+  const { setShowNotification } = useNotification();
+  const navigate = useNavigate();
+  const { AppStoreData, setAppStoreData } = useAppStore();
+
+  const prepareData = (data: InventoryColumns[]) => {
+    const formattedData = data.reduce((accumulator: any, currentValue) => {
+      return [
+        ...accumulator,
+        {
+          id: currentValue.id,
+          productName: currentValue.productName,
+          description: currentValue.description,
+          price: currentValue.price,
+          discount: currentValue.discount,
+          isAvailable: currentValue.isAvailable,
+          tax: currentValue.tax,
+          category: currentValue.category,
+        },
+      ];
+    }, []);
+    return formattedData;
+  };
+  const onDeleteClicked = (data: any) => {
+    console.log(" data for deleteinh", data);
+    axios
+      .delete("http://localhost:5000/api/admin/v1/delete-item", {
+        params: {
+          id: data.id,
+        },
+      })
+      .then((response: any) => {
+        setInventoryData(prepareData(response.data.items));
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "Successfully deleted item!",
+          showAlert: true,
+        });
+      })
+      .catch(() => {
+        setShowNotification({
+          status: NotificationStatus.ERROR,
+          alertMessage: "Failed to retreive items information..!",
+          showAlert: true,
+        });
+      });
+  };
+
+  // const getActualData = (data:any) =>{
+  //   const userData  =  unformattedEmployeeData.filter((item:any)=> item.id.toLowerCase()=== data.id.toLowerCase());
+  //   return userData[0];
+  // }
+  const onUpdateClicked = (data: any) => {
+    setToUpdateData(data);
+    setForUpdate(true);
+    setAppStoreData({
+      ...AppStoreData,
+      inventoryData: {
+        inventoryUpdateData: data,
+        forUpdate: true,
+      },
+    });
+    navigate("/add-inventory");
+  };
 
   const columns: ColumnsType<InventoryColumns> = [
     {
@@ -43,12 +122,26 @@ const Inventory = () => {
       render: (text) => (
         <>
           {text ? (
-            <Tag color={"green"} key={text}>
-              {"Yes"}
+            <Tag
+              size={"md"}
+              key={"yes"}
+              borderRadius="full"
+              variant="solid"
+              colorScheme="green"
+              p="1"
+            >
+              <TagLabel mx="4">Yes</TagLabel>
             </Tag>
           ) : (
-            <Tag color={"blue"} key={text}>
-              {"No"}
+            <Tag
+              size={"md"}
+              key={"no"}
+              borderRadius="full"
+              variant="solid"
+              colorScheme="red"
+              p="1"
+            >
+              <TagLabel mx="4" >No</TagLabel>
             </Tag>
           )}
         </>
@@ -65,12 +158,16 @@ const Inventory = () => {
       render: (_, record) => (
         <HStack>
           <IconButton
-            aria-label="delete inventory"
+            aria-label="Search database"
+            onClick={() => {
+              onDeleteClicked(record);
+            }}
             icon={<DeleteIcon />}
             size="sm"
           />
           <IconButton
-            aria-label="edit inventory"
+            aria-label="Search database"
+            onClick={() => onUpdateClicked(record)}
             icon={<EditIcon />}
             size="sm"
           />
@@ -79,32 +176,17 @@ const Inventory = () => {
     },
   ];
 
-  const prepareData = (data: InventoryColumns[]) => {
-    const formattedData = data.reduce((accumulator: any, currentValue) => {
-      return [
-        ...accumulator,
-        {
-          productName: currentValue.productName,
-          description: currentValue.description,
-          price: currentValue.price,
-          discount: currentValue.discount,
-          isAvailable: currentValue.isAvailable,
-          tax: currentValue.tax,
-          category: currentValue.category,
-        },
-      ];
-    }, []);
-    return formattedData;
-  };
-
   useEffect(() => {
     setIsLoading(true);
-    axios.get("http://localhost:5000/api/admin/get-items").then((response) => {
-      setInventoryData(prepareData(response.data.inventory));
-      setIsLoading(false);
-    }).catch((error)=>{
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setInventoryData(prepareData(response.data.items));
         setIsLoading(false);
-    });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
   }, []);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);

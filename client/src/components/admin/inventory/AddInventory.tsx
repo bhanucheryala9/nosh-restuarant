@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   Card,
   Flex,
@@ -21,17 +21,31 @@ import {
   InputLeftElement,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import Dragger from "antd/es/upload/Dragger";
 import { UploadProps } from "antd";
 import { FaInbox } from "react-icons/fa";
-import { InventoryRequestPayload, NotificationStatus } from "../../common/utils";
+import {
+  generateUID,
+  InventoryRequestPayload,
+  NotificationStatus,
+} from "../../common/utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNotification } from "../../../contexts/Notification";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../../../contexts/AppStoreContext";
+import Dropzone from "react-dropzone";
 
-const AddInventory = () => {
+interface AddInventoryProps {
+  children?: ReactNode;
+  isUpdate?: boolean;
+  setIsUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const AddInventory = (props: AddInventoryProps) => {
   const [formData, setFormData] = useState<InventoryRequestPayload>();
+  const [defaultValues, setDefaultValues] = useState({});
+  const [forUpdate, setForUpdate] = useState<boolean>(false);
+  const [productURI, setProductURI] = useState<string>("");
+
   const {
     handleSubmit,
     register,
@@ -39,48 +53,90 @@ const AddInventory = () => {
   } = useForm();
   const navigate = useNavigate();
   const { setShowNotification } = useNotification();
+  const { AppStoreData } = useAppStore();
 
-  const props: UploadProps = {
-    name: "file",
-    multiple: true,
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        console.log(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        console.log(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
+  useEffect(() => {
+    setDefaultValues(AppStoreData?.inventoryData?.inventoryUpdateData);
+    setForUpdate(AppStoreData?.inventoryData?.forUpdate);
+  }, []);
+
+  const prepareData = () => {
+    const formattedData = {
+      id: (defaultValues as any).id,
+      productName: (defaultValues as any).productName,
+      category: (defaultValues as any).category,
+      description: (defaultValues as any).description,
+      price: (defaultValues as any).price,
+      discount: (defaultValues as any).discount,
+      isAvailable: (defaultValues as any).isAvailable,
+      tax: (defaultValues as any).tax,
+    };
+    return formattedData;
   };
 
-  const onSubmitClicked = () => {
-    const preparedPayload = { ...formData, id: "sjhagdjhsaddghj" };
-    console.log("payload of inventory", preparedPayload);
-    axios
-      .post("http://localhost:5000/api/admin/add-item", preparedPayload)
-      .then((response) => {
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Successfully Item added to invetory..!",
-          showAlert: true,
-        });
-        navigate("/inventory");
-
+  const handleFilesDropped = async (files: any) => {
+    const formData1 = new FormData();
+    formData1.append("file", files[0]);
+    formData1.append("upload_preset", "iu8dkp2y");
+    formData1.append("folder", "nosh");
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dh4anygjz/image/upload", formData1)
+      .then((res) => {
+        setProductURI(res.data.url);
       })
       .catch((error) => {
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Failed to added Item to invetory..!",
-          showAlert: true,
-        });
+        console.log("failed to upload in cloudnary");
+        window.alert("Failed to upload image in cloud..!");
       });
+  };
+  const onSubmitClicked = () => {
+    if (!forUpdate) {
+      const preparedPayload = {
+        ...formData,
+        id: "I" + generateUID(),
+        tax: 0,
+        url: productURI,
+      };
+      console.log("payload of inventory", preparedPayload);
+      axios
+        .post("http://localhost:5000/api/admin/v1/add-item", preparedPayload)
+        .then((response) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Successfully Item added to invetory..!",
+            showAlert: true,
+          });
+          navigate("/inventory");
+        })
+        .catch((error) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to added Item to invetory..!",
+            showAlert: true,
+          });
+        });
+    } else {
+      const data = prepareData();
+      const payload = { ...data, ...formData };
+      console.log("******* update mode:", payload);
+      axios
+        .put("http://localhost:5000/api/admin/v1/update-item", payload)
+        .then((response) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Successfully Item added to invetory..!",
+            showAlert: true,
+          });
+          navigate("/inventory");
+        })
+        .catch((error) => {
+          setShowNotification({
+            status: NotificationStatus.SUCCESS,
+            alertMessage: "Failed to added Item to invetory..!",
+            showAlert: true,
+          });
+        });
+    }
   };
 
   return (
@@ -134,6 +190,7 @@ const AddInventory = () => {
                       {...register("productName", {
                         required: "Product Name is required",
                       })}
+                      defaultValue={(defaultValues as any)?.productName}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -151,6 +208,7 @@ const AddInventory = () => {
                     <Textarea
                       placeholder="Enter product summary here.."
                       {...register("description")}
+                      defaultValue={(defaultValues as any)?.description}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -173,11 +231,15 @@ const AddInventory = () => {
                       <Input
                         placeholder="Enter amount"
                         type={"number"}
+                        defaultValue={(defaultValues as any)?.price}
                         {...register("price", {
                           required: "Price is required",
                         })}
                         onChange={(e) => {
-                          const data = { ...formData, price: e.target.value };
+                          const data = {
+                            ...formData,
+                            price: Number(e.target.value),
+                          };
                           setFormData(data as any);
                         }}
                       />
@@ -191,6 +253,7 @@ const AddInventory = () => {
                     <Input
                       placeholder="Enter discount"
                       type="number"
+                      defaultValue={(defaultValues as any)?.discount}
                       {...register("discount", {
                         required: "Discount is required",
                       })}
@@ -210,6 +273,7 @@ const AddInventory = () => {
                       {...register("isAvailable", {
                         required: "Is available is required",
                       })}
+                      defaultValue={(defaultValues as any)?.isAvailable}
                       onChange={(e) => {
                         const data = {
                           ...formData,
@@ -243,20 +307,23 @@ const AddInventory = () => {
                   mx="4"
                   my="4"
                 />
-                <Dragger {...props} style={{ width: "100%" }}>
-                  <Flex alignItems={"center"} direction="column" py="4" px="8">
-                    <p className="ant-upload-drag-icon">
-                      <FaInbox width={40} height={40} />
-                    </p>
-                    <p className="ant-upload-text">
-                      Click or drag file to this area to upload
-                    </p>
-                    <p className="ant-upload-hint">
-                      Support for a single or bulk upload. Strictly prohibit
-                      from uploading company data or other band files
-                    </p>
-                  </Flex>
-                </Dragger>
+                <Dropzone onDrop={(files) => handleFilesDropped(files)}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      {...getRootProps()}
+                      style={{
+                        border: "1px dashed #ED8936",
+                        padding: "4rem 7rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input {...getInputProps()} />
+                      <p>
+                        Drag 'n' drop some files here, or click to select files
+                      </p>
+                    </div>
+                  )}
+                </Dropzone>
               </Flex>
             </GridItem>
             <GridItem
@@ -279,6 +346,7 @@ const AddInventory = () => {
                     <FormLabel fontSize={"xs"}>Product Category</FormLabel>
                     <Select
                       placeholder="Select option"
+                      defaultValue={(defaultValues as any)?.category}
                       {...register("category", {
                         required: "Category is required",
                       })}
@@ -313,11 +381,12 @@ const AddInventory = () => {
                       {errors["category"]?.message as string}
                     </FormErrorMessage>
                   </FormControl>
-                  <FormControl mt="4" isInvalid={!!errors["tax"]}>
+                  {/* <FormControl mt="4" isInvalid={!!errors["tax"]}>
                     <FormLabel fontSize={"xs"}>Tax Percentage</FormLabel>
                     <Input
                       placeholder="Enter tax percentage"
                       type="number"
+                      defaultValue={(defaultValues as any)?.tax}
                       {...register("tax", {
                         required: "Tax is required",
                       })}
@@ -329,7 +398,7 @@ const AddInventory = () => {
                     <FormErrorMessage>
                       {errors["tax"]?.message as string}
                     </FormErrorMessage>
-                  </FormControl>
+                  </FormControl> */}
                 </Flex>
               </Flex>
             </GridItem>

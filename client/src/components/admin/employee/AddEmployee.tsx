@@ -32,71 +32,128 @@ interface AddEmployeeProps {
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
   children?: ReactNode;
+  defaultData?: any;
+  isUpdate: boolean;
+  setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 const AddEmployee = (props: AddEmployeeProps) => {
-  const { isModalOpen, setIsModalOpen } = props;
+  const { isModalOpen, setIsModalOpen, defaultData, isUpdate, setIsUpdate } = props;
   const { signUp } = useAuth();
   const { setShowNotification } = useNotification();
-
   const [formData, setFormData] = useState<EmployeeRequestPayload>();
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm();
+    getValues,
+  } = useForm({
+    defaultValues: {
+      firstName: defaultData?.firstName,
+      lastName: defaultData?.lastName,
+      email: defaultData?.email,
+      phone: defaultData?.phoneNumber,
+      employeeType: defaultData?.subtype,
+      salary: defaultData?.salary,
+      addressLine1: defaultData?.address.addressLine1,
+      addressLine2: defaultData?.address.addressLine1,
+      city: defaultData?.address.city,
+      state: defaultData?.address.state,
+      about: defaultData?.about,
+    },
+  });
+
+  const prepareData = () => {
+    const formattedData = {
+      firstName: defaultData.firstName,
+      lastName: defaultData.lastName,
+      email: defaultData.email,
+      phone: defaultData.phoneNumber,
+      subtype: defaultData.subtype,
+      type: defaultData.type,
+      salary: defaultData.salary,
+      address: defaultData.address,
+      about: defaultData.about,
+    };
+    return formattedData;
+  };
 
   const onSubmitClicked = (data: any) => {
     let formattedData = formData;
-    formattedData = {
-      ...formattedData,
-      id:
-        formattedData &&
-        formattedData?.firstName[0] +
-          formattedData?.lastName[0] +
-          Math.floor(Math.random() * 90000) +
-          10000,
-      joinedDate: Date.now(),
-      address: {
-        ...formattedData?.address,
-        zipcode: "12208",
-      },
-    } as any;
 
-    axios
-      .post("http://localhost:5000/api/admin/add-employee", formattedData)
-      .then((response) => {
-
-        try {
-          signUp(formattedData?.email, "Nosh@123")
-            .then((res: any) => {
-              setShowNotification({
-                status: NotificationStatus.SUCCESS,
-                alertMessage: "employee account successfully created..!",
-                showAlert: true,
+    if (!isUpdate) {
+      formattedData = {
+        ...formattedData,
+        id: (
+          formattedData &&
+          formattedData?.firstName[0] +
+            formattedData?.lastName[0] +
+            Math.floor(Math.random() * 90000) +
+            10000
+        )?.toLowerCase(),
+        joinedDate: Date.now(),
+        credits: 0,
+        address: {
+          ...formattedData?.address,
+          zipcode: "12208",
+        },
+      } as any;
+      axios
+        .post("http://localhost:5000/api/admin/v1/add-employee", formattedData)
+        .then((response) => {
+          try {
+            signUp(formattedData?.email, "Nosh@123")
+              .then((res: any) => {
+                setShowNotification({
+                  status: NotificationStatus.SUCCESS,
+                  alertMessage: "employee account successfully created..!",
+                  showAlert: true,
+                });
+                setIsModalOpen(false);
+              })
+              .catch((error: any) => {
+                setShowNotification({
+                  status: NotificationStatus.ERROR,
+                  alertMessage: "Failed to create employee login..!",
+                  showAlert: true,
+                });
+                setIsModalOpen(false);
               });
-              setIsModalOpen(false);
-            })
-            .catch((error: any) => {
-              setShowNotification({
-                status: NotificationStatus.ERROR,
-                alertMessage: "Failed to create employee login..!",
-                showAlert: true,
-              });
-              setIsModalOpen(false);
+          } catch {
+            setShowNotification({
+              status: NotificationStatus.ERROR,
+              alertMessage: "Failed to create employee login..!",
+              showAlert: true,
             });
-        } catch {
-          setShowNotification({
-            status: NotificationStatus.ERROR,
-            alertMessage: "Failed to create employee login..!",
-            showAlert: true,
-          });
-        }
+          }
+        })
+        .catch((error) => {
+          console.log("failed to create")
+          setIsModalOpen(false);
+          setIsUpdate(false);
+        });
+    } else {
+      const preparedUserData = prepareData();
+      formattedData = {
+        id: defaultData.id as string,
+        ...preparedUserData,
+        ...formData,
+      } as any;
+      axios
+        .put(
+          "http://localhost:5000/api/admin/v1/update-employee",
+          formattedData
+        )
+        .then((response) => {
+          setIsModalOpen(false);
+          setIsUpdate(false);
+        })
+        .catch((error) => {
+          console.log("Failed to update data");
+          setIsModalOpen(false);
+          setIsUpdate(false);
 
-
-      })
-      .catch((error) => {
-      });
-
+        });
+    }
   };
 
   return (
@@ -134,6 +191,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("firstName", {
                         required: "First Name is required",
                       })}
+                      defaultValue={defaultData?.firstName}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -161,6 +219,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("lastName", {
                         required: "Last Name is required",
                       })}
+                      defaultValue={defaultData?.lastName}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -188,6 +247,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("email", {
                         required: "Email is required",
                       })}
+                      defaultValue={defaultData?.email}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -215,6 +275,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("phone", {
                         required: "Mobile Number is required",
                       })}
+                      defaultValue={defaultData?.phoneNumber}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -242,6 +303,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("employeeType", {
                         required: "Employee is required",
                       })}
+                      defaultValue={defaultData?.subtype}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -281,6 +343,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                         {...register("salary", {
                           required: "Salary is required",
                         })}
+                        defaultValue={defaultData?.salary}
                         onChange={(e) => {
                           const userData = {
                             ...formData,
@@ -308,6 +371,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("addressLine1", {
                         required: "Address Line1 is required",
                       })}
+                      defaultValue={defaultData?.address.addressLine1}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -335,6 +399,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                     </FormLabel>
                     <Input
                       {...register("addressLine2")}
+                      defaultValue={defaultData?.address.addressLine2}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -361,6 +426,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("city", {
                         required: "City is required",
                       })}
+                      defaultValue={defaultData?.address.city}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -390,6 +456,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       {...register("state", {
                         required: "State is required",
                       })}
+                      defaultValue={defaultData?.address.state}
                       onChange={(e) => {
                         const userData = {
                           ...formData,
@@ -418,6 +485,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                     <Textarea
                       placeholder="write short discription about you.."
                       {...register("about")}
+                      defaultValue={defaultData?.about}
                       onChange={(e) => {
                         const userData = {
                           ...formData,

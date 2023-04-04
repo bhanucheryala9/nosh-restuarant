@@ -23,15 +23,20 @@ import "./dashboard.css";
 import Cart from "./customer/cart/Cart";
 import Loader from "./common/Loader";
 import { CSSProperties, useEffect, useState } from "react";
+import { useUser } from "../contexts/UserContext";
+import biryani from "../assets/biryani.jpg";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { userData } = useUser();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(true);
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
   return (
     <Flex direction={"column"}>
       {!isLoading && <Loader />}
@@ -270,97 +275,76 @@ const Dashboard = () => {
           />
         </Box>
       </Flex>
-
-      {/* <Flex
-        px="6"
-        py="8"
-        direction={"column"}
-        bg="orange.500"
-        textColor={"white"}
-        mx="24"
-        my="6"
-        rounded={"2xl"}
-      >
-        <Text fontSize={"2xl"} fontWeight="semibold" my="2" minW={"8xl"}>
-          Welcome to Eatland
+      <Flex direction={"column"} p="4" mb="6" alignItems={"center"} px="6" bg="white">
+        <Text
+          fontFamily={"'Nunito', sans-serif"}
+          fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+          fontWeight={"semibold"}
+          mt="6"
+        >
+          Food Suggestion
         </Text>
-        <Text fontSize={"lg"}>Feel the taste of authentic foods</Text>
-      </Flex>
-
-      <HStack gap={3}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
-          return (
-            <Flex
-              bg="white"
-              direction={"column"}
-              px="8"
-              py="10"
-              rounded={"full"}
-              alignItems="center"
-              shadow={"xl"}
-              style={{
-                boxShadow:
-                  "0 1.8px 1.2px rgba(0, 0, 0, 0.014), 0 0.7px 1.3px rgba(0, 0, 0, 0.018), 0 5.5px 3px rgba(0, 0, 0, 0.06),0 8.3px 7.9px rgba(0, 0, 0, 0.072), 0 11.8px 3.4px rgba(0, 0, 0, 0.026),0 20px 10px rgba(0, 0, 0, 0.05)",
-              }}
-            >
-              <Avatar size="lg" src="https://bit.ly/broken-link" />
-              <Text my={"3"} fontWeight="semibold" color={"orange.600"}>
-                Item - {index}
-              </Text>
-            </Flex>
-          );
-        })}
-      </HStack> */}
-
-      {/* <Flex
-        bg="white"
-        p="6"
-        my="6"
-        rounded={"md"}
-        shadow="sm"
-        direction={"column"}
-      >
-        <Text fontSize={"3xl"} fontWeight="semibold" my="4">
-          Recent Item:{" "}
+        <Text
+          fontFamily={"'Nunito', sans-serif"}
+          fontSize={{ base: "sm", lg: "lg" }}
+          mt="2"
+          mb="6"
+        >
+          choose your own taste
         </Text>
-        <HStack>
+        <Flex>
           {[1, 2, 3, 4].map((item) => {
             return (
-              <Card maxW="sm">
-                <CardBody>
-                  <Image
-                    src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                    alt="Green double couch with wooden legs"
-                    borderRadius="lg"
-                  />
-                  <Stack mt="6" spacing="3">
-                    <Heading size="md">Living room Sofa</Heading>
-                    <Text>
-                      This sofa is perfect for modern tropical spaces, baroque
-                      inspired spaces, earthy toned spaces and for people who
-                      love a chic design with a sprinkle of vintage design.
-                    </Text>
-                    <Text color="blue.600" fontSize="2xl">
-                      $450
-                    </Text>
-                  </Stack>
-                </CardBody>
+              <Flex
+                border={"1px solid"}
+                borderColor="orange.500"
+                px="4"
+                py="6"
+                borderRadius={"lg"}
+                direction={"column"}
+                alignItems="center"
+                mx="2"
+                mt="4"
+                _hover={ {
+                  backgroundColor:"orange.50"
+                }}
+                cursor="pointer"
+              >
+                <Image
+                  filter="auto"
+                  brightness="70%"
+                  maxHeight={"56"}
+                  minW={{ base: "full", lg: "xs" }}
+                  src={biryani}
+                  alt="Green double couch with wooden legs"
+                  borderRadius="lg"
+                />
+                <Text
+                  fontSize={"2xl"}
+                  fontWeight="semibold"
+                  mt="6"
+                  letterSpacing={"wide"}
+                >
+                  Biryani
+                </Text>
+                <Text
+                  fontSize={"3xl"}
+                  fontWeight="bold"
+                  my="2"
+                  letterSpacing={"wide"}
+                  textColor="orange.500"
+                >
+                  $10
+                </Text>
                 <Divider />
-                <CardFooter>
-                  <ButtonGroup spacing="2">
-                    <Button variant="solid" colorScheme="blue">
-                      Buy now
-                    </Button>
-                    <Button variant="ghost" colorScheme="blue">
-                      Add to cart
-                    </Button>
-                  </ButtonGroup>
-                </CardFooter>
-              </Card>
+                <Button my="4" width={"xs"} colorScheme="orange">
+                  Add to Cart
+                </Button>
+              </Flex>
             );
-          })}{" "}
-        </HStack>
-      </Flex> */}
+          })}
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
