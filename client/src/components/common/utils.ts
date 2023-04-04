@@ -186,75 +186,14 @@ export const NAV_ITEMS: Array<NavItem> = [
 
 export const EMPLOYEE_NAV: Array<NavItem> = [
   {
-    label: "Dashboard",
-    href: "/dashboard",
+    label: "Orders",
+    subLabel: "Find your orders",
+    href: "/employee-orders",
   },
   {
-    label: "Admin",
-    children: [
-      {
-        label: "Create Employee",
-        subLabel: "you can create and manage employees",
-        href: "/employee",
-      },
-      {
-        label: "Add Inventory",
-        subLabel: "Create inventory",
-        href: "/add-inventory",
-      },
-      {
-        label: "Inventory",
-        subLabel: "Manage inventory",
-        href: "/inventory",
-      },
-      {
-        label: "Offers",
-        subLabel: "Create Offers and Rewards",
-        href: "/rewards",
-      },
-      {
-        label: "Sales",
-        subLabel: "View the sales details.",
-        href: "/sales",
-      },
-    ],
-  },
-
-  {
-    label: "Employee",
-    children: [
-      {
-        label: "Orders",
-        subLabel: "Find your orders",
-        href: "/employee-orders",
-      },
-      {
-        label: "Update Orders",
-        subLabel: "Update inventory items status",
-        href: "/employee-update-orders",
-      },
-    ],
-  },
-
-  {
-    label: "Customer",
-    children: [
-      {
-        label: "Orders Now",
-        subLabel: "Find items to order",
-        href: "/orders",
-      },
-      {
-        label: "Purchase History",
-        subLabel: "Check your purchase history",
-        href: "/purchase-history",
-      },
-      {
-        label: "Payment",
-        subLabel: "Check your payment section",
-        href: "/payment",
-      },
-    ],
+    label: "Update Orders",
+    subLabel: "Update inventory items status",
+    href: "/employee-update-orders",
   },
 ];
 export const ADMIN_NAV_ITEMS: Array<NavItem> = [
