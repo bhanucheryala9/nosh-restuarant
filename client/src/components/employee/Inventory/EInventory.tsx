@@ -127,21 +127,14 @@ const EInventory = () => {
   };
 
   const onInventorytatusChange = (orderID: string, status: boolean) => {
-    const itemNeedtoUpdate = eInventoryData?.map((item) => {
-      if (item.id === orderID) {
-        return { ...item, isAvailable: status };
-      }
-    });
+    let itemData =  eInventoryData?.filter((item)=> item.id === orderID);
+    const itemNeedtoUpdate = {...itemData[0], isAvailable: status }
 
-    console.log(
-      "************** tesing complte data of item:",
-      itemNeedtoUpdate[0]
-    );
     setIsLoading(true);
     axios
       .put(
         "http://localhost:5000/api/admin/v1/update-items-status",
-        itemNeedtoUpdate[0]
+        itemNeedtoUpdate
       )
       .then((response) => {
         setEInventoryData(response.data.items);
@@ -200,9 +193,11 @@ const EInventory = () => {
       title: "Action",
       key: "action",
       width: "45px",
-      render: (_, record) => (
-        <HStack>
-          {/* <IconButton
+      render: (data, record) => (
+        <>
+          {/* {console.log("************** record details", record, data)} */}
+          <HStack>
+            {/* <IconButton
             aria-label="Search database"
             onClick={() => {
               onDeleteClicked(record);
@@ -210,35 +205,37 @@ const EInventory = () => {
             icon={<DeleteIcon />}
             size="sm"
           /> */}
-          <Menu>
-            {({ isOpen }) => (
-              <>
-                <MenuButton
-                  isActive={isOpen}
-                  as={IconButton}
-                  icon={<AiOutlineMore />}
-                  size="sm"
-                ></MenuButton>
-                <MenuList>
-                  <MenuItem
-                    onClick={() => onInventorytatusChange(record.id, true)}
-                  >
-                    Available
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => onInventorytatusChange(record.id, false)}
-                  >
-                    Not Available
-                  </MenuItem>
-                </MenuList>
-              </>
-            )}
-          </Menu>
-        </HStack>
+            <Menu>
+              {({ isOpen }) => (
+                <>
+                  <MenuButton
+                    isActive={isOpen}
+                    as={IconButton}
+                    icon={<AiOutlineMore />}
+                    size="sm"
+                  ></MenuButton>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() =>
+                        console.log("************** issue:", record, data)
+                      }
+                    >
+                      Available
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => onInventorytatusChange(data.id, false)}
+                    >
+                      Not Available
+                    </MenuItem>
+                  </MenuList>
+                </>
+              )}
+            </Menu>
+          </HStack>
+        </>
       ),
     },
   ];
-
 
   useEffect(() => {
     setIsLoading(true);

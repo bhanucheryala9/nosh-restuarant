@@ -143,21 +143,13 @@ const EOrders = () => {
   };
 
   const onOrderStatusChange = (orderID: string, status: string) => {
-    const itemNeedtoUpdate = eordersData?.map((item) => {
-      if (item.orderId === orderID) {
-        return { ...item, orderStatus: status };
-      }
-    });
-
-    console.log(
-      "************** tesing complte data of item:",
-      itemNeedtoUpdate[0]
-    );
+    let itemData = eordersData?.filter((item) => item.orderId === orderID);
+    const itemNeedtoUpdate = { ...itemData[0], orderStatus: status };
     setIsLoading(true);
     axios
       .put(
         "http://localhost:5000/api/admin/v1/update-order-status",
-        itemNeedtoUpdate[0]
+        itemNeedtoUpdate
       )
       .then((response) => {
         setEOrdersData(response.data.items);
