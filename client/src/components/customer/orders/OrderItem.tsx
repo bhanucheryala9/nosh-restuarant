@@ -36,6 +36,7 @@ export interface OrderInfo {
   category: string;
   price: number;
   quantity: number;
+  url:string
 }
 const OrderItem = (props: OrderItemsProps) => {
   const {
@@ -86,6 +87,7 @@ const OrderItem = (props: OrderItemsProps) => {
                 category: category,
                 price: price,
                 quantity: 1,
+                url: url
               },
             ]
         : [
@@ -95,6 +97,7 @@ const OrderItem = (props: OrderItemsProps) => {
               category: category,
               price: price,
               quantity: 1,
+              url: url
             },
           ];
     console.log("********* data clicked for cart", filterData);
