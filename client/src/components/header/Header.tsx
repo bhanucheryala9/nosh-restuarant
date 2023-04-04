@@ -24,7 +24,7 @@ import logo from "../../assets/app-logo.jpg";
 import DesktopHeader from "./DesktopHeader";
 import MobileHeader from "./MobileNav";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../../contexts/CartContext";
 import { faker } from "@faker-js/faker";
 import { useAuth } from "../../contexts/AuthContext";
@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { setIsCartOpen } = useCart();
+  const [userType, setUserType] = useState<string>("");
   const { logOut } = useAuth();
   const navigate = useNavigate();
 
@@ -40,10 +41,15 @@ const Header = () => {
     logOut()
       .then(() => {
         console.log(" logout successfully");
-        navigate('/');
+        navigate("/");
       })
       .catch(() => {});
   };
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userInfo") as string);
+    setUserType(userData.type);
+  }, []);
 
   return (
     <Box>
@@ -102,13 +108,15 @@ const Header = () => {
           alignItems="center"
           spacing={6}
         >
-          <Icon
-            as={AiOutlineShoppingCart}
-            size="lg"
-            boxSize={"6"}
-            onClick={() => setIsCartOpen(true)}
-            cursor="pointer"
-          />
+          {userType === "customer" && (
+            <Icon
+              as={AiOutlineShoppingCart}
+              size="lg"
+              boxSize={"6"}
+              onClick={() => setIsCartOpen(true)}
+              cursor="pointer"
+            />
+          )}
           <Menu>
             <MenuButton
               as={Button}
