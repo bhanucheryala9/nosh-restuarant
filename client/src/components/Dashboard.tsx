@@ -25,6 +25,7 @@ import Loader from "./common/Loader";
 import { CSSProperties, useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import biryani from "../assets/biryani.jpg";
+import usersFood from "../test-data/customer/user-specific.json";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -275,7 +276,14 @@ const Dashboard = () => {
           />
         </Box>
       </Flex>
-      <Flex direction={"column"} p="4" mb="6" alignItems={"center"} px="6" bg="white">
+      <Flex
+        direction={"column"}
+        p="4"
+        mb="6"
+        alignItems={"center"}
+        px="6"
+        bg="white"
+      >
         <Text
           fontFamily={"'Nunito', sans-serif"}
           fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
@@ -293,7 +301,7 @@ const Dashboard = () => {
           choose your own taste
         </Text>
         <Flex>
-          {[1, 2, 3, 4].map((item) => {
+          {usersFood["test@gmail.com"].map((item) => {
             return (
               <Flex
                 border={"1px solid"}
@@ -305,8 +313,8 @@ const Dashboard = () => {
                 alignItems="center"
                 mx="2"
                 mt="4"
-                _hover={ {
-                  backgroundColor:"orange.50"
+                _hover={{
+                  backgroundColor: "orange.50",
                 }}
                 cursor="pointer"
               >
@@ -315,7 +323,7 @@ const Dashboard = () => {
                   brightness="70%"
                   maxHeight={"56"}
                   minW={{ base: "full", lg: "xs" }}
-                  src={biryani}
+                  src={item.url !== "" ? item.url : biryani}
                   alt="Green double couch with wooden legs"
                   borderRadius="lg"
                 />
@@ -325,7 +333,7 @@ const Dashboard = () => {
                   mt="6"
                   letterSpacing={"wide"}
                 >
-                  Biryani
+                  {item.productName}
                 </Text>
                 <Text
                   fontSize={"3xl"}
@@ -334,7 +342,7 @@ const Dashboard = () => {
                   letterSpacing={"wide"}
                   textColor="orange.500"
                 >
-                  $10
+                  ${item.price}
                 </Text>
                 <Divider />
                 <Button my="4" width={"xs"} colorScheme="orange">
