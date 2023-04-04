@@ -9,7 +9,12 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
-import { ADMIN_NAV_ITEMS, CLIENT_NAV_ITEMS, NAV_ITEMS } from "../common/utils";
+import {
+  ADMIN_NAV_ITEMS,
+  CLIENT_NAV_ITEMS,
+  EMPLOYEE_NAV,
+  NAV_ITEMS,
+} from "../common/utils";
 import DesktopSubHeader from "./DesktopSubHeader";
 
 const DesktopHeader = () => {
@@ -17,9 +22,6 @@ const DesktopHeader = () => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
-
-
-  
   const [nav, setNav] = useState(NAV_ITEMS);
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userInfo") as string);
@@ -28,6 +30,8 @@ const DesktopHeader = () => {
         ? CLIENT_NAV_ITEMS
         : userData.type === "admin"
         ? ADMIN_NAV_ITEMS
+        : userData.type === "employee"
+        ? EMPLOYEE_NAV
         : NAV_ITEMS;
     setNav(customerTypeNav);
   }, []);
