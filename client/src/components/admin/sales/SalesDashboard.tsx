@@ -15,6 +15,9 @@ import {
   StatNumber,
   Text,
   VStack,
+  Link,
+  Tag,
+  TagLabel,
 } from "@chakra-ui/react";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
@@ -28,6 +31,9 @@ import {
   YAxis,
 } from "recharts";
 import { admin_orders } from "../../../test-data/admin/aorder";
+import { getStatusColors } from "../../common/utils";
+import _ from "lodash";
+import axios from "axios";
 
 export interface DataType {
   key: React.Key;
@@ -36,50 +42,147 @@ export interface DataType {
   order_status: string;
   amount: string;
 }
+
+interface EOrdersColumns {
+  orderId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  address: {
+    addressLine1: string;
+    addressLine2: string;
+    state: string;
+    city: string;
+  };
+  orderDetails: Array<{
+    id: string;
+    productName: string;
+    category: string;
+    price: number;
+    quantity: number;
+  }>;
+  totalAmount: number;
+  orderStatus: string;
+  isPaid: boolean;
+  paymentId: string;
+  createdAt: Date | string;
+}
+
+interface EorderTableColumns {
+  orderId: string;
+  name: string;
+  email: string;
+  orderDetails: Array<{
+    id: string;
+    productName: string;
+    category: string;
+    price: number;
+    quantity: number;
+  }>;
+  noOfItems: number;
+  totalAmount: number;
+  orderStatus: string;
+  createdAt: Date | string;
+}
 const SalesDashboard = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [rewardsData, setRewardsData] = useState<DataType[]>([]);
+
+  const [eordersData, setEOrdersData] = useState<EOrdersColumns[]>([]);
+  const [tableData, setTableData] = useState<EorderTableColumns[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [orderStats, setOrderStats] = useState({
+    total: 0,
+    ready: 0,
+    processing: 0,
+    preparing: 0,
+  });
   const [showCreateRewardModal, setShowCreateRewardModal] =
     useState<boolean>(false);
-  const columns: ColumnsType<DataType> = [
+
+  const prepareData = (data: EOrdersColumns[]) => {
+    const stats = data.reduce(
+      (accumulator: any, currentValue) => {
+        if (currentValue.orderStatus === "processing") {
+          return { ...accumulator, processing: 1 + accumulator.processing };
+        } else if (currentValue.orderStatus === "ready") {
+          return { ...accumulator, ready: 1 + accumulator.ready };
+        } else if (currentValue.orderStatus === "preparing") {
+          return { ...accumulator, preparing: 1 + accumulator.preparing };
+        } else {
+          return accumulator;
+        }
+      },
+      {
+        total: data.length || 0,
+        ready: 0,
+        processing: 0,
+        preparing: 0,
+      }
+    );
+    setOrderStats(stats);
+    const formattedData = data.reduce((accumulator: any, currentValue) => {
+      return [
+        ...accumulator,
+        {
+          id: currentValue.orderId,
+          orderId: currentValue.orderId,
+          name: currentValue.lastName + " " + currentValue.firstName,
+          email: currentValue.email,
+          orderDetails: currentValue.orderDetails,
+          noOfItems: currentValue.orderDetails?.length || 0,
+          totalAmount: currentValue.totalAmount,
+          orderStatus: currentValue.orderStatus,
+          createdAt: currentValue.createdAt,
+        },
+      ];
+    }, []);
+    return formattedData;
+  };
+  const columns: ColumnsType<EorderTableColumns> = [
     {
-      title: "Reward ID",
-      dataIndex: "orderID",
-      render: (text: string) => <a>{text}</a>,
+      title: "Id",
+      dataIndex: "orderId",
+      render: (text) => (
+        <>
+          <Link>{_.upperCase(text)}</Link>
+        </>
+      ),
     },
     {
-      title: "Reward Code",
-      dataIndex: "customer_name",
+      title: "Name",
+      dataIndex: "name",
     },
     {
-      title: "Category",
-      dataIndex: "order_status",
+      title: "No of Items",
+      dataIndex: "noOfItems",
     },
     {
-      title: "Discount %",
-      dataIndex: "amount",
+      title: "Amount",
+      dataIndex: "totalAmount",
+      render: (text) => <>${text / 100}</>,
     },
     {
-      title: "Action",
-      key: "action",
-      width: "45px",
-      render: (_, record) => (
-        <HStack>
-          <IconButton
-            aria-label="Search database"
-            icon={<DeleteIcon />}
-            size="sm"
-          />
-          <IconButton
-            aria-label="Search database"
-            icon={<EditIcon />}
-            size="sm"
-          />
-        </HStack>
+      title: "Order Status",
+      dataIndex: "orderStatus",
+      render: (text) => (
+        <>
+          {
+            <Tag
+              size={"md"}
+              key={"text"}
+              borderRadius="full"
+              variant="solid"
+              colorScheme={getStatusColors(text)}
+              p="1"
+            >
+              <TagLabel mx="4">{_.upperCase(text)}</TagLabel>
+            </Tag>
+          }
+        </>
       ),
     },
   ];
-
   useEffect(() => {
     const formattedData = admin_orders.reduce(
       (accumulator: any, currentValue) => {
@@ -93,6 +196,18 @@ const SalesDashboard = () => {
       },
       []
     );
+
+    setIsLoading(true);
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-orders")
+      .then((response) => {
+        setEOrdersData(response.data.items);
+        setTableData(prepareData(response.data.items));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
     setRewardsData(formattedData);
   }, []);
 
@@ -145,7 +260,7 @@ const SalesDashboard = () => {
 
   const colors = ["red", "green", "yellow", "blue"];
 
-  const orderStats = [
+  const orderStats1 = [
     {
       name: "Total",
       quantity: "20",
@@ -165,7 +280,7 @@ const SalesDashboard = () => {
   ];
 
   const getStatusComponent = () => {
-    return orderStats.map((item, index) => {
+    return Object.entries(orderStats || {}).map((item, index) => {
       return (
         <GridItem colSpan={1} rowSpan={1}>
           <Flex
@@ -184,9 +299,9 @@ const SalesDashboard = () => {
                 boxSize="12"
               />
               <Stat>
-                <StatLabel fontSize={"md"}>{item.name}</StatLabel>
+                <StatLabel fontSize={"md"}>{_.capitalize(item[0])}</StatLabel>
                 <StatNumber textColor={`${colors[index]}.600`} fontSize={"3xl"}>
-                  {item.quantity}
+                  {item[1]}
                 </StatNumber>
               </Stat>
             </HStack>
@@ -197,19 +312,18 @@ const SalesDashboard = () => {
   };
   return (
     <>
-      <Flex mx={{base:"4",lg:"10"}} my="6" direction={"column"}>
+      <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
         <Flex justifyContent={"space-between"}>
-          <Text fontSize={{base:"lg",lg:"xl"}} fontWeight="bold">
+          <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
             Dashbord
           </Text>
-          <Button colorScheme={"orange"} size={{base:"sm", lg:"lg"}}> Create Coupons</Button>
         </Flex>
 
         <Grid
           my="4"
-          templateRows={{base:"repeat(4, 1fr)",lg:"repeat(1, 1fr)"}}
-          templateColumns={{base:"repeat(1, 1fr)",lg:"repeat(4, 1fr)"}}
-          gap={{base:2,lg:4}}
+          templateRows={{ base: "repeat(4, 1fr)", lg: "repeat(1, 1fr)" }}
+          templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(4, 1fr)" }}
+          gap={{ base: 2, lg: 4 }}
         >
           {getStatusComponent()}
         </Grid>
@@ -275,9 +389,9 @@ const SalesDashboard = () => {
               }}
               style={{ width: "100%" }}
               size="large"
-              scroll={{x:400}}
+              scroll={{ x: 400 }}
               columns={columns}
-              dataSource={rewardsData}
+              dataSource={tableData}
             />
           </VStack>
         </GridItem>

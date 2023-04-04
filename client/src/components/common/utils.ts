@@ -4,7 +4,6 @@ export const resetLocalStorage = () => {
   localStorage.setItem("userInfo", JSON.stringify({}));
   localStorage.setItem("isUserLoggedIn", "no");
   localStorage.setItem("orders", JSON.stringify([]));
-
 };
 export enum AlertStatus {
   SUCCESS = "success",
@@ -110,39 +109,113 @@ export const NAV_ITEMS: Array<NavItem> = [
     ],
   },
 ];
+
 export const ADMIN_NAV_ITEMS: Array<NavItem> = [
   {
     label: "Dashboard",
     href: "/dashboard",
   },
   {
-    label: "Manage Employee",
-    href: "/employee",
-  },
-  {
-    label: "Manage Inventory",
+    label: "Admin",
     children: [
+      {
+        label: "Create Employee",
+        subLabel: "you can create and manage employees",
+        href: "/employee",
+      },
       {
         label: "Add Inventory",
         subLabel: "Create inventory",
         href: "/add-inventory",
       },
       {
-        label: "View Inventory",
+        label: "Inventory",
         subLabel: "Manage inventory",
         href: "/inventory",
       },
+      {
+        label: "Offers",
+        subLabel: "Create Offers and Rewards",
+        href: "/rewards",
+      },
+      {
+        label: "Sales",
+        subLabel: "View the sales details.",
+        href: "/sales",
+      },
     ],
   },
+
   {
-    label: "Offers",
-    href: "/rewards",
+    label: "Employee",
+    children: [
+      {
+        label: "Orders",
+        subLabel: "Find your orders",
+        href: "/employee-orders",
+      },
+      {
+        label: "Update Orders",
+        subLabel: "Update inventory items status",
+        href: "/employee-update-orders",
+      },
+    ],
   },
+
   {
-    label: "Sales",
-    href: "/sales",
+    label: "Customer",
+    children: [
+      {
+        label: "Orders Now",
+        subLabel: "Find items to order",
+        href: "/orders",
+      },
+      {
+        label: "Purchase History",
+        subLabel: "Check your purchase history",
+        href: "/purchase-history",
+      },
+      {
+        label: "Payment",
+        subLabel: "Check your payment section",
+        href: "/payment",
+      },
+    ],
   },
 ];
+// export const ADMIN_NAV_ITEMS: Array<NavItem> = [
+//   {
+//     label: "Dashboard",
+//     href: "/dashboard",
+//   },
+//   {
+//     label: "Manage Employee",
+//     href: "/employee",
+//   },
+//   {
+//     label: "Manage Inventory",
+//     children: [
+//       {
+//         label: "Add Inventory",
+//         subLabel: "Create inventory",
+//         href: "/add-inventory",
+//       },
+//       {
+//         label: "View Inventory",
+//         subLabel: "Manage inventory",
+//         href: "/inventory",
+//       },
+//     ],
+//   },
+//   {
+//     label: "Offers",
+//     href: "/rewards",
+//   },
+//   {
+//     label: "Sales",
+//     href: "/sales",
+//   },
+// ];
 
 export const CLIENT_NAV_ITEMS: Array<NavItem> = [
   {
@@ -158,7 +231,7 @@ export const CLIENT_NAV_ITEMS: Array<NavItem> = [
     href: "/purchase-history",
   },
   {
-    label: "Restuarent Tour",
+    label: "Restaurant Tour",
     href: "/tour",
   },
 ];
@@ -210,18 +283,19 @@ export interface RewardsRequestPayload {
 export const generateUID = () => {
   return Math.floor(Math.random() * 90000) + 10000;
 };
-// {
-//   label: "Employee",
-//   children: [
-//     {
-//       label: "Orders",
-//       subLabel: "Find your orders",
-//       href: "#",
-//     },
-//     {
-//       label: "Create Order",
-//       subLabel: "Create new order for Customer",
-//       href: "#",
-//     },
-//   ],
-// },
+
+export const getStatusColors = (status: string | boolean) => {
+  if (status === "processing") {
+    return "yellow";
+  } else if (status === "accepted") {
+    return "orange";
+  } else if (status === "preparing") {
+    return "blue";
+  } else if (status === true) {
+    return "green";
+  } else if (status === false) {
+    return "red";
+  } else {
+    return "green";
+  }
+};

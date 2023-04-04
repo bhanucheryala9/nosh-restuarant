@@ -67,7 +67,7 @@ const PurchaseHistory = () => {
         orderID: item.orderId,
         name: item.firstName + " " + item.lastName,
         numberOfItems: item.orderDetails.length,
-        price: Number(item.totalAmount)/100
+        price: Number(item.totalAmount) / 100,
       };
     });
     return toReturn;
@@ -85,16 +85,18 @@ const PurchaseHistory = () => {
     //   },
     //   []
     // );
+    const userID = JSON.parse(
+      localStorage?.getItem("userInfo") || ("{}" as string)
+    );
     axios
       .get("http://localhost:5000/api/customer/v1/get-purchase-history", {
         params: {
-          id: "cheryalabhanu99@gmail.com",
+          id: userID?.email,
         },
       })
       .then((response) => {
         console.log("********** response of order", response.data.orders);
         setRewardsData(prepareData(response.data.orders));
-
       })
       .catch((error) => {
         console.log("************** error", error);

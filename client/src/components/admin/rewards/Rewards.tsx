@@ -1,32 +1,24 @@
 import { ChatIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
-  Code,
   Flex,
-  FormControl,
-  FormLabel,
   Grid,
   GridItem,
   HStack,
   Icon,
   IconButton,
-  Input,
-  Select,
   Stat,
   StatLabel,
   StatNumber,
   Text,
-  Textarea,
 } from "@chakra-ui/react";
 import Table, { ColumnsType } from "antd/es/table";
 import axios from "axios";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { AiFillCodeSandboxSquare } from "react-icons/ai";
 import { Line, LineChart, XAxis, YAxis } from "recharts";
 import { useNotification } from "../../../contexts/Notification";
 import {
-  RewardsTestData,
   statsChartData,
 } from "../../../test-data/admin/rewards";
 import { NotificationStatus, RewardsRequestPayload } from "../../common/utils";
@@ -41,6 +33,8 @@ export interface RewardDataType {
   minOrderPrice: number;
   rewardType: string;
   appliedCategory: string[] | string;
+  startTime: string;
+  endTime: string;
 }
 
 const Rewards = () => {
@@ -48,11 +42,10 @@ const Rewards = () => {
   const [rewardsData, setRewardsData] = useState<RewardDataType[]>([]);
   const [forUpdate, setForUpdate] = useState<boolean>(false);
   const [toUpdateData, setToUpdateData] = useState();
+  const [statsData, setStatsData] = useState({});
   const [showCreateRewardModal, setShowCreateRewardModal] =
     useState<boolean>(false);
   const { setShowNotification } = useNotification();
-
-
 
   const onUpdateClicked = (data: any) => {
     setToUpdateData(data);
@@ -82,6 +75,33 @@ const Rewards = () => {
           showAlert: true,
         });
       });
+  };
+
+  const prepareStatsData = (data: any) => {
+    const stats = data?.reduce(
+      (acc: any, current: any) => {
+        if (new Date(Number(current.endTime)) < new Date()) {
+          return { ...acc, inactive: acc.inactive + 1 };
+        } else if (new Date(Number(current.startTime)) > new Date()) {
+          return { ...acc, scheduled: acc.scheduled + 1 };
+        } else if (
+          new Date(Number(current.startTime)) <= new Date() &&
+          new Date(Number(current.endTime)) >= new Date()
+        ) {
+          return { ...acc, active: acc.active + 1 };
+        }
+        else{
+          return acc
+        }
+      },
+      {
+        total: data?.length || 0,
+        active: 0,
+        inactive: 0,
+        scheduled: 0,
+      }
+    );
+    setStatsData(stats);
   };
 
   const columns: ColumnsType<RewardDataType> = [
@@ -171,6 +191,7 @@ const Rewards = () => {
       .get("http://localhost:5000/api/admin/v1/get-rewards")
       .then((response) => {
         setRewardsData(prepareData(response.data.rewards));
+        prepareStatsData(prepareData(response.data.rewards));
       })
       .catch((error) => {});
   }, [showCreateRewardModal]);
@@ -184,24 +205,12 @@ const Rewards = () => {
     onChange: onSelectChange,
   };
 
-  const StatusProps = [
-    {
-      name: "Total",
-      quantity: 15,
-    },
-    {
-      name: "Active",
-      quantity: 14,
-    },
-    {
-      name: "In Active",
-      quantity: 1,
-    },
-    {
-      name: "Scheduled",
-      quantity: 3,
-    },
-  ];
+  const StatusProps = (prop: string) => {
+    if (prop === "total") return "Total";
+    else if (prop === "active") return "Active";
+    else if (prop === "inactive") return "In Active";
+    else if (prop === "scheduled") return "Scheduled";
+  }
 
   const gradientColor = [
     "linear-gradient(to top, #30c7ec 47%, #46aef7 70%)",
@@ -211,7 +220,7 @@ const Rewards = () => {
   ];
 
   const getStatusComponent = () => {
-    return StatusProps.map((item, index) => {
+    return Object.entries(statsData || {}).map((item: any, index) => {
       return (
         <GridItem colSpan={1} rowSpan={1} key={index}>
           <Flex
@@ -250,10 +259,10 @@ const Rewards = () => {
               <Icon as={ChatIcon} boxSize={14} textShadow="0 0 10px black" />
               <Stat>
                 <StatLabel fontSize={"xl"} textShadow="0 0 10px black">
-                  {item.name}
+                  {StatusProps(item[0])}
                 </StatLabel>
                 <StatNumber fontSize={"4xl"} textShadow="0 0 10px black">
-                  {item.quantity}
+                  {item[1]}
                 </StatNumber>
               </Stat>
             </HStack>

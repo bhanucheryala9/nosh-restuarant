@@ -4,6 +4,7 @@ var fs = require("fs");
 const usersService = require("../services/users-services.js");
 const inventoryService = require("../services/inventory-services.js");
 const rewardsService = require("../services/rewards-services.js");
+const orderService = require("../services/orders-services.js");
 
 router.post("/add-employee", function (req, res, next) {
   const payload = req.body;
@@ -252,6 +253,52 @@ router.put("/v1/update-reward", async function (req, res, next) {
   try {
     const rewards = await rewardsService.updateRewardsItemID(payload);
     res.json({ rewards: rewards, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+/**
+ * 
+ *   Order details
+ * 
+ */
+
+router.get("/v1/get-orders", async function (req, res, next) {
+  try {
+    const items = await orderService.getOrdersItems();
+    res.json({ items: items, code: 200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put("/v1/update-order-status", async function (req, res, next) {
+  try {
+    const payload = req.body;
+    const items = await orderService.updateOrderStatus(payload);
+    res.json({ items: items, code: 200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+router.get("/v1/get-employee-items", async function (req, res, next) {
+  try {
+    const items = await inventoryService.getInventoryItems();
+    res.json({ items: items, code: 200, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put("/v1/update-items-status", async function (req, res, next) {
+  try {
+    const payload = req.body;
+    const items = await inventoryService.updateInventoryItemID(payload);
+    res.json({ items: items, code: 200, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -73,3 +73,29 @@ exports.updateOrdersItemID = async (payload) => {
       return "Failed to retreive updated employee data";
     });
 };
+
+exports.updateOrderStatus = async (payload) =>{
+  return await OrdersModel.findOneAndUpdate(
+    { orderId: payload.orderId },
+    {
+      $set: {
+        orderId: payload.orderId,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email,
+        address: payload.address,
+        orderDetails: payload.orderDetails,
+        totalAmount: payload.totalAmount,
+        orderStatus: payload.orderStatus,
+        isPaid: payload.isPaid,
+        paymentId: payload.paymentId,
+      },
+    }
+  )
+    .then(() => {
+      return OrdersModel.find({});
+    })
+    .catch(() => {
+      return "Failed to retreive updated employee data";
+    });
+}

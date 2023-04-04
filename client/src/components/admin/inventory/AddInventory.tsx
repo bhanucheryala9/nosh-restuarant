@@ -118,7 +118,6 @@ const AddInventory = (props: AddInventoryProps) => {
     } else {
       const data = prepareData();
       const payload = { ...data, ...formData };
-      console.log("******* update mode:", payload);
       axios
         .put("http://localhost:5000/api/admin/v1/update-item", payload)
         .then((response) => {
