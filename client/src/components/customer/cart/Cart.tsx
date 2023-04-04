@@ -43,7 +43,7 @@ const Cart = () => {
     setCartInfo(cartData);
     localStorage.setItem("orders", JSON.stringify({}));
     localStorage.setItem("orders", JSON.stringify(cartData));
-    setAppStoreData({ ...AppStoreData, finalCartData: cartInfo });
+    setAppStoreData({ ...AppStoreData, finalCartData: cartData });
     navigate("/payment");
   };
 

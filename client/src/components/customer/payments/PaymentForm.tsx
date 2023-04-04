@@ -35,25 +35,25 @@ export default function PaymentForm(props: { setCardDetails: any }) {
       card: elements?.getElement(CardElement) as any,
     })) as any;
     const { id } = paymentMethod;
-    setCardDetails( id)
-    if (!error) {
-      try {
-        const response = await axios.post("http://localhost:4000/payment", {
-          amount: 50,
-          id,
-        });
+    setCardDetails(id)
+    // if (!error) {
+    //   try {
+    //     const response = await axios.post("http://localhost:4000/payment", {
+    //       amount: props.finalAmount,
+    //       id,
+    //     });
 
-        if (response.data.success) {
-          console.log("Successful payment");
-          setSuccess(true);
-          localStorage.setItem("userInfo", JSON.stringify({}))
-        }
-      } catch (error) {
-        console.log("Error", error);
-      }
-    } else {
-      console.log(error.message);
-    }
+    //     if (response.data.success) {
+    //       console.log("Successful payment");
+    //       setSuccess(true);
+    //       localStorage.setItem("userInfo", JSON.stringify({}))
+    //     }
+    //   } catch (error) {
+    //     console.log("Error", error);
+    //   }
+    // } else {
+    //   console.log(error.message);
+    // }
   };
 
   return (
