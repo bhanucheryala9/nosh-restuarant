@@ -1,6 +1,15 @@
-
+import { Button, Flex, HStack, Text, VStack, Image } from "@chakra-ui/react";
+import axios from "axios";
 import React, { createRef, useCallback, useEffect, useState } from "react";
+import orderPlaced from "../../..//assets/order-placed.jpg";
+import accepted from "../../..//assets/accepted.jpg";
+import preparing from "../../..//assets/preparing.jpg";
+import ready from "../../..//assets/ready.jpg";
 const Tracking = () => {
+
+  const [trackorder, setTrackOrder] = useState();
+  const [stepDetails, setStepDetails] = useState(0);
+
 
 
   const statusProps = [
@@ -49,6 +58,23 @@ const Tracking = () => {
       ),
     },
   ];
+  const getData = () => {
+    const orderID = localStorage.getItem("orderID");
+    axios
+      .get("http://localhost:5000/api/customer/v1/get-order-details-by-id", {
+        params: {
+          id: orderID,
+        },
+      })
+      .then((response) => {
+        setTrackOrder(response.data.orders);
+        const status = response.data?.orders?.orderStatus;
+        setStepDetails(getCurrentStep(status));
+      })
+      .catch((error) => {
+        console.log("************** error", error);
+      });
+  };
 
 
   }
