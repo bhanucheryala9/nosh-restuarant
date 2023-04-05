@@ -293,7 +293,11 @@ const Employee = () => {
         </HStack>
       ),
     },
-   
+    {
+      title: "Joined Date",
+      dataIndex: "joinedDate",
+      responsive: ["sm"],
+    },
   ];
 
   const { setShowNotification } = useNotification();
@@ -336,10 +340,20 @@ const Employee = () => {
               direction={"column"}
             >
               <Flex justifyContent={"end"} mb="4">
-                
+                <InputGroup maxW="44" alignItems={"center"} rounded="md">
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<SearchIcon color="gray.300" />}
+                  />
+                  <Input
+                    variant="filled"
+                    placeholder="Search.."
+                    size={{ base: "sm" }}
+                  />
+                </InputGroup>
                 <Button
-                  size={{  }}
-                  colorScheme=""
+                  size={{ base: "sm", lg: "md" }}
+                  colorScheme="orange"
                   onClick={() => setAddEmployeeModal(true)}
                 >
                   Add Employee
