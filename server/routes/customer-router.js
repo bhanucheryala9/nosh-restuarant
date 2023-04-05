@@ -32,3 +32,24 @@ router.post("/v1/place-order", async function (req, res, next) {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.get("/v1/get-purchase-history", async function (req, res, next) {
+  const payload = req.query.id;
+  try {
+    const orders = await orderService.getUserSpecificOrder(payload);
+    res.json({ orders: orders, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/v1/get-order-details-by-id", async function (req, res, next) {
+  const payload = req.query.id;
+  try {
+    const orders = await orderService.getOrdersItemByID(payload);
+    res.json({ orders: orders, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+module.exports = router;
