@@ -35,7 +35,27 @@ const config = {
 };
 
 const App = () => {
+  const [conversationHistory, setConversationHistory] = useState([]);
 
+  const handleEnd = ({ steps, values }) => {
+    if (!conversationHistory.length) {
+      const newConversationHistory = [
+        {
+          type: 'user',
+          message: values.name,
+        },
+      ];
+      steps.forEach((step) => {
+        if (step.message) {
+          newConversationHistory.push({
+            type: 'bot',
+            message: step.message,
+          });
+        }
+      });
+      setConversationHistory(newConversationHistory);
+    }
+  }
   
 
   return (
