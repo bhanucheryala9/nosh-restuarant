@@ -20,7 +20,6 @@ const Tracking = () => {
     return num + 1;
   };
 
-
   const statusProps = [
     {
       title: (
@@ -67,6 +66,7 @@ const Tracking = () => {
       ),
     },
   ];
+
   const getData = () => {
     const orderID = localStorage.getItem("orderID");
     axios
@@ -85,38 +85,57 @@ const Tracking = () => {
       });
   };
 
+  useEffect(() => {
+    const intervalCall = setInterval(() => {
+      getData();
+    }, 2000);
+    return () => {
+      // clean up
+      clearInterval(intervalCall);
+    };
+  }, []);
+
+  const onDaskClicked = () =>{
+    const user = JSON.parse(localStorage.getItem("userInfo")||"");
+    if(user.type==="admin"){
+      navigate("/employee")
+    }else if(user.type ==="employee"){
+      navigate("/employee-orders")
+    }else{
+        navigate("/dashboard")
+    }
 
   }
 
   return (
     <React.Fragment>
-    <Flex w="100%" justifyContent="center" alignItems="center">
-      <Flex
-        bg="white"
-        rounded={"2xl"}
-        my="4"
-        mx="6"
-        px="10"
-        py="6"
-        maxW="60%"
-        direction="column"
-        alignItems="center"
-        shadow="md"
-      >
-        <Text textColor="orange.500" fontSize="2xl" fontWeight="semibold">
-          Check Your Status
-        </Text>
-        <Divider />
-        <HStack justifyContent="space-between" w="100%">
-        <Text>
+      <Flex w="100%" justifyContent="center" alignItems="center">
+        <Flex
+          bg="white"
+          rounded={"2xl"}
+          my="4"
+          mx="6"
+          px="10"
+          py="6"
+          maxW="60%"
+          direction="column"
+          alignItems="center"
+          shadow="md"
+        >
+          <Text textColor="orange.500" fontSize="2xl" fontWeight="semibold">
+            Check Your Status
+          </Text>
+          <Divider />
+          <HStack justifyContent="space-between" w="100%">
+            <Text>
               Name:{" "}
               {(trackorder as any)?.firstName +
                 " " +
                 (trackorder as any)?.lastName}
             </Text>
             <Text> ORDER ID: #{(trackorder as any)?.orderId}</Text>
-        </HStack>
-        <Flex mt="16" width="100%">
+          </HStack>
+          <Flex mt="16" width="100%">
             {stepDetails !== -1 ? (
               <Steps
                 style={{ width: "100%" }}
