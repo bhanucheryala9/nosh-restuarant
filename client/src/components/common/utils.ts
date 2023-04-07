@@ -15,7 +15,7 @@ const theme = {
   userFontColor: 'white',
   headerImage: 'none',
 };
-
+const emailValidator = require('email-validator');
 const steps = [
   {
     id: '0',
@@ -27,7 +27,7 @@ const steps = [
     message: 'Is this your first order',
     trigger: '2',
   },
-  
+
 ];
 
 const config = {
@@ -75,23 +75,22 @@ const App = () => {
           handleReset={handleReset}
         />
         <div className="conversation-container">
-        {conversationHistory.map((message, index) => {
-          if (message.type === 'user') {
-            return (
-              <div key={index} className="user-message">
-                <span>{message.message}</span>
-              </div>
-            );
-          } else {
-            return (
-              <div key={index} className="bot-message">
-                <span>{message.message}</span>
-              </div>
-            );
-          }
-        })}
-      </div>
-
+          {conversationHistory.map((message, index) => {
+            if (message.type === 'user') {
+              return (
+                <div key={index} className="user-message">
+                  <span>{message.message}</span>
+                </div>
+              );
+            } else {
+              return (
+                <div key={index} className="bot-message">
+                  <span>{message.message}</span>
+                </div>
+              );
+            }
+          })}
+        </div>
       </ThemeProvider>
     </div>
   );
