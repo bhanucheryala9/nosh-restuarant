@@ -56,6 +56,10 @@ const App = () => {
       setConversationHistory(newConversationHistory);
     }
   }
+  const handleReset = () => {
+    setConversationHistory([]);
+    window.location.reload();
+  }
   
 
   return (
