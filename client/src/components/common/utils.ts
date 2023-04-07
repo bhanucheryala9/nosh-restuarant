@@ -73,8 +73,25 @@ const App = () => {
           headerAvatar={botAvatar}
           handleEnd={handleEnd}
           handleReset={handleReset}
-
         />
+        <div className="conversation-container">
+        {conversationHistory.map((message, index) => {
+          if (message.type === 'user') {
+            return (
+              <div key={index} className="user-message">
+                <span>{message.message}</span>
+              </div>
+            );
+          } else {
+            return (
+              <div key={index} className="bot-message">
+                <span>{message.message}</span>
+              </div>
+            );
+          }
+        })}
+      </div>
+
       </ThemeProvider>
     </div>
   );
