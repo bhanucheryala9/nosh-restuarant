@@ -27,6 +27,40 @@ const steps = [
     message: 'Is this your first order',
     trigger: '2',
   },
+  {
+    id: '2',
+    options: [
+      { value: 'Yes', label: 'Yes', trigger: '3' },
+      { value: 'No', label: 'No', trigger: '4' },
+    ],
+  },
+  {
+    id: '3',
+    message: 'May I know your email?',
+    trigger: '13',
+  },
+  {
+    id: '13',
+    user: true,
+    validator: (value) => {
+      if (emailValidator.validate(value)) {
+        return true;
+      } else {
+        return 'Please enter a valid email address.';
+      }
+    },
+    metadata: {
+      email: 'email',
+      value: '{{{raw}}}'
+    },
+    trigger: '14',
+  },
+  {
+    id: '14',
+    message: 'So, Which type of food do you want to order?',
+    trigger: 'end',
+  },
+
 
 ];
 
