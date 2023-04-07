@@ -180,7 +180,51 @@ const steps = [
     },
     trigger: '6',
   },
+  {
+    id: '6',
+    message: 'Would you like to order your previous-order?',
+    trigger: '7',
+  },
+  {
+    id: '7',
+    options: [
+      { value: 'Yes', label: 'Yes', trigger: '8' },
+      { value: 'No', label: 'No', trigger: '14' },
+    ],
+  },
+  {
+    id: '8',
+    message: 'Are you sure? Do you want to order?',
+    trigger: '10',
+  },
+  
+  {
+     id: '8',
+    message: 'Do you want to order more ?',
+      trigger: '10',
+    },
 
+    {
+         id: '10',
+         options: [
+          { value: 'Yes', label: 'Yes', trigger: '11' },
+         { value: 'No', label: 'No', trigger: '14' },
+        ],
+      },
+
+
+  {
+    id: '10',
+    options: [
+      { value: 'Yes', label: 'Yes', trigger: '11' },
+      { value: 'No', label: 'No', trigger: '14' },
+    ],
+  },
+  {
+    id: '11',
+    message: 'Your order is added to cart. Please proceed for the payment',
+    end:true,
+  },
 ];
 
 const config = {
