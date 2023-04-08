@@ -7,7 +7,42 @@ export const resetLocalStorage = () => {
   localStorage.setItem("orders", JSON.stringify([]));
 };
 
+export enum AlertStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+  WARNING = "warning",
+}
 
+export interface AlertMessageProps {
+  status: AlertStatus;
+  alertMessage?: string;
+  showAlert?: boolean;
+}
+
+export enum NotificationStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+  WARNING = "warning",
+  DEFAULT = "default",
+}
+
+export interface NotificationProps {
+  status?: NotificationStatus;
+  alertMessage?: string;
+  showAlert?: boolean;
+}
+export interface LoaderProps {
+  loadingMessage?: string;
+  isLoading?: boolean;
+  children?: ReactNode;
+}
+
+export interface NavItem {
+  label: string;
+  subLabel?: string;
+  children?: Array<NavItem>;
+  href?: string;
+}
 export const Orders_Catergory = [
   "all",
   "appetizers",
@@ -18,6 +53,63 @@ export const Orders_Catergory = [
   "beverages",
 ];
 
+export const NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Admin",
+    children: [
+      {
+        label: "Create Employee",
+        subLabel: "you can create and manage employees",
+        href: "/employee",
+      },
+      {
+        label: "Add Inventory",
+        subLabel: "Create inventory",
+        href: "/add-inventory",
+      },
+      {
+        label: "Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
+      },
+      {
+        label: "Offers",
+        subLabel: "Create Offers and Rewards",
+        href: "/rewards",
+      },
+      {
+        label: "Sales",
+        subLabel: "View the sales details.",
+        href: "/sales",
+      },
+    ],
+  },
+
+  {
+    label: "Customer",
+    children: [
+      {
+        label: "Orders Now",
+        subLabel: "Find items to order",
+        href: "/orders",
+      },
+      {
+        label: "Purchase History",
+        subLabel: "Check your purchase history",
+        href: "/purchase-history",
+      },
+      {
+        label: "Payment",
+        subLabel: "Check your payment section",
+        href: "/payment",
+      },
+    ],
+  },
+];
 
 
 export const EMPLOYEE_NAV: Array<NavItem> = [
@@ -71,6 +163,31 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
+export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Order Now",
+    href: "/orders",
+  },
+  {
+    label: "Purchase History",
+    href: "/purchase-history",
+  },
+  {
+    label: "Restaurant Tour",
+    href: "/tour",
+  },
+];
+
+export const TOUR_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Restaurant Tour",
+    href: "/tour",
+  },
+];
 
 
 export const cartData = [
