@@ -1,4 +1,4 @@
-
+<<<<<<< HEAD
 import { ReactNode } from "react";
 const validator = require("email-validator");
 export const resetLocalStorage = () => {
@@ -217,6 +217,51 @@ export const cartData = [
     quantity: 0,
   },
 ];
+
+/**  Api response structures */
+export interface EmployeeRequestPayload {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  joinedDate: Date;
+  type: string;
+  phoneNumber: number;
+  subtype: string;
+  salary: number;
+  about?: string;
+  address: {
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    zipcode: string;
+  };
+}
+export interface InventoryRequestPayload {
+  id: string;
+  productName: string;
+  category: string;
+  description: string;
+  price: number;
+  discount: number;
+  isAvailable: boolean;
+  tax: number;
+}
+
+export interface RewardsRequestPayload {
+  id: string;
+  rewardType: string;
+  code: string;
+  discountPercentage: number;
+  maxDiscountAmount: number;
+  minOrderPrice: number;
+  appliesTo: string;
+  appliedCategory: string[] | string;
+  startTime?: Date | string;
+  endTime?: Date | string;
+}
+
 
 export const steps_for_chat = [
   {
