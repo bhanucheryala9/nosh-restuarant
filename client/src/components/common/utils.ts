@@ -15,6 +15,166 @@ export const generateUID = () => {
   return Math.floor(Math.random() * 90000) + 10000;
 };
 
+export const EMPLOYEE_NAV: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    subLabel: "Find your dashboard",
+    href: "/employee-orders",
+  },
+  {
+    label: "Orders",
+    subLabel: "Find your orders",
+    href: "/create-order",
+  },
+  {
+    label: "Items Availability",
+    subLabel: "Update inventory items status",
+    href: "/employee-update-orders",
+  },
+];
+export const ADMIN_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Manage Employee",
+    href: "/employee",
+  },
+  {
+    label: "Manage Inventory",
+    children: [
+      {
+        label: "Add Inventory",
+        subLabel: "Create inventory",
+        href: "/add-inventory",
+      },
+      {
+        label: "View Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
+      },
+    ],
+  },
+  {
+    label: "Offers",
+    href: "/rewards",
+  },
+  {
+    label: "Sales",
+    href: "/sales",
+  },
+  {
+    label: "Payment and Refunds",
+    href: "/refund",
+  },
+];
+
+
+// export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+//   {
+//     label: "Dashboard",
+//     href: "/dashboard",
+//   },
+//   {
+//     label: "Admin",
+//     children: [
+//       {
+//         label: "Create Employee",
+//         subLabel: "you can create and manage employees",
+//         href: "/employee",
+//       },
+//       {
+//         label: "Add Inventory",
+//         subLabel: "Create inventory",
+//         href: "/add-inventory",
+//       },
+//       {
+//         label: "Inventory",
+//         subLabel: "Manage inventory",
+//         href: "/inventory",
+//       },
+//       {
+//         label: "Offers",
+//         subLabel: "Create Offers and Rewards",
+//         href: "/rewards",
+//       },
+//       {
+//         label: "Sales",
+//         subLabel: "View the sales details.",
+//         href: "/sales",
+//       },
+//       {
+//         label: "Payment and Rewards",
+//         subLabel: "Manage payments and refunds.",
+//         href: "/refund",
+//       },
+//     ],
+//   },
+
+//   {
+//     label: "Employee",
+//     children: [
+//       {
+//         label: "Orders",
+//         subLabel: "Find your orders",
+//         href: "/employee-orders",
+//       },
+//       {
+//         label: "Orders Now",
+//         subLabel: "Find your orders",
+//         href: "/create-order",
+//       },
+//       {
+//         label: "Update Orders",
+//         subLabel: "Update inventory items status",
+//         href: "/employee-update-orders",
+//       },
+//     ],
+//   },
+
+//   {
+//     label: "Customer",
+//     children: [
+//       {
+//         label: "Orders Now",
+//         subLabel: "Find items to order",
+//         href: "/orders",
+//       },
+//       {
+//         label: "Purchase History",
+//         subLabel: "Check your purchase history",
+//         href: "/purchase-history",
+//       },
+//       {
+//         label: "Payment",
+//         subLabel: "Check your payment section",
+//         href: "/payment",
+//       },
+//       {
+//         label: "Restaurant Tour",
+//         subLabel: "Check your payment section",
+//         href: "/tour",
+//       },
+//     ],
+//   },
+// ];
+
+export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Order Now",
+    href: "/orders",
+  },
+  {
+    label: "Purchase History",
+    href: "/purchase-history",
+  },
+  {
+    label: "Restaurant Tour",
+    href: "/tour",
+  },
+];
+
 export const getStatusColors = (status: string | boolean) => {
   if (status === "processing") {
     return "yellow";
