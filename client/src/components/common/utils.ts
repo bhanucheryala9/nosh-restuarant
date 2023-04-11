@@ -11,6 +11,106 @@ export enum AlertStatus {
   WARNING = "warning",
 }
 
+export interface AlertMessageProps {
+  status: AlertStatus;
+  alertMessage?: string;
+  showAlert?: boolean;
+}
+
+export enum NotificationStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+  WARNING = "warning",
+  DEFAULT = "default",
+}
+
+export interface NotificationProps {
+  status?: NotificationStatus;
+  alertMessage?: string;
+  showAlert?: boolean;
+}
+export interface LoaderProps {
+  loadingMessage?: string;
+  isLoading?: boolean;
+  children?: ReactNode;
+}
+
+export interface NavItem {
+  label: string;
+  subLabel?: string;
+  children?: Array<NavItem>;
+  href?: string;
+}
+
+export const Orders_Catergory = [
+  "all",
+  "appetizers",
+  "biryani",
+  "soups",
+  "indo-chinese",
+  "main-course",
+  "beverages",
+];
+
+
+export const NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Admin",
+    children: [
+      {
+        label: "Create Employee",
+        subLabel: "you can create and manage employees",
+        href: "/employee",
+      },
+      {
+        label: "Add Inventory",
+        subLabel: "Create inventory",
+        href: "/add-inventory",
+      },
+      {
+        label: "Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
+      },
+      {
+        label: "Offers",
+        subLabel: "Create Offers and Rewards",
+        href: "/rewards",
+      },
+      {
+        label: "Sales",
+        subLabel: "View the sales details.",
+        href: "/sales",
+      },
+    ],
+  },
+
+  {
+    label: "Customer",
+    children: [
+      {
+        label: "Orders Now",
+        subLabel: "Find items to order",
+        href: "/orders",
+      },
+      {
+        label: "Purchase History",
+        subLabel: "Check your purchase history",
+        href: "/purchase-history",
+      },
+      {
+        label: "Payment",
+        subLabel: "Check your payment section",
+        href: "/payment",
+      },
+    ],
+  },
+];
+
 export const generateUID = () => {
   return Math.floor(Math.random() * 90000) + 10000;
 };
@@ -65,6 +165,8 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
     href: "/refund",
   },
 ];
+
+
 
 
 // export const CLIENT_NAV_ITEMS: Array<NavItem> = [
