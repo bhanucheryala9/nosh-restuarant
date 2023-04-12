@@ -35,19 +35,8 @@ const CartItem = (props: CartItemProps) => {
           return product;
         }
       });
-    } else {
-      updatedData = cartInfo?.map((product) => {
-        if (product.productName === item.productName) {
-          if (product.quantity <= 0) {
-            return { ...product, quantity: 0 };
-          } else {
-            return { ...product, quantity: item.quantity - 1 };
-          }
-        } else {
-          return product;
-        }
-      });
-    }
+    } ;
+    
     localStorage.setItem("orders", JSON.stringify(updatedData))
     setCartInfo(updatedData);
   };

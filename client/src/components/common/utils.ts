@@ -250,7 +250,24 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
-
+export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Order Now",
+    href: "/orders",
+  },
+  {
+    label: "Purchase History",
+    href: "/purchase-history",
+  },
+  {
+    label: "Restaurant Tour",
+    href: "/tour",
+  },
+];
 
 export const TOUR_NAV_ITEMS: Array<NavItem> = [
   {
