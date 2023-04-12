@@ -15,7 +15,20 @@ import banner2 from "../assets/banner-2.jpg";
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
- 
+  const getCategoryIndexMapper = (index: number) => {
+    if (index === 0) {
+      return "budget";
+    } else if (index === 1) {
+      return "favorite";
+    } else if (index === 3) {
+      return "ready";
+    } else if (index === 4) {
+      return "trending";
+    } else {
+      return "recent";
+    }
+  };
+
 
  
 
