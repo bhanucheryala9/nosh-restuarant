@@ -28,7 +28,92 @@ const Dashboard = () => {
       return "recent";
     }
   };
+  const createCart = useCallback(
+    (datas: any) => {
+      const items: any = [];
+      Object.entries(datas || {})?.map((item: any) => {
+        return item[1]
+          ?.filter((order: any) => order.quantity !== 0)
+          .map((food: any) => {
+            items.push({
+              category: food.category,
+              id: food.id,
+              price: food.price,
+              productName: food.productName,
+              quantity: food.quantity,
+              url: food.url,
+            });
+          });
+      });
+      localStorage.setItem("orders", JSON.stringify(items))
+      //   category: food.category,
+      //         id: food.id,
+      //         price: food.price,
+      //         productName: food.productName,
+      //         quantity: food.quantity,
+      //         url: food.url,
+      // }
+    },
+    [dashboardCart]
+  );
 
+  const catergoryLabels = [
+    {
+      label: "Budget Friendly",
+      count: 12,
+    },
+    {
+      label: "Restuarant Favorite",
+      count: 14,
+    },
+    {
+      label: "Fastest Near You",
+      count: 22,
+    },
+    {
+      label: "Recommended Items",
+      count: 18,
+    },
+    {
+      label: "Recent Orders",
+      count: 13,
+    },
+  ];
+
+  const handleCart = (data: any, operation: string, categ: string) => {
+    const updatedData = presentdata?.map((item: any) => {
+      if (operation === "add") {
+        if (item.productName === data.productName) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        } else {
+          return item;
+        }
+      } else {
+        if (item.productName === data.productName) {
+          return {
+            ...item,
+            quantity: item.quantity - 1,
+          };
+        } else {
+          return item;
+        }
+      }
+    });
+
+    setPresentation(updatedData as any);
+    (dashboardCart as any)[categ] = updatedData;
+    createCart(dashboardCart);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
  
 
