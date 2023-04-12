@@ -52,7 +52,6 @@ export const Orders_Catergory = [
   "beverages",
 ];
 
-
 export const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Dashboard",
@@ -110,64 +109,6 @@ export const NAV_ITEMS: Array<NavItem> = [
     ],
   },
 ];
-
-export const generateUID = () => {
-  return Math.floor(Math.random() * 90000) + 10000;
-};
-
-export const EMPLOYEE_NAV: Array<NavItem> = [
-  {
-    label: "Dashboard",
-    subLabel: "Find your dashboard",
-    href: "/employee-orders",
-  },
-  {
-    label: "Orders",
-    subLabel: "Find your orders",
-    href: "/create-order",
-  },
-  {
-    label: "Items Availability",
-    subLabel: "Update inventory items status",
-    href: "/employee-update-orders",
-  },
-];
-export const ADMIN_NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Manage Employee",
-    href: "/employee",
-  },
-  {
-    label: "Manage Inventory",
-    children: [
-      {
-        label: "Add Inventory",
-        subLabel: "Create inventory",
-        href: "/add-inventory",
-      },
-      {
-        label: "View Inventory",
-        subLabel: "Manage inventory",
-        href: "/inventory",
-      },
-    ],
-  },
-  {
-    label: "Offers",
-    href: "/rewards",
-  },
-  {
-    label: "Sales",
-    href: "/sales",
-  },
-  {
-    label: "Payment and Refunds",
-    href: "/refund",
-  },
-];
-
-
-
 
 // export const CLIENT_NAV_ITEMS: Array<NavItem> = [
 //   {
@@ -258,24 +199,112 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
 //   },
 // ];
 
-export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+export const EMPLOYEE_NAV: Array<NavItem> = [
   {
     label: "Dashboard",
-    href: "/dashboard",
+    subLabel: "Find your dashboard",
+    href: "/employee-orders",
   },
   {
-    label: "Order Now",
-    href: "/orders",
+    label: "Orders",
+    subLabel: "Find your orders",
+    href: "/create-order",
   },
   {
-    label: "Purchase History",
-    href: "/purchase-history",
+    label: "Items Availability",
+    subLabel: "Update inventory items status",
+    href: "/employee-update-orders",
   },
+];
+export const ADMIN_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Manage Employee",
+    href: "/employee",
+  },
+  {
+    label: "Manage Inventory",
+    children: [
+      {
+        label: "Add Inventory",
+        subLabel: "Create inventory",
+        href: "/add-inventory",
+      },
+      {
+        label: "View Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
+      },
+    ],
+  },
+  {
+    label: "Offers",
+    href: "/rewards",
+  },
+  {
+    label: "Sales",
+    href: "/sales",
+  },
+  {
+    label: "Payment and Refunds",
+    href: "/refund",
+  },
+];
+
+
+
+export const TOUR_NAV_ITEMS: Array<NavItem> = [
   {
     label: "Restaurant Tour",
     href: "/tour",
   },
 ];
+/**  Api response structures */
+export interface EmployeeRequestPayload {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  joinedDate: Date;
+  type: string;
+  phoneNumber: number;
+  subtype: string;
+  salary: number;
+  about?: string;
+  address: {
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    zipcode: string;
+  };
+}
+export interface InventoryRequestPayload {
+  id: string;
+  productName: string;
+  category: string;
+  description: string;
+  price: number;
+  discount: number;
+  isAvailable: boolean;
+  tax: number;
+}
+
+export interface RewardsRequestPayload {
+  id: string;
+  rewardType: string;
+  code: string;
+  discountPercentage: number;
+  maxDiscountAmount: number;
+  minOrderPrice: number;
+  appliesTo: string;
+  appliedCategory: string[] | string;
+  startTime?: Date | string;
+  endTime?: Date | string;
+}
+
+export const generateUID = () => {
+  return Math.floor(Math.random() * 90000) + 10000;
+};
 
 export const getStatusColors = (status: string | boolean) => {
   if (status === "processing") {
@@ -295,7 +324,127 @@ export const getStatusColors = (status: string | boolean) => {
   }
 };
 
-abel: "Lamb Biryani", trigger: "8" },
+export const cartData = [
+  {
+    name: "biryani",
+    price: 10,
+    quantity: 0,
+  },
+  {
+    name: "pulav",
+    price: 7,
+    quantity: 0,
+  },
+  {
+    name: "idly",
+    price: 7,
+    quantity: 0,
+  },
+  {
+    name: "vada",
+    price: 7,
+    quantity: 0,
+  },
+  {
+    name: "dosa",
+    price: 9,
+    quantity: 0,
+  },
+];
+
+export const steps_for_chat = [
+  {
+    id: "0",
+    message: "Welcome Order & Enjoy the food in NOSH!",
+    trigger: "1",
+  },
+  {
+    id: "1",
+    message: "Is this your first order",
+    trigger: "2",
+  },
+  {
+    id: "2",
+    options: [
+      { value: "Yes", label: "Yes", trigger: "3" },
+      { value: "No", label: "No", trigger: "4" },
+    ],
+  },
+  {
+    id: "3",
+    message: "May I know your email?",
+    trigger: "13",
+  },
+  {
+    id: "13",
+    user: true,
+    metadata: {
+      email: "email",
+      value: "{{{raw}}}",
+    },
+    trigger: "14",
+    validator: (value: any) => {
+      if (validator.validate(value)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  {
+    id: "14",
+    message: "So, Which type of food do you want to order?",
+    trigger: "15",
+  },
+  {
+    id: "15",
+    options: [
+      { value: "Appetizers", label: "Appetizers", trigger: "16" },
+      { value: "Soups", label: "Soups", trigger: "17" },
+      { value: "Biryani", label: "Biryani", trigger: "18" },
+      { value: "Main Course", label: "Main Course", trigger: "19" },
+      { value: "Indo Chineese", label: "Indo Chineese", trigger: "20" },
+      { value: "Beverages", label: "Beverages", trigger: "26" },
+    ],
+  },
+  {
+    id: "16",
+    message: "Which Appetizers do you want to order?",
+    trigger: "21",
+  },
+  {
+    id: "21",
+    options: [
+      { value: "Chilli Chicken", label: "Chilli Chicken", trigger: "8" },
+      { value: "Chicken 65", label: "Chicken 65", trigger: "8" },
+      { value: "Apollo Fish", label: "Apollo Fish", trigger: "8" },
+      { value: "Gobi Manchuria", label: "Gobi Manchuria", trigger: "8" },
+      { value: "Chilli Paneer", label: "Chilli Paneer", trigger: "8" },
+    ],
+  },
+  {
+    id: "17",
+    message: "Which Soup do you want to order?",
+    trigger: "22",
+  },
+  {
+    id: "22",
+    options: [
+      { value: "Tomato Soup", label: "Tomato Soup", trigger: "8" },
+      { value: "Veg Corn Soup", label: "Veg Corn Soup", trigger: "8" },
+      { value: "Chicken Corn Soup", label: "Chicken Corn Soup", trigger: "8" },
+    ],
+  },
+  {
+    id: "18",
+    message: "Which Biryani do you want to order?",
+    trigger: "23",
+  },
+  {
+    id: "23",
+    options: [
+      { value: "Chicken Biryani", label: "Chicken Biryani", trigger: "8" },
+      { value: "Lamb Biryani", label: "Lamb Biryani", trigger: "8" },
       { value: "Fish Biryani", label: "Fish Biryani", trigger: "8" },
       { value: "Goat Biryani", label: "Goat Biryani", trigger: "8" },
       {
