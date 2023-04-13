@@ -9,6 +9,7 @@ exports.getsUsers = async (users) => {
 };
 
 exports.getUsersByID = async (id) => {
+  console.log("************* id:", id)
   return await UsersModel.find({ email: id });
 };
 

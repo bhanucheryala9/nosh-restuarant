@@ -140,7 +140,7 @@ const Header = () => {
               </Center>
               <br />
               <MenuDivider />
-              <MenuItem>Account Settings</MenuItem>
+              <MenuItem onClick={()=> navigate("/profile")}>Profile</MenuItem>
               <MenuItem onClick={logoutUser}>Logout</MenuItem>
             </MenuList>
           </Menu>
