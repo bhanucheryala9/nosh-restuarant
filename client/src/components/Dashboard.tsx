@@ -208,7 +208,52 @@ const Dashboard = () => {
     }
   }, [dashboardCart, selectedCat]);
 
- 
+  const getCategoriesItem = (index: number) => {
+    return (
+      <Flex
+        bg={selectedCat === index ? "orange.400" : "gray.100"}
+        my="2"
+        py="2"
+        px="4"
+        borderRadius="xl"
+        justifyContent="space-between"
+        alignItems="center"
+        cursor="pointer"
+        onClick={() => setSelectedCat(index)}
+      >
+        <Flex direction="row" alignItems="center">
+          {/* <IconButton
+            colorScheme="orange"
+            aria-label="Call Segun"
+            size="lg"
+            icon={<PhoneIcon />}
+          /> */}
+          <Flex alignItems="start" direction="column" py="2" mx="3">
+            <Text
+              fontSize="lg"
+              fontWeight="semibold"
+              textColor={selectedCat === index ? "white" : "black"}
+            >
+              {catergoryLabels[index].label}
+            </Text>
+            {/* <Text
+              fontSize="md"
+              textColor={selectedCat === index ? "white" : "gray.600"}
+            >
+              {catergoryLabels[index].count} foods
+            </Text> */}
+          </Flex>
+        </Flex>
+        <Icon
+          as={ArrowRightIcon}
+          boxSize={3}
+          mr="4"
+          textColor={selectedCat === index ? "white" : "black"}
+        />
+      </Flex>
+    );
+  };
+
 
   return (
     <Flex direction={"column"}>
