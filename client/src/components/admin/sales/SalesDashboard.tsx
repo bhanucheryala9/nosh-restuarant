@@ -334,7 +334,7 @@ const SalesDashboard = () => {
         templateColumns="repeat(4, 1fr)"
         mx="8"
       >
-        <GridItem colSpan={4} p="4" bg="white" rounded={"md"} shadow="base">
+        {/* <GridItem colSpan={4} p="4" bg="white" rounded={"md"} shadow="base">
           <VStack gap={4}>
             <Text fontSize={"xl"} fontWeight="semibold">
               Sales Charts
@@ -365,7 +365,7 @@ const SalesDashboard = () => {
               </AreaChart>
             </ResponsiveContainer>{" "}
           </VStack>
-        </GridItem>
+        </GridItem> */}
         <GridItem
           colSpan={4}
           p={4}
