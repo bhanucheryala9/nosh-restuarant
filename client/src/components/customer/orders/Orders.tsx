@@ -1,56 +1,58 @@
 import {
-    Flex,
-    Grid,
-    GridItem,
-    Image,
-    Input,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
-    Text,
-  } from "@chakra-ui/react";
-  import React, { useState, useEffect } from "react";
-  import OrderItem from "./OrderItem";
-  import order from "../../../assets/orders.jpg";
-  import { Orders_Catergory } from "../../common/utils";
-  import _ from "lodash";
-  import ReactPaginate from "react-paginate";
-  import axios from "axios";
-  
-  const Orders = () => {
-    const [currentPage, setCurrentPage] = useState(0);
-    const [seachfood, setSearchFood] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState<string>("all");
-    const [data, setData] = useState([]);
-    const [itemsData, setItemsData] = useState([]);
-    const PER_PAGE = 10;
-    const pageCount = Math.ceil(data.length / PER_PAGE);
-  
-    const handlePageClick = (selected: any) => {
-        const offset = currentPage * PER_PAGE;
-        const currentPageData = data.slice(offset, offset + PER_PAGE);
-        setData(currentPageData);
-        setCurrentPage(selected);
-      };
-    
-      useEffect(() => {
-        setData(data.slice(0, 8));
-        axios
-          .get("http://34.235.166.147:5000/api/admin/v1/get-items")
-          .then((response) => {
-            setData(response.data.items);
-            setItemsData(response.data.items);
-            localStorage.setItem("orders",JSON.stringify([]))
-          })
-          .catch((error) => {
-            console.log("Error while retreiveing items: ", error);
-          });
-      }, []);
-return(
+  Flex,
+  Grid,
+  GridItem,
+  Image,
+  Input,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import OrderItem from "./OrderItem";
+import order from "../../../assets/orders.jpg";
+import { Orders_Catergory } from "../../common/utils";
+import _ from "lodash";
+import ReactPaginate from "react-paginate";
+import axios from "axios";
+
+const Orders = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [seachfood, setSearchFood] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [data, setData] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
+  const PER_PAGE = 10;
+  const pageCount = Math.ceil(data.length / PER_PAGE);
+
+  const handlePageClick = (selected: any) => {
+    const offset = currentPage * PER_PAGE;
+    const currentPageData = data.slice(offset, offset + PER_PAGE);
+    setData(currentPageData);
+    setCurrentPage(selected);
+  };
+
+  useEffect(() => {
+    setData(data.slice(0, 8));
+    axios
+      .get("http://34.235.166.147:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setData(response.data.items);
+        setItemsData(response.data.items);
+        localStorage.setItem("orders",JSON.stringify([]))
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
+  }, []);
+
+
+  return (
     <div>
-        <Flex direction={"column"}>
+      <Flex direction={"column"}>
         <Flex
           justifyContent={"center"}
           direction="column"
@@ -93,12 +95,12 @@ return(
             );
           }}
         >
-            <TabList>
+          <TabList>
             {Orders_Catergory.map((item, index) => {
               return <Tab key={index}>{_.capitalize(item)}</Tab>;
             })}
-            </TabList>
-            <TabPanels my="8" rounded={"lg"} shadow="base">
+          </TabList>
+          <TabPanels my="8" rounded={"lg"} shadow="base">
             {Orders_Catergory.map((index, item) => {
               return (
                 <TabPanel bg={"white"} key={index}>
@@ -112,7 +114,14 @@ return(
                     >
                       Menu
                     </Text>
-                    {}
+                    <Input
+                      type="text"
+                      placeholder="search food"
+                      width="48"
+                      onChange={(e) => {
+                        setSearchFood(e.target.value);
+                      }}
+                    />
                   </Flex>
 
                   <Grid
@@ -145,19 +154,25 @@ return(
                           );
                         })}
                   </Grid>
-          </TabPanel>
+                </TabPanel>
               );
             })}
-        </TabPanels>
+          </TabPanels>
         </Tabs>
-
-
-
-
-       
-        
-        </Flex>
+        <ReactPaginate
+          previousLabel={"← Previous"}
+          nextLabel={"Next →"}
+          pageCount={pageCount}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          previousLinkClassName={"pagination__link"}
+          nextLinkClassName={"pagination__link"}
+          disabledClassName={"pagination__link--disabled"}
+          activeClassName={"pagination__link--active"}
+        />
+      </Flex>
     </div>
-
-);  
+  );
 };
+
+export default Orders;
