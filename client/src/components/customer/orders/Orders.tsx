@@ -87,11 +87,7 @@ const Orders = () => {
             const redata = itemsData.filter(
               (item: any) => item.category === Orders_Catergory[index]
             );
-            setData(
-              Orders_Catergory[index] === "all"
-                ? itemsData.slice(0, 8)
-                : redata.slice(0, 8)
-            );
+            setData(redata);
           }}
         >
           <TabList>

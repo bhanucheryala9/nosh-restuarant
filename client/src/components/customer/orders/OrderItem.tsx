@@ -99,7 +99,10 @@ const OrderItem = (props: OrderItemsProps) => {
               url: url,
             },
           ];
-    localStorage.setItem("orders", JSON.stringify(filterData));
+    localStorage.setItem(
+      "orders",
+      JSON.stringify(filterData.filter((item: any) => item.quantity > 0))
+    );
     // setCartData(filterData);
   };
   return (
