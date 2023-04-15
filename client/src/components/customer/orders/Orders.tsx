@@ -114,14 +114,14 @@ const Orders = () => {
                     >
                       Menu
                     </Text>
-                    <Input
+                    {/* <Input
                       type="text"
                       placeholder="search food"
                       width="48"
                       onChange={(e) => {
                         setSearchFood(e.target.value);
                       }}
-                    />
+                    /> */}
                   </Flex>
 
                   <Grid
@@ -159,7 +159,7 @@ const Orders = () => {
             })}
           </TabPanels>
         </Tabs>
-        <ReactPaginate
+        {/* <ReactPaginate
           previousLabel={"← Previous"}
           nextLabel={"Next →"}
           pageCount={pageCount}
@@ -169,7 +169,7 @@ const Orders = () => {
           nextLinkClassName={"pagination__link"}
           disabledClassName={"pagination__link--disabled"}
           activeClassName={"pagination__link--active"}
-        />
+        /> */}
       </Flex>
     </div>
   );
