@@ -90,20 +90,20 @@ const Payments = () => {
       totalAmount: (finalAmount + finalAmount / 8) * 100,
       orderStatus: "processing",
     };
-    axios
-      .post("http://localhost:5000/api/customer/v1/place-order", payload)
-      .then((response) => {
-        console.log("********** response of order", response.data.orders);
-        setShowNotification({
-          status: NotificationStatus.SUCCESS,
-          alertMessage: "Orders Placed successfully..!",
-          showAlert: true,
-        });
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        console.log("************** error", error);
-      });
+    // axios
+    //   .post("http://localhost:5000/api/customer/v1/place-order", payload)
+    //   .then((response) => {
+    //     console.log("********** response of order", response.data.orders);
+    //     setShowNotification({
+    //       status: NotificationStatus.SUCCESS,
+    //       alertMessage: "Orders Placed successfully..!",
+    //       showAlert: true,
+    //     });
+    //     navigate("/dashboard");
+    //   })
+    //   .catch((error) => {
+    //     console.log("************** error", error);
+    //   });
   };
 
   return (

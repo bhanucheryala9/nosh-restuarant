@@ -127,8 +127,8 @@ const EInventory = () => {
   };
 
   const onInventorytatusChange = (orderID: string, status: boolean) => {
-    let itemData =  eInventoryData?.filter((item)=> item.id === orderID);
-    const itemNeedtoUpdate = {...itemData[0], isAvailable: status }
+    let itemData = eInventoryData?.filter((item) => item.id === orderID);
+    const itemNeedtoUpdate = { ...itemData[0], isAvailable: status };
 
     setIsLoading(true);
     axios
@@ -152,17 +152,19 @@ const EInventory = () => {
       dataIndex: "id",
       render: (text) => (
         <>
-          <Link>{_.upperCase(text)}</Link>
+          <Link>{(text as string).toUpperCase()}</Link>
         </>
       ),
     },
     {
       title: "Product Name",
       dataIndex: "productName",
+      render: (text) => <div>{_.capitalize(text)}</div>,
     },
     {
       title: "Category",
       dataIndex: "category",
+      render: (text) => <div>{_.capitalize(text)}</div>,
     },
     {
       title: "Price",
@@ -183,7 +185,11 @@ const EInventory = () => {
               colorScheme={getStatusColors(text)}
               p="1"
             >
-              <TagLabel mx="4">{_.upperCase(text)}</TagLabel>
+              <TagLabel mx="4">
+                {text === true
+                  ? _.upperCase("Available")
+                  : _.upperCase("Not Available")}
+              </TagLabel>
             </Tag>
           }
         </>
@@ -195,7 +201,6 @@ const EInventory = () => {
       width: "45px",
       render: (data, record) => (
         <>
-          {/* {console.log("************** record details", record, data)} */}
           <HStack>
             {/* <IconButton
             aria-label="Search database"
@@ -216,9 +221,7 @@ const EInventory = () => {
                   ></MenuButton>
                   <MenuList>
                     <MenuItem
-                      onClick={() =>
-                        console.log("************** issue:", record, data)
-                      }
+                      onClick={() => onInventorytatusChange(data.id, true)}
                     >
                       Available
                     </MenuItem>
@@ -250,13 +253,7 @@ const EInventory = () => {
         setIsLoading(false);
       });
   }, []);
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+
   return (
     <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
       {isLoading ? <Loader /> : null}
@@ -277,7 +274,6 @@ const EInventory = () => {
           style={{ width: "100%" }}
           //   scroll={{ x: 400 }}
           size="large"
-          rowSelection={rowSelection as any}
           columns={columns}
           dataSource={eInventoryData}
         />

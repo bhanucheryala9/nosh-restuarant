@@ -1,26 +1,21 @@
 import {
   Button,
-  Code,
   Flex,
   Grid,
   GridItem,
   HStack,
   StackDivider,
   Text,
-  Box,
   VStack,
 } from "@chakra-ui/react";
-import { Divider, UploadProps } from "antd";
-import Dragger from "antd/es/upload/Dragger";
+import { Divider } from "antd";
 import axios from "axios";
-import React, { createRef, useEffect, useState } from "react";
-import Dropzone from "react-dropzone";
-import { FaInbox } from "react-icons/fa";
-import { Segmented, Space } from "antd";
+import React, {  useEffect, useState } from "react";
+import { Segmented } from "antd";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { useNotification } from "../../../contexts/Notification";
-
+import ta from 'time-ago'
 interface EOrdersColumns {
   orderId: string;
   firstName: string;
@@ -67,10 +62,7 @@ const EmployeeDashboard = () => {
   const [eordersData, setEOrdersData] = useState<EOrdersColumns[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<EOrdersColumns>();
   const [tableData, setTableData] = useState<EorderTableColumns[]>([]);
-  const [orderChangeDetails, setOrderChangeDetails] = useState({
-    orderId: "",
-    orderStatus: "processing",
-  });
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [forUpdate, setForUpdate] = useState<boolean>(false);
   const [toUpdateData, setToUpdateData] = useState();
@@ -121,7 +113,6 @@ const EmployeeDashboard = () => {
         ? "ready"
         : "ready";
     const payload = { ...selectedOrder, orderStatus: status };
-    console.log("*********** updated status payload:", payload);
     setIsLoading(true);
     axios
       .put("http://localhost:5000/api/admin/v1/update-order-status", payload)
@@ -194,7 +185,7 @@ const EmployeeDashboard = () => {
                         </Text>
                         <Text fontSize={"xs"} textColor={"gray.500"}>
                           {" "}
-                          a few min ago
+                          {ta.ago(data.createdAt)}
                         </Text>
                       </VStack>
                       <Text fontSize={"xl"} fontWeight={"bold"}>
@@ -255,7 +246,7 @@ const EmployeeDashboard = () => {
                   Personal Details
                 </Text>
                 <Text fontSize={"md"} fontWeight={"semibold"}>
-                  {selectedOrder?.lastName}
+                  {_.capitalize(selectedOrder?.lastName)}
                 </Text>
               </VStack>
             </HStack>
