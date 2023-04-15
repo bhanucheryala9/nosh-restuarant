@@ -145,13 +145,14 @@ const SalesDashboard = () => {
       dataIndex: "orderId",
       render: (text) => (
         <>
-          <Link>{_.upperCase(text)}</Link>
+          <Link>{(text as string).toUpperCase()}</Link>
         </>
       ),
     },
     {
       title: "Name",
       dataIndex: "name",
+      render: (text) => <div>{_.capitalize(text)}</div>,
     },
     {
       title: "No of Items",
@@ -285,10 +286,10 @@ const SalesDashboard = () => {
         <GridItem colSpan={1} rowSpan={1}>
           <Flex
             bg="white"
-            shadow="md"
+            shadow="base"
             px="8"
             py="5"
-            rounded="md"
+            rounded="lg"
             alignItems={"center"}
           >
             <HStack mx={10} gap={6}>
@@ -312,7 +313,7 @@ const SalesDashboard = () => {
   };
   return (
     <>
-      <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
+      <Flex mx={{ base: "4", lg: "10" }} mt="6" direction={"column"}>
         <Flex justifyContent={"space-between"}>
           <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
             Dashbord
@@ -333,7 +334,7 @@ const SalesDashboard = () => {
         templateColumns="repeat(4, 1fr)"
         mx="8"
       >
-        <GridItem colSpan={4} p="4" bg="white" rounded={"md"} shadow="base">
+        {/* <GridItem colSpan={4} p="4" bg="white" rounded={"md"} shadow="base">
           <VStack gap={4}>
             <Text fontSize={"xl"} fontWeight="semibold">
               Sales Charts
@@ -364,7 +365,7 @@ const SalesDashboard = () => {
               </AreaChart>
             </ResponsiveContainer>{" "}
           </VStack>
-        </GridItem>
+        </GridItem> */}
         <GridItem
           colSpan={4}
           p={4}

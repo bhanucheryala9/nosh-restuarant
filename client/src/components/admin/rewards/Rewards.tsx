@@ -38,7 +38,6 @@ export interface RewardDataType {
 }
 
 const Rewards = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [rewardsData, setRewardsData] = useState<RewardDataType[]>([]);
   const [forUpdate, setForUpdate] = useState<boolean>(false);
   const [toUpdateData, setToUpdateData] = useState();
@@ -105,11 +104,6 @@ const Rewards = () => {
   };
 
   const columns: ColumnsType<RewardDataType> = [
-    // {
-    //   title: "Reward ID",
-    //   dataIndex: "id",
-    //   render: (text: string) => <a>{text}</a>,
-    // },
     {
       title: "Reward Code",
       dataIndex: "code",
@@ -122,6 +116,7 @@ const Rewards = () => {
     {
       title: "Category",
       dataIndex: "appliedCategory",
+      render: (text) => <div><b>{_.capitalize(text as string)}</b></div>,
     },
     {
       title: "Discount %",
@@ -196,14 +191,6 @@ const Rewards = () => {
       .catch((error) => {});
   }, [showCreateRewardModal]);
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
 
   const StatusProps = (prop: string) => {
     if (prop === "total") return "Total";
@@ -309,7 +296,6 @@ const Rewards = () => {
             style={{ width: "100%" }}
             scroll={{ x: 400 }}
             size="large"
-            rowSelection={rowSelection as any}
             columns={columns}
             dataSource={rewardsData}
           />

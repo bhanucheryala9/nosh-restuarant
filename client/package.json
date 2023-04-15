@@ -29,6 +29,7 @@
     "npm": "^9.6.4",
     "react": "^18.2.0",
     "react-best-chatbot": "^2.0.1",
+    "react-corner-ribbon": "^0.0.5",
     "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Tag } from "antd";
 import {
-  Card,
   Flex,
   Grid,
   GridItem,
@@ -9,31 +8,26 @@ import {
   Avatar,
   HStack,
   Link,
-  Portal,
   Code,
   VStack,
   Button,
-  InputGroup,
-  InputLeftElement,
-  Input,
   Icon,
   IconButton,
 } from "@chakra-ui/react";
 import { ColumnsType } from "antd/es/table";
 import AddEmployee from "./AddEmployee";
-import { EmployeeTestData } from "../../../test-data/admin/employee";
 import {
   DeleteIcon,
   EditIcon,
   EmailIcon,
   PhoneIcon,
-  SearchIcon,
 } from "@chakra-ui/icons";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { useNotification } from "../../../contexts/Notification";
 import { NotificationStatus } from "../../common/utils";
 import { useNavigate } from "react-router-dom";
+import _ from "lodash";
 
 export interface EmployeeDatatype {
   key: React.Key;
@@ -82,7 +76,6 @@ const Employee = () => {
           },
         ];
       }, []);
-    // setEmployeeData(formattedData);
     setUserProfile(formattedData[0]);
     return formattedData;
   };
@@ -231,11 +224,6 @@ const Employee = () => {
       .then((response: any) => {
         setunformattedEmployeeData(response.data.employees);
         setEmployeeData(prepareData(response.data.employees));
-        // setShowNotification({
-        //   status: NotificationStatus.SUCCESS,
-        //   alertMessage: "Employee info retreived successfully..!",
-        //   showAlert: true,
-        // });
       })
       .catch(() => {
         setShowNotification({
@@ -246,17 +234,9 @@ const Employee = () => {
       });
   }, [addEmployeeModal]);
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
 
   return (
     <React.Fragment>
-      {/* <Notifications /> */}
       <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
         <Text fontSize={"xl"} fontWeight="bold">
           Employees List
@@ -275,8 +255,8 @@ const Employee = () => {
               w="100%"
               direction={"column"}
             >
-              <Flex justifyContent={"space-between"} mb="4">
-                <InputGroup maxW="44" alignItems={"center"} rounded="md">
+              <Flex justifyContent={"end"} mb="4">
+                {/* <InputGroup maxW="44" alignItems={"center"} rounded="md">
                   <InputLeftElement
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
@@ -286,7 +266,7 @@ const Employee = () => {
                     placeholder="Search.."
                     size={{ base: "sm" }}
                   />
-                </InputGroup>
+                </InputGroup> */}
                 <Button
                   size={{ base: "sm", lg: "md" }}
                   colorScheme="orange"
@@ -325,9 +305,9 @@ const Employee = () => {
                   fontFamily="semibold"
                   textColor={"orange.500"}
                 >
-                  {userProfile?.name}
+                  {_.capitalize(userProfile?.name)}
                 </Text>
-                <Text textColor={"gray.700"}>{userProfile?.employeeType}</Text>
+                <Text textColor={"gray.700"}>{_.capitalize(userProfile?.employeeType)}</Text>
                 <HStack mt="4" gap={4}>
                   <HStack>
                     <Icon as={EmailIcon} />

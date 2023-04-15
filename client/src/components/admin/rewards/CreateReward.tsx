@@ -3,7 +3,6 @@ import {
   Divider,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Grid,
   GridItem,
@@ -19,7 +18,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { ReactNode, useState } from "react";
@@ -28,13 +26,11 @@ import {
   NotificationStatus,
   RewardsRequestPayload,
 } from "../../common/utils";
-import { uuid } from "uuidv4";
 import { useForm } from "react-hook-form";
 import { useNotification } from "../../../contexts/Notification";
-import { DatePicker } from "antd";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css";
-import { DateRangePicker, DateRange } from "react-date-range";
+import {  DateRange } from "react-date-range";
 interface CreateRewardProps {
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
