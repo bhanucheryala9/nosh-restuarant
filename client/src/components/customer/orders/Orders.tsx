@@ -49,6 +49,23 @@ const Orders = () => {
       });
   }, []);
 
+
+  useEffect(() => {
+    const redata = itemsData.filter(
+      (item: any) => item.category === selectedCategory
+    );
+
+    setData(redata);
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    const redata = itemsData.filter((item: any) =>
+      item.productName.toLowerCase().includes(seachfood.toLowerCase())
+    );
+    setData(redata);
+  }, [seachfood]);
+  
+
   return (
     <div>
       <Flex direction={"column"}>
