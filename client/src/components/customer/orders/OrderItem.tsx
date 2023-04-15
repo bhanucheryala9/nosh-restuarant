@@ -69,7 +69,7 @@ const OrderItem = (props: OrderItemsProps) => {
 
     fetchImage();
   }, []);
-  const { cartData, setCartData } = useCart();
+  // const { cartData, setCartData } = useCart();
   const onItemClicked = () => {
     const cart = JSON.parse(localStorage.getItem("orders") || "");
     const filterData =
@@ -100,7 +100,7 @@ const OrderItem = (props: OrderItemsProps) => {
             },
           ];
     localStorage.setItem("orders", JSON.stringify(filterData));
-    setCartData(filterData);
+    // setCartData(filterData);
   };
   return (
     <Card maxW={"72"} key={id}>
