@@ -23,7 +23,9 @@ import { Empty } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const CreateOrders = () => {
- const [orders, setOrders] = useState([]);
+  const [ecart, setECart] = useState(cartData);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [orders, setOrders] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [amount, setAmount] = useState({
     total: 0,
@@ -100,15 +102,15 @@ const CreateOrders = () => {
             borderRadius={"xl"}
           />
           <Flex mt="2" mb="3" mx="4" direction={"column"}>
-            <Text  fontWeight={"semibold"} my="2">
+            <Text fontSize={"lg"} fontWeight={"semibold"} my="2">
               {_.capitalize(item.productName)}
             </Text>
-            <Text  fontWeight={"semibold"} mt="-1" mb="2">
+            <Text fontSize={"xs"} fontWeight={"semibold"} mt="-1" mb="2">
               {_.capitalize(item.description.slice(0, 35)) + "...."}
             </Text>
 
             <Flex justifyContent={"space-between"} alignItems={"center"}>
-              <Text  fontWeight={"bold"}>
+              <Text fontSize={"xl"} fontWeight={"bold"}>
                 ${item.price}
               </Text>
               {item.quantity === 0 ? (
@@ -131,7 +133,7 @@ const CreateOrders = () => {
                   >
                     -
                   </Button>
-                  <Text  fontWeight={"semibold"}>
+                  <Text fontSize={"md"} fontWeight={"semibold"}>
                     {item.quantity}
                   </Text>
                   <Button
@@ -172,7 +174,7 @@ const CreateOrders = () => {
   return (
     <Flex direction={"column"} mx="6" my="6">
       <Flex justifyContent={"space-between"} mb="3">
-        <Text  fontWeight={"semibold"}>
+        <Text fontSize={"xl"} fontWeight={"semibold"}>
           Create Order
         </Text>
         <Button colorScheme="orange" onClick={onPayClicked}>
@@ -248,7 +250,7 @@ const CreateOrders = () => {
           justifyContent="center"
         >
           <Text
-            
+            fontSize={"xl"}
             fontWeight={"semibold"}
             textColor={"orange.500"}
             mb="4"
@@ -284,7 +286,7 @@ const CreateOrders = () => {
                             />
                             <Flex direction={"column"} ml="6">
                               <Text
-                                
+                                fontSize={"lg"}
                                 fontWeight={"semibold"}
                                 my="2"
                               >
@@ -297,7 +299,8 @@ const CreateOrders = () => {
                             <Text
                               textColor="orange.500"
                               fontWeight="semibold"
-                                                         >
+                              fontSize="xl"
+                            >
                               ${(data.quantity * data.price).toFixed(2)}
                             </Text>
                           </Flex>
