@@ -42,29 +42,13 @@ const Orders = () => {
       .then((response) => {
         setData(response.data.items);
         setItemsData(response.data.items);
-        localStorage.setItem("orders", JSON.stringify([]));
+        localStorage.setItem("orders",JSON.stringify([]))
       })
       .catch((error) => {
         console.log("Error while retreiveing items: ", error);
       });
   }, []);
 
-
-  useEffect(() => {
-    const redata = itemsData.filter(
-      (item: any) => item.category === selectedCategory
-    );
-
-    setData(redata);
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    const redata = itemsData.filter((item: any) =>
-      item.productName.toLowerCase().includes(seachfood.toLowerCase())
-    );
-    setData(redata);
-  }, [seachfood]);
-  
 
   return (
     <div>
@@ -104,7 +88,11 @@ const Orders = () => {
             const redata = itemsData.filter(
               (item: any) => item.category === Orders_Catergory[index]
             );
-            setData(redata);
+            setData(
+              Orders_Catergory[index] === "all"
+                ? itemsData.slice(0, 8)
+                : redata.slice(0, 8)
+            );
           }}
         >
           <TabList>
