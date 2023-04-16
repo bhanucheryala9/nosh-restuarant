@@ -31,33 +31,30 @@ const NotificationProvider = (props: {
     showAlert:false
   });
 
+  
   const showNotifications = () => {
-   showNotification.showAlert && showNotification.status === NotificationStatus.SUCCESS && toast.success(showNotification.alertMessage, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    showNotification.showAlert && showNotification.status === NotificationStatus.ERROR && toast.error(showNotification.alertMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    setShowNotification({
-      status: NotificationStatus.DEFAULT,
-      alertMessage: "This is sample alert..!",
-      showAlert:false
-    });
+    if(showNotification.showAlert){
+      switch (showNotification.status) {
+        case NotificationStatus.SUCCESS:
+          toast.success(showNotification.alertMessage);
+          break;
+        case NotificationStatus.ERROR:
+          toast.error(showNotification.alertMessage);
+          break;
+        case NotificationStatus.WARNING:
+          toast.warn(showNotification.alertMessage);
+          break;
+        case NotificationStatus.INFO:
+          toast.info(showNotification.alertMessage);
+          break;
+        default:
+          toast.info(showNotification.alertMessage);
+          break;
+      }
+    }
   };
+
+  
 
   React.useEffect(()=>{
     showNotifications()
