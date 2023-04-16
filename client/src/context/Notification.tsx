@@ -2,17 +2,19 @@ import React from "react";
 import react, { createContext, useContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NotificationProps, NotificationStatus } from "../components/common/utils";
+import {
+  NotificationProps,
+  NotificationStatus,
+} from "../components/common/utils";
 interface NotificationContexProps {
- showNotificationOpen: boolean,
- setShowNotificationOpen: ()=> void
+  showNotificationOpen: boolean;
+  setShowNotificationOpen: () => void;
 }
 const NotificationContex = createContext<any>(null);
 
 export const useNotification = () => {
   return useContext(NotificationContex);
 };
-
 
 const NotificationProvider = (props: {
   children:
@@ -28,42 +30,48 @@ const NotificationProvider = (props: {
   const [showNotification, setShowNotification] = useState<NotificationProps>({
     status: NotificationStatus.DEFAULT,
     alertMessage: "This is sample alert..!",
-    showAlert:false
+    showAlert: false,
   });
 
-  
   const showNotifications = () => {
-    if(showNotification.showAlert){
-      switch (showNotification.status) {
-        case NotificationStatus.SUCCESS:
-          toast.success(showNotification.alertMessage);
-          break;
-        case NotificationStatus.ERROR:
-          toast.error(showNotification.alertMessage);
-          break;
-        case NotificationStatus.WARNING:
-          toast.warn(showNotification.alertMessage);
-          break;
-        case NotificationStatus.INFO:
-          toast.info(showNotification.alertMessage);
-          break;
-        default:
-          toast.info(showNotification.alertMessage);
-          break;
-      }
-    }
+    showNotification.showAlert &&
+      showNotification.status === NotificationStatus.SUCCESS &&
+      toast.success(showNotification.alertMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    showNotification.showAlert &&
+      showNotification.status === NotificationStatus.ERROR &&
+      toast.error(showNotification.alertMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    setShowNotification({
+      status: NotificationStatus.DEFAULT,
+      alertMessage: "This is sample alert..!",
+      showAlert: false,
+    });
   };
 
-  
-
-  React.useEffect(()=>{
-    showNotifications()
-  },[showNotification.showAlert])
-
+  React.useEffect(() => {
+    showNotifications();
+  }, [showNotification.showAlert]);
 
   const value = {
     showNotification: showNotification,
-    setShowNotification: setShowNotification
+    setShowNotification: setShowNotification,
   };
 
   return (
