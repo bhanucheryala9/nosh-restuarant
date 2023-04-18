@@ -103,6 +103,32 @@
         "__v": {
           "$numberInt": "0"
         }
+      },
+      {
+        "_id": {
+          "$oid": "64114cf24649410110154327"
+        },
+        "id": "I91278",
+        "productName": "Tomato Soup",
+        "description": "Dal is a popular Indian lentil soup made with a variety of lentils, onions, tomatoes, and aromatic spices. It's a healthy and delicious vegetarian dish that can be enjoyed as a main course with rice",
+        "price": "9.99",
+        "url": "http://res.cloudinary.com/dh4anygjz/image/upload/v1680623345/nosh/obwdf67lauqirqgp9zsf.jpg",
+        "discount": {
+          "$numberInt": "10"
+        },
+        "isAvailable": true,
+        "tax": {
+          "$numberInt": "0"
+        },
+        "category": "appetizers",
+        "createdAt": {
+          "$date": {
+            "$numberLong": "1678855410059"
+          }
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
       }
   ]
 }
