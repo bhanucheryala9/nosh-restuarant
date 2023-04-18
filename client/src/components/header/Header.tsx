@@ -101,50 +101,61 @@ const Header = () => {
           </Flex>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          alignItems="center"
-          spacing={6}
-        >
-          {userType === "customer" && (
-            <Icon
-              as={AiOutlineShoppingCart}
-              size="lg"
-              boxSize={"6"}
-              onClick={() => setIsCartOpen(true)}
-              cursor="pointer"
-            />
-          )}
-          <Menu>
-            <MenuButton
-              as={Button}
-              rounded={"full"}
-              variant={"link"}
-              cursor={"pointer"}
-              minW={0}
-            >
-              <Avatar size="sm" bg="gray.200" src={faker.image.avatar()}>
-                <AvatarBadge boxSize="1.25em" bg="green.500" />
-              </Avatar>
-            </MenuButton>
-            <MenuList alignItems={"center"}>
-              <br />
-              <Center>
-                <Avatar size={"lg"} name="Bhanu Cheryala" bg="orange.50" />
-              </Center>
-              <br />
-              <Center>
-                <p>Username</p>
-              </Center>
-              <br />
-              <MenuDivider />
-              <MenuItem onClick={()=> navigate("/profile")}>Profile</MenuItem>
-              <MenuItem onClick={logoutUser}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </Stack>
+        {localStorage.getItem("isUserLoggedIn") === "yes" && (
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            alignItems="center"
+            spacing={6}
+          >
+            {JSON.parse(localStorage.getItem("userInfo") as string)?.type === "customer" && (
+              <>
+                <Icon
+                  as={AiOutlineShoppingCart}
+                  size="lg"
+                  boxSize={"6"}
+                  onClick={() => setIsCartOpen(true)}
+                  cursor="pointer"
+                />
+                {/* <Avatar src="">
+                <AvatarBadge boxSize="1.25em" bg="green.500" as={Text}>
+                  3
+                </AvatarBadge>
+              </Avatar> */}
+              </>
+            )}
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={"full"}
+                variant={"link"}
+                cursor={"pointer"}
+                minW={0}
+              >
+                <Avatar size="sm" bg="gray.200" src={faker.image.avatar()}>
+                  <AvatarBadge boxSize="1.25em" bg="green.500" />
+                </Avatar>
+              </MenuButton>
+              <MenuList alignItems={"center"}>
+                <br />
+                <Center>
+                  <Avatar size={"lg"} name="Bhanu Cheryala" bg="orange.50" />
+                </Center>
+                <br />
+                <Center>
+                  <p>Username</p>
+                </Center>
+                <br />
+                <MenuDivider />
+                <MenuItem onClick={() => navigate("/profile")}>
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={logoutUser}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          </Stack>
+        )}
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>

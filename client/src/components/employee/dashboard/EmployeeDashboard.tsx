@@ -58,7 +58,7 @@ interface EorderTableColumns {
   createdAt: Date | string;
 }
 const EmployeeDashboard = () => {
-  const [segmentValue, setSegmentValue] = useState<string>("New");
+  const [segmentValue, setSegmentValue] = useState<string>("processing");
   const [eordersData, setEOrdersData] = useState<EOrdersColumns[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<EOrdersColumns>();
   const [tableData, setTableData] = useState<EorderTableColumns[]>([]);

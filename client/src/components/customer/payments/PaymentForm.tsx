@@ -7,14 +7,14 @@ const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
     base: {
-      iconColor: "#DD6B20",
+      iconColor: "#414141",
       color: "#000",
       fontWeight: 500,
       fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
       fontSize: "16px",
       fontSmoothing: "antialiased",
-      ":-webkit-autofill": { color: "#DD6B20" },
-      "::placeholder": { color: "#DD6B20" },
+      ":-webkit-autofill": { color: "#565656" },
+      "::placeholder": { color: "#565656" },
     },
     invalid: {
       iconColor: "red",
@@ -35,7 +35,8 @@ export default function PaymentForm(props: { setCardDetails: any }) {
       card: elements?.getElement(CardElement) as any,
     })) as any;
     const { id } = paymentMethod;
-    setCardDetails(id)
+    console.log("************ id:", id);
+    setCardDetails(id);
     // if (!error) {
     //   try {
     //     const response = await axios.post("http://localhost:4000/payment", {

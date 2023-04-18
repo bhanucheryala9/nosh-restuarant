@@ -2,7 +2,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  HStack,
   Image,
   Tab,
   TabList,
@@ -12,8 +11,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import OrdersBanner from "../../../assets/orders.jpg";
-import Cart from "../cart/Cart";
 import OrderItem from "./OrderItem";
 import order from "../../../assets/orders.jpg";
 import { Orders_Catergory } from "../../common/utils";

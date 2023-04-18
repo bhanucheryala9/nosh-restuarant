@@ -74,7 +74,6 @@ const CreateOrders = () => {
     return data1;
   };
 
-  console.log("************* data", amount);
 
   useEffect(() => {
     axios

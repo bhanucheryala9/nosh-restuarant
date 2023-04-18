@@ -52,7 +52,6 @@ function App() {
                   <AppLayout>
                     {/* <ErrorBoundary> */}
                     <Routes>
-                      //inventory
                       <Route path="/" element={<LoginPage />} />
                       <Route path="/dashboard" element={<EmployeeDashboard />} />
                       <Route path="/test" element={<Test />} />
@@ -63,7 +62,7 @@ function App() {
                       <Route path="/signup" element={<SignUp />} />
                       <Route path="/orders" element={<Orders />} />
                       <Route path="/sales" element={<SalesDashboard />} />
-                      <Route path="/employee-orders" element={<EOrders />} />
+                      <Route path="/employee-orders" element={<EmployeeDashboard />} />
                       <Route
                         path="/employee-update-orders"
                         element={<EInventory />}
