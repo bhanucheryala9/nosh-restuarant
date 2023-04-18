@@ -1,20 +1,11 @@
-import {
-  Button,
-  Flex,
-  HStack,
-  IconButton,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, HStack, Image, Text } from "@chakra-ui/react";
 import purchase from "../../../assets/purchase-history.jpg";
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { RewardsTestData } from "../../../test-data/admin/rewards";
-import { purchase_history } from "../../../test-data/customer/purchase-history";
 import axios from "axios";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 
 export interface DataType {
   key: React.Key;
@@ -25,22 +16,39 @@ export interface DataType {
 }
 const PurchaseHistory = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [completeOrderDetails, setCompletedOrderDetails] = useState([]);
   const [rewardsData, setRewardsData] = useState<DataType[]>([]);
-  const [showCreateRewardModal, setShowCreateRewardModal] =
-    useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const onReorderClicked = (id: any) => {
+    const precartData = completeOrderDetails?.filter(
+      (item: any) => item.orderId === id
+    );
+    localStorage.setItem(
+      "orders",
+      JSON.stringify((precartData[0] as any)?.orderDetails)
+    );
+    navigate("/payment")
+  };
   const columns: ColumnsType<DataType> = [
     {
       title: "Order ID",
       dataIndex: "orderID",
-      render: (text: string) => <a>{text}</a>,
+      render: (text: string) => <a>{(text as string).toUpperCase()}</a>,
     },
     {
       title: "Name",
       dataIndex: "name",
+      render: (text: string) => <div>{_.capitalize(text)}</div>,
     },
     {
       title: "Number Of Items",
       dataIndex: "numberOfItems",
+      render: (text: string) => (
+        <div>
+          <b>{_.capitalize(text)}</b>
+        </div>
+      ),
     },
     {
       title: "Price $",
@@ -52,7 +60,11 @@ const PurchaseHistory = () => {
       width: "45px",
       render: (_, record) => (
         <HStack>
-          <Button colorScheme={"orange"} rounded="full">
+          <Button
+            colorScheme={"orange"}
+            rounded="full"
+            onClick={() => onReorderClicked((record as any)?.orderID)}
+          >
             Reorder
           </Button>
         </HStack>
@@ -73,18 +85,6 @@ const PurchaseHistory = () => {
     return toReturn;
   };
   useEffect(() => {
-    // const formattedData = purchase_history.reduce(
-    //   (accumulator: any, currentValue) => {
-    //     return [
-    //       ...accumulator,
-    //       {
-    //         key: currentValue.orderID,
-    //         ...currentValue,
-    //       },
-    //     ];
-    //   },
-    //   []
-    // );
     const userID = JSON.parse(
       localStorage?.getItem("userInfo") || ("{}" as string)
     );
@@ -95,7 +95,7 @@ const PurchaseHistory = () => {
         },
       })
       .then((response) => {
-        console.log("********** response of order", response.data.orders);
+        setCompletedOrderDetails(response.data.orders);
         setRewardsData(prepareData(response.data.orders));
       })
       .catch((error) => {

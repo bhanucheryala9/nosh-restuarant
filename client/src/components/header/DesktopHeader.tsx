@@ -38,7 +38,14 @@ const DesktopHeader = () => {
 
   return (
     <Stack direction={"row"} spacing={4} mt={1}>
-      {nav.map((navItem) => (
+      {
+      (JSON.parse(localStorage.getItem("userInfo") as string).type === "customer"
+        ? CLIENT_NAV_ITEMS
+        : JSON.parse(localStorage.getItem("userInfo") as string).type === "admin"
+        ? ADMIN_NAV_ITEMS
+        : JSON.parse(localStorage.getItem("userInfo") as string).type === "employee"
+        ? EMPLOYEE_NAV
+        : []).map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>

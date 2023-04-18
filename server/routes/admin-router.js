@@ -94,6 +94,15 @@ router.put("/v1/update-employee", async function (req, res, next) {
   }
 });
 
+router.get("/v1/getuserdetailsbyId", async function (req, res, next) {
+  const payload = req.query.id;
+  try {
+    const users = await usersService.getUsersByID(payload);
+    res.json({ users: users, status: "success" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 /***
  *
  * Admin Module: Inventory routes

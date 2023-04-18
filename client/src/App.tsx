@@ -30,6 +30,9 @@ import AppStoreProvider from "./contexts/AppStoreContext";
 import Tour from "./components/customer/tour/Tour";
 import EOrders from "./components/employee/orders/EOrders";
 import EInventory from "./components/employee/Inventory/EInventory";
+import Profile from "./components/common/Profile";
+import CreateOrders from "./components/employee/create-orders/CreateOrders";
+import EmployeeDashboard from "./components/employee/dashboard/EmployeeDashboard";
 
 interface CartContextProp {
   isCartOpen: boolean;
@@ -49,9 +52,8 @@ function App() {
                   <AppLayout>
                     {/* <ErrorBoundary> */}
                     <Routes>
-                      //inventory
                       <Route path="/" element={<LoginPage />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<EmployeeDashboard />} />
                       <Route path="/test" element={<Test />} />
                       <Route path="/employee" element={<Employee />} />
                       <Route path="/rewards" element={<Rewards />} />
@@ -60,9 +62,14 @@ function App() {
                       <Route path="/signup" element={<SignUp />} />
                       <Route path="/orders" element={<Orders />} />
                       <Route path="/sales" element={<SalesDashboard />} />
-                      <Route path="/employee-orders" element={<EOrders />} />
-                      <Route path="/employee-update-orders" element={<EInventory />} />=
+                      <Route path="/employee-orders" element={<EmployeeDashboard />} />
+                      <Route
+                        path="/employee-update-orders"
+                        element={<EInventory />}
+                      />
                       <Route path="/tour" element={<Tour />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/create-order" element={<CreateOrders />} />
                       <Route
                         path="/purchase-history"
                         element={<PurchaseHistory />}

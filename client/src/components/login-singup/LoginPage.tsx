@@ -13,6 +13,8 @@ import Header from "../header/Header";
 import { useNotification } from "../../contexts/Notification";
 import axios from "axios";
 import { useUser } from "../../contexts/UserContext";
+import Chatbot from 'react-best-chatbot';
+import { AiOutlineClose, AiOutlineReload, AiOutlineSend } from "react-icons/ai";
 
 const LoginPage = () => {
   const { Title, Text } = Typography;
@@ -88,6 +90,56 @@ const LoginPage = () => {
     }
   };
 
+  const steps = [
+    {
+      id: 1,
+      content: "Hello, human!",
+      goTo: 2
+    }, 
+    {
+      id: 2,
+      content: "See ya...",
+      end: true
+    }
+  ];
+
+  const options = {
+    header: "Tutorial Bot",
+    endContent: "See ya 👋",
+    botAvatarSrc: "/img/bot.png",
+    hidden: false,
+    messageDelay: 1000,
+    open: true,
+    sendComponentFunction: (disabled: any) => (
+      <AiOutlineSend style={{ color: disabled ? "#DDDDDD" : "" }} />
+    ),
+    refreshComponent: <AiOutlineReload fontSize={18} color="#7b68ee" />,
+    closeComponent: <AiOutlineClose />,
+    chatButtonComponent: (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#333333",
+          color: "#FFFFFF",
+          borderRadius: "50%",
+          height: 50,
+          width: 50,
+          cursor: "pointer"
+        }}
+      >
+        <AiOutlineReload />
+      </div>
+    ),
+    loadingComponent: <AiOutlineReload size={16} 
+      style={{ color: "#7b68ee" }} />,
+    openingCallback: () => console.log("Opening..."),
+    // sendingMessageCallback: (_answers) => console.log("Sending message..."),
+    // endingCallback: (answers, toggleOpen, refresh) => console.log("Ending..."),
+    closingCallback: () => console.log("Closing..."),
+  };
+
   return (
     <div className="login-page">
       {/* <Header /> */}
@@ -158,6 +210,9 @@ const LoginPage = () => {
           </Form.Item>
         </Form>
       </div>
+
+      <Chatbot steps={steps}  options={options}/>
+
     </div>
   );
 };

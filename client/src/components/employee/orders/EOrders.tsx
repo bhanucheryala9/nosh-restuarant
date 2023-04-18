@@ -146,19 +146,19 @@ const EOrders = () => {
     let itemData = eordersData?.filter((item) => item.orderId === orderID);
     const itemNeedtoUpdate = { ...itemData[0], orderStatus: status };
     setIsLoading(true);
-    axios
-      .put(
-        "http://localhost:5000/api/admin/v1/update-order-status",
-        itemNeedtoUpdate
-      )
-      .then((response) => {
-        setEOrdersData(response.data.items);
-        setTableData(prepareData(response.data.items));
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-      });
+    // axios
+    //   .put(
+    //     "http://localhost:5000/api/admin/v1/update-order-status",
+    //     itemNeedtoUpdate
+    //   )
+    //   .then((response) => {
+    //     setEOrdersData(response.data.items);
+    //     setTableData(prepareData(response.data.items));
+    //     setIsLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     setIsLoading(false);
+    //   });
   };
 
   const columns: ColumnsType<EorderTableColumns> = [

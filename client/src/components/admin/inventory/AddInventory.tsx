@@ -1,16 +1,10 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import {
-  Card,
   Flex,
   Grid,
   GridItem,
   Text,
-  Avatar,
-  HStack,
-  Link,
-  Portal,
   Code,
-  VStack,
   Button,
   FormControl,
   FormLabel,
@@ -21,8 +15,6 @@ import {
   InputLeftElement,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { UploadProps } from "antd";
-import { FaInbox } from "react-icons/fa";
 import {
   generateUID,
   InventoryRequestPayload,
@@ -380,24 +372,6 @@ const AddInventory = (props: AddInventoryProps) => {
                       {errors["category"]?.message as string}
                     </FormErrorMessage>
                   </FormControl>
-                  {/* <FormControl mt="4" isInvalid={!!errors["tax"]}>
-                    <FormLabel fontSize={"xs"}>Tax Percentage</FormLabel>
-                    <Input
-                      placeholder="Enter tax percentage"
-                      type="number"
-                      defaultValue={(defaultValues as any)?.tax}
-                      {...register("tax", {
-                        required: "Tax is required",
-                      })}
-                      onChange={(e) => {
-                        const data = { ...formData, tax: e.target.value };
-                        setFormData(data as any);
-                      }}
-                    />
-                    <FormErrorMessage>
-                      {errors["tax"]?.message as string}
-                    </FormErrorMessage>
-                  </FormControl> */}
                 </Flex>
               </Flex>
             </GridItem>

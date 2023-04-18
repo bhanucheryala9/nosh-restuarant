@@ -100,7 +100,6 @@ const OrderItem = (props: OrderItemsProps) => {
               url: url
             },
           ];
-    console.log("********* data clicked for cart", filterData);
     setCartData(filterData);
   };
   return (

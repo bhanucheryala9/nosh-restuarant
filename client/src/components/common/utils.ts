@@ -110,7 +110,7 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
-// export const ADMIN_NAV_ITEMS: Array<NavItem> = [
+// export const CLIENT_NAV_ITEMS: Array<NavItem> = [
 //   {
 //     label: "Dashboard",
 //     href: "/dashboard",
@@ -155,6 +155,11 @@ export const NAV_ITEMS: Array<NavItem> = [
 //         href: "/employee-orders",
 //       },
 //       {
+//         label: "Orders Now",
+//         subLabel: "Find your orders",
+//         href: "/create-order",
+//       },
+//       {
 //         label: "Update Orders",
 //         subLabel: "Update inventory items status",
 //         href: "/employee-update-orders",
@@ -180,15 +185,25 @@ export const NAV_ITEMS: Array<NavItem> = [
 //         subLabel: "Check your payment section",
 //         href: "/payment",
 //       },
+//       {
+//         label: "Restaurant Tour",
+//         subLabel: "Check your payment section",
+//         href: "/tour",
+//       },
 //     ],
 //   },
 // ];
 
 export const EMPLOYEE_NAV: Array<NavItem> = [
   {
+    label: "Dashboard",
+    subLabel: "Find your dashboard",
+    href: "/employee-orders",
+  },
+  {
     label: "Orders",
     subLabel: "Find your orders",
-    href: "/employee-orders",
+    href: "/create-order",
   },
   {
     label: "Update Orders",
@@ -312,3 +327,31 @@ export const getStatusColors = (status: string | boolean) => {
     return "green";
   }
 };
+
+export const cartData = [
+  {
+    name: "biryani",
+    price: 10,
+    quantity: 0,
+  },
+  {
+    name: "pulav",
+    price: 7,
+    quantity: 0,
+  },
+  {
+    name: "idly",
+    price: 7,
+    quantity: 0,
+  },
+  {
+    name: "vada",
+    price: 7,
+    quantity: 0,
+  },
+  {
+    name: "dosa",
+    price: 9,
+    quantity: 0,
+  },
+];
