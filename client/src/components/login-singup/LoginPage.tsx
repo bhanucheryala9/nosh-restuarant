@@ -1,6 +1,6 @@
 import "./login.css";
 import { Button, Divider, Form, Input, Typography } from "antd";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
@@ -27,6 +27,24 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const { setShowNotification } = useNotification();
+  useEffect(() => {
+    (function (d, m) {
+      var kommunicateSettings = {
+        appId: "31e86c3017597b6413fbbe3cf554d500e",
+        popupWidget: true,
+        automaticChatOpenOnNavigation: true,
+      };
+      var s = document.createElement("script");
+      s.type = "text/javascript";
+      s.async = true;
+      s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+      var h = document.getElementsByTagName("head")[0];
+      h.appendChild(s);
+      (window as any).kommunicate = m;
+      m._globals = kommunicateSettings;
+    })(document, (window as any).kommunicate || {});
+  }, []);
+
 
   const getErroMessage = (message: string) => {
     if (message === "wrong-password") {
@@ -211,7 +229,7 @@ const LoginPage = () => {
         </Form>
       </div>
 
-      <Chatbot steps={steps}  options={options}/>
+      {/* <Chatbot steps={steps}  options={options}/> */}
 
     </div>
   );

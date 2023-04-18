@@ -98,14 +98,13 @@ const Payments = () => {
   const navigate = useNavigate();
 
   const prepareData = () => {
-    console.log("************* calling")
     const orders = JSON.parse(localStorage.getItem("orders") as any);
     const payload = {
       ...orderInfo,
       orderId: "o" + generateUID(),
       paymentId: getCardDetails,
       orderDetails: orders,
-      totalAmount: (finalAmount + finalAmount / 8) * 100,
+      totalAmount: (finalAmount + Number((finalAmount / 8).toFixed(2))) * 100,
       orderStatus: "processing",
     };
     axios
@@ -126,7 +125,7 @@ const Payments = () => {
 
   return (
     <Flex direction={"column"} justifyContent="center">
-      <form onSubmit={handleSubmit(prepareData)}>
+      <form>
         <Grid
           templateRows="repeat(1, 1fr)"
           templateColumns="repeat(2, 1fr)"
@@ -243,7 +242,8 @@ const Payments = () => {
                   <Button
                     colorScheme={"orange"}
                     mt="3"
-                    type="submit"
+                    // type="submit"
+                    onClick={prepareData}
                     w="56"
                     float="right"
                   >

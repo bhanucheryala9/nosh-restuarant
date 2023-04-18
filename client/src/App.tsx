@@ -53,7 +53,17 @@ function App() {
                     {/* <ErrorBoundary> */}
                     <Routes>
                       <Route path="/" element={<LoginPage />} />
-                      <Route path="/dashboard" element={<EmployeeDashboard />} />
+                      <Route
+                        path="/dashboard"
+                        element={
+                          JSON.parse(localStorage.getItem("userInfo") as string)
+                            ?.type === "employee" ? (
+                            <EOrders />
+                          ) : (
+                            <Dashboard />
+                          )
+                        }
+                      />
                       <Route path="/test" element={<Test />} />
                       <Route path="/employee" element={<Employee />} />
                       <Route path="/rewards" element={<Rewards />} />
@@ -62,7 +72,10 @@ function App() {
                       <Route path="/signup" element={<SignUp />} />
                       <Route path="/orders" element={<Orders />} />
                       <Route path="/sales" element={<SalesDashboard />} />
-                      <Route path="/employee-orders" element={<EmployeeDashboard />} />
+                      <Route
+                        path="/employee-orders"
+                        element={<EmployeeDashboard />}
+                      />
                       <Route
                         path="/employee-update-orders"
                         element={<EInventory />}
