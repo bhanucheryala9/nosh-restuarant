@@ -12,8 +12,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { EmployeeRequestPayload } from "./utils";
+import { EmployeeRequestPayload, NotificationStatus } from "./utils";
 import axios from "axios";
+import { useNotification } from "../../contexts/Notification";
 
 const Profile = () => {
   const profile = JSON.parse(
@@ -41,10 +42,11 @@ const Profile = () => {
       about: usersData?.about,
     },
   });
-  const [formData, setFormData] = useState<EmployeeRequestPayload>();
-  console.log("🚀 ~ file: Profile.tsx:45 ~ Profile ~ formData:", formData);
+  const { setShowNotification } = useNotification();
 
-  useEffect(() => {
+  const [formData, setFormData] = useState<EmployeeRequestPayload>();
+
+  const getInfo = () => {
     axios
       .get("http://localhost:5000/api/admin/v1/getuserdetailsbyId", {
         params: {
@@ -55,7 +57,11 @@ const Profile = () => {
         setUserData(res.data.users[0]);
         setFormData(res.data.users[0]);
       });
-  }, [profile.email]);
+  };
+
+  useEffect(() => {
+    getInfo();
+  }, []);
 
   const onSubmitClicked = () => {
     const payload = { ...usersData, ...formData };
@@ -64,6 +70,11 @@ const Profile = () => {
       .put("http://localhost:5000/api/admin/v1/update-employee", payload)
       .then((response) => {
         console.log("successfully updated user information..!");
+        setShowNotification({
+          status: NotificationStatus.SUCCESS,
+          alertMessage: "successfully updated user information..",
+          showAlert: true,
+        });
       })
       .catch((error) => {
         console.log("failed to create");
@@ -75,9 +86,9 @@ const Profile = () => {
       <form onSubmit={handleSubmit(onSubmitClicked)}>
         <Flex
           direction="column"
-          bg="orange.50"
           p="4"
           mx="20"
+          bg="white"
           shadow="base"
           borderRadius="lg"
           my="4"
