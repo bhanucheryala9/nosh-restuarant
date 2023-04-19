@@ -596,7 +596,7 @@ const Payments = () => {
               gap={4}
             >
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["firstName"]}>
+                <FormControl >
                   <FormLabel
                     id="firstName"
                     fontSize={"xs"}
@@ -608,7 +608,7 @@ const Payments = () => {
                   <Input
                     type={"text"}
                     {...register("firstName", {
-                      required: "First Name is required",
+                      // required: "First Name is required",
                     })}
                     defaultValue={(orderInfo as any)?.firstName}
                     onChange={(e) =>
@@ -618,13 +618,13 @@ const Payments = () => {
                       } as any)
                     }
                   />
-                  <FormErrorMessage>
+                  {/* <FormErrorMessage>
                     {errors["firstName"]?.message as string}
-                  </FormErrorMessage>
+                  </FormErrorMessage> */}
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["lastName"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -634,7 +634,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("lastName", {
-                      required: "Last Name is required",
+                      // required: "Last Name is required",
                     })}
                     defaultValue={(orderInfo as any)?.lastName}
                     onChange={(e) =>
@@ -650,7 +650,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
-                <FormControl isInvalid={!!errors["email"]}>
+                <FormControl>
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -660,7 +660,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("email", {
-                      required: "Email is required",
+                      // required: "Email is required",
                     })}
                     defaultValue={(orderInfo as any)?.email}
                     onChange={(e) =>
@@ -676,7 +676,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
-                <FormControl isInvalid={!!errors["addressLine1"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -686,7 +686,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("addressLine1", {
-                      required: "Address Line1 is required",
+                      // required: "Address Line1 is required",
                     })}
                     defaultValue={(orderInfo as any)?.address.addressLine1}
                     onChange={(e) =>
@@ -729,7 +729,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["city"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -739,7 +739,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("city", {
-                      required: "City is required",
+                      // required: "City is required",
                     })}
                     defaultValue={(orderInfo as any)?.address.city}
                     onChange={(e) =>
@@ -758,7 +758,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["state"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"

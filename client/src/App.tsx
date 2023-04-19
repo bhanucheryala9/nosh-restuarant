@@ -41,7 +41,7 @@ interface CartContextProp {
 
 function App() {
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <Router>
         <AuthProvider>
           <AppStoreProvider>
@@ -102,7 +102,7 @@ function App() {
           </AppStoreProvider>
         </AuthProvider>
       </Router>
-    </React.StrictMode>
+    /* </React.StrictMode> */
   );
 }
 
