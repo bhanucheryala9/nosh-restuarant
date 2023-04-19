@@ -20,30 +20,35 @@ import { OrderInfo } from "../orders/OrderItem";
 import CartItem from "./CartItem";
 
 const Cart = () => {
-  const { isCartOpen, setIsCartOpen, cartData } = useCart();
+  const { isCartOpen, setIsCartOpen,  } = useCart();
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [tax, setTaxAmount] = useState<number>(0);
   const { AppStoreData, setAppStoreData } = useAppStore();
   const navigate = useNavigate();
-  const [cartInfo, setCartInfo] = useState(cartData);
+  const [cartInfo, setCartInfo] = useState([]);
 
   useEffect(() => {
-    const amount = cartData?.reduce((acc: any, item: OrderInfo) => {
+    const amount = cartInfo?.reduce((acc: any, item: OrderInfo) => {
       return acc + item?.quantity * item?.price;
     }, 0);
     setTotalAmount(amount);
     setTaxAmount(amount / 8);
-  }, [cartData]);
+  }, [cartInfo]);
 
-  useEffect(() => {
-    setCartInfo(cartData);
-  }, [cartData]);
+  useEffect(()=>{
+    const cartdata = JSON.parse(localStorage.getItem("orders") ||"")
+    setCartInfo(cartdata)
+
+  },[localStorage.getItem("orders")])
+  // useEffect(() => {
+  //   setCartInfo(cartData);
+  // }, [cartData]);
 
   const onSubmitClicked = () => {
-    setCartInfo(cartData);
-    localStorage.setItem("orders", JSON.stringify({}));
-    localStorage.setItem("orders", JSON.stringify(cartData));
-    setAppStoreData({ ...AppStoreData, finalCartData: cartData });
+    // setCartInfo(cartData);
+    // localStorage.setItem("orders", JSON.stringify({}));
+    localStorage.setItem("orders", JSON.stringify(cartInfo));
+    // setAppStoreData({ ...AppStoreData, finalCartData: cartData });
     navigate("/payment");
   };
 
@@ -94,7 +99,7 @@ const Cart = () => {
                 return (
                   <CartItem
                     item={item}
-                    setCartInfo={setCartInfo}
+                    setCartInfo={setCartInfo as any}
                     cartInfo={cartInfo}
                     key={index}
                   />
@@ -107,7 +112,13 @@ const Cart = () => {
                   <Text fontSize={"sm"} textColor="gray.700">
                     Tax
                   </Text>
-                  <Text fontSize={"sm"}>${tax}</Text>
+                  <Text fontSize={"sm"}>${(tax).toFixed(2)}</Text>
+                </HStack>
+                <HStack justifyContent={"space-between"}>
+                  <Text fontSize={"sm"} textColor="gray.700">
+                    Sub total
+                  </Text>
+                  <Text fontSize={"sm"}>${(totalAmount).toFixed(2)}</Text>
                 </HStack>
                 <HStack justifyContent={"space-between"} mt="2">
                   <Text>Total</Text>
@@ -116,7 +127,7 @@ const Cart = () => {
                     fontWeight="semibold"
                     fontSize={"2xl"}
                   >
-                    ${totalAmount}
+                    ${(totalAmount+ tax).toFixed(2)}
                   </Text>
                 </HStack>
                 <Button

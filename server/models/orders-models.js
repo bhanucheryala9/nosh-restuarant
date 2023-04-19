@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -16,11 +15,14 @@ const ordersSchema = new Schema({
     // zipcode: String
   },
   orderDetails: [
-    {id: String,
-  productName: String,
-  category: String,
-  price: Number,
-  quantity: Number}
+    {
+      id: String,
+      productName: String,
+      category: String,
+      price: Number,
+      url: String,
+      quantity: Number,
+    },
   ],
   totalAmount: Number,
   orderStatus: String,

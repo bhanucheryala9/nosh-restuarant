@@ -13,7 +13,7 @@ exports.createOrders = async (orders) => {
         description: "Cafe Testing",
         payment_method: paymentId,
         confirm: true,
-        receipt_email:"cheryalabhanu99@gmail.com"
+        // receipt_email:"cheryalabhanu99@gmail.com"
       })
     const payload = {
       ...orders,

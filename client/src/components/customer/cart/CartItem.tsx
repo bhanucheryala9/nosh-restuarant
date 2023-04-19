@@ -26,17 +26,23 @@ const CartItem = (props: CartItemProps) => {
     if (option === "add") {
       updatedData = cartInfo?.map((product) => {
         if (product.productName === item.productName) {
-          return { ...product, quantity: item.quantity + 1 };
+          if (product.quantity < 0) {
+            return { ...product, quantity: 0 };
+          } else {
+            return { ...product, quantity: item.quantity + 1 };
+          }
         } else {
           return product;
         }
       });
-
-      console.log("************ after adding", updatedData);
     } else {
       updatedData = cartInfo?.map((product) => {
         if (product.productName === item.productName) {
-          return { ...product, quantity: item.quantity - 1 };
+          if (product.quantity <= 0) {
+            return { ...product, quantity: 0 };
+          } else {
+            return { ...product, quantity: item.quantity - 1 };
+          }
         } else {
           return product;
         }
@@ -45,7 +51,6 @@ const CartItem = (props: CartItemProps) => {
     setCartInfo(updatedData);
   };
 
-  console.log("*************** image ddata", item);
   return (
     <Flex my="4" key={item.id}>
       <Flex>
@@ -73,7 +78,11 @@ const CartItem = (props: CartItemProps) => {
               colorScheme={"orange"}
               borderColor="orange.500"
             >
-              <InputLeftAddon children="-" onClick={() => prepareData("sub")} />
+              <InputLeftAddon
+                cursor="pointer"
+                children="-"
+                onClick={() => prepareData("sub")}
+              />
               <Input
                 type={"number"}
                 defaultValue={item.quantity}
@@ -81,6 +90,7 @@ const CartItem = (props: CartItemProps) => {
                 w={10}
               />
               <InputRightAddon
+                cursor="pointer"
                 children="+"
                 onClick={() => prepareData("add")}
               />

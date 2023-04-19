@@ -6,16 +6,17 @@ import {
   HStack,
   StackDivider,
   Text,
+  Image,
   VStack,
 } from "@chakra-ui/react";
 import { Divider } from "antd";
 import axios from "axios";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Segmented } from "antd";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { useNotification } from "../../../contexts/Notification";
-import ta from 'time-ago'
+import ta from "time-ago";
 interface EOrdersColumns {
   orderId: string;
   firstName: string;
@@ -33,6 +34,7 @@ interface EOrdersColumns {
     category: string;
     price: number;
     quantity: number;
+    url: string;
   }>;
   totalAmount: number;
   orderStatus: string;
@@ -51,6 +53,7 @@ interface EorderTableColumns {
     category: string;
     price: number;
     quantity: number;
+    url: string;
   }>;
   noOfItems: number;
   totalAmount: number;
@@ -255,9 +258,13 @@ const EmployeeDashboard = () => {
                 return (
                   <VStack width={"100%"} py="2">
                     <Flex justifyContent={"space-between"} width={"100%"}>
-                      <Text fontSize={"large"} fontWeight={"semibold"}>
-                        {item.productName}
-                      </Text>
+                      <Flex alignItems={"center"}>
+                        <Image src={item.url} width={"12"} h={"12"} borderRadius={"xl"}/>
+                        <Text fontSize={"large"} fontWeight={"semibold"} ml="4">
+                          {item.productName}
+                        </Text>
+                      </Flex>
+
                       <HStack gap={20}>
                         <Text fontSize={"md"}>Quantity: {item.quantity}</Text>
                         <Text fontSize={"lg"} fontWeight={"semibold"}>

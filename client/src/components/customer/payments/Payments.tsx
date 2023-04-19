@@ -79,7 +79,7 @@ const Payments = () => {
     formState: { errors },
   } = useForm();
   useEffect(() => {
-    const userinfo = JSON.parse(localStorage.getItem("userInfo") || "");
+    const userinfo = JSON.parse(localStorage.getItem("userInfo") || "")
     const user = {
       firstName: userinfo?.firstName,
       lastName: userinfo?.lastName,
@@ -87,7 +87,9 @@ const Payments = () => {
       email: userinfo?.email,
     };
     setOrdersInfo({ ...orderInfo, ...(user as any) });
-    const cartinfo = JSON.parse(localStorage.getItem("orders") || "");
+    const cartinfo = JSON.parse(localStorage.getItem("orders") || "")?.filter(
+      (item: any) => item.quantity !== 0
+    );
     setCartItems(cartinfo);
     const amount = cartinfo?.reduce((acc: any, item: OrderInfo) => {
       return acc + item?.quantity * item?.price;
@@ -98,14 +100,13 @@ const Payments = () => {
   const navigate = useNavigate();
 
   const prepareData = () => {
-    console.log("************* calling")
     const orders = JSON.parse(localStorage.getItem("orders") as any);
     const payload = {
       ...orderInfo,
       orderId: "o" + generateUID(),
       paymentId: getCardDetails,
       orderDetails: orders,
-      totalAmount: (finalAmount + finalAmount / 8) * 100,
+      totalAmount: (finalAmount + Number((finalAmount / 8).toFixed(2))) * 100,
       orderStatus: "processing",
     };
     axios
@@ -126,7 +127,7 @@ const Payments = () => {
 
   return (
     <Flex direction={"column"} justifyContent="center">
-      <form onSubmit={handleSubmit(prepareData)}>
+      <form>
         <Grid
           templateRows="repeat(1, 1fr)"
           templateColumns="repeat(2, 1fr)"
@@ -243,7 +244,8 @@ const Payments = () => {
                   <Button
                     colorScheme={"orange"}
                     mt="3"
-                    type="submit"
+                    // type="submit"
+                    onClick={prepareData}
                     w="56"
                     float="right"
                   >
@@ -542,7 +544,7 @@ const Payments = () => {
                   Sub Total
                 </Text>
                 <Text fontSize={"lg"} fontWeight="semibold">
-                  ${finalAmount ? finalAmount : 0}
+                  ${finalAmount ? (finalAmount).toFixed(2) : 0}
                 </Text>
               </Flex>
               <Flex width={"100%"} justifyContent="space-between" my="2">
@@ -594,7 +596,7 @@ const Payments = () => {
               gap={4}
             >
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["firstName"]}>
+                <FormControl >
                   <FormLabel
                     id="firstName"
                     fontSize={"xs"}
@@ -606,7 +608,7 @@ const Payments = () => {
                   <Input
                     type={"text"}
                     {...register("firstName", {
-                      required: "First Name is required",
+                      // required: "First Name is required",
                     })}
                     defaultValue={(orderInfo as any)?.firstName}
                     onChange={(e) =>
@@ -616,13 +618,13 @@ const Payments = () => {
                       } as any)
                     }
                   />
-                  <FormErrorMessage>
+                  {/* <FormErrorMessage>
                     {errors["firstName"]?.message as string}
-                  </FormErrorMessage>
+                  </FormErrorMessage> */}
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["lastName"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -632,7 +634,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("lastName", {
-                      required: "Last Name is required",
+                      // required: "Last Name is required",
                     })}
                     defaultValue={(orderInfo as any)?.lastName}
                     onChange={(e) =>
@@ -648,7 +650,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
-                <FormControl isInvalid={!!errors["email"]}>
+                <FormControl>
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -658,7 +660,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("email", {
-                      required: "Email is required",
+                      // required: "Email is required",
                     })}
                     defaultValue={(orderInfo as any)?.email}
                     onChange={(e) =>
@@ -674,7 +676,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
-                <FormControl isInvalid={!!errors["addressLine1"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -684,9 +686,9 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("addressLine1", {
-                      required: "Address Line1 is required",
+                      // required: "Address Line1 is required",
                     })}
-                    defaultValue={(orderInfo as any)?.address.addressLine1}
+                    defaultValue={(orderInfo as any)?.address?.addressLine1}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
@@ -713,7 +715,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("addressLine2")}
-                    defaultValue={(orderInfo as any)?.address.addressLine2}
+                    defaultValue={(orderInfo as any)?.address?.addressLine2}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
@@ -727,7 +729,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["city"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -737,9 +739,9 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("city", {
-                      required: "City is required",
+                      // required: "City is required",
                     })}
-                    defaultValue={(orderInfo as any)?.address.city}
+                    defaultValue={(orderInfo as any)?.address?.city}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
@@ -756,7 +758,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl isInvalid={!!errors["state"]}>
+                <FormControl >
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -768,7 +770,7 @@ const Payments = () => {
                     {...register("state", {
                       required: "State is required",
                     })}
-                    defaultValue={(orderInfo as any)?.address.state}
+                    defaultValue={(orderInfo as any)?.address?.state}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,

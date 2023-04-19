@@ -1,20 +1,35 @@
 import "./login.css";
 import { Button, Divider, Form, Input, Typography } from "antd";
-import { FC, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   AlertMessageProps,
   AlertStatus,
   NotificationStatus,
+  steps_for_chat,
 } from "../common/utils";
 import lgn from "../../assets/loginPage.jpg";
-import Header from "../header/Header";
+import botAvatar from "../../assets/nosh.jpg";
 import { useNotification } from "../../contexts/Notification";
 import axios from "axios";
-import { useUser } from "../../contexts/UserContext";
-import Chatbot from 'react-best-chatbot';
-import { AiOutlineClose, AiOutlineReload, AiOutlineSend } from "react-icons/ai";
+import ChatBot from "react-simple-chatbot";
+import { ThemeProvider as TPC } from "styled-components";
+
+const theme = {
+  background: "white",
+  headerBgColor: "#ed872d",
+  headerFontSize: "20px",
+  botBubbleColor: "#F5F5F5",
+  headerFontColor: "white",
+  botFontColor: "black",
+  userBubbleColor: "#ed872d",
+  userFontColor: "white",
+  headerImage: "none",
+};
+const config = {
+  floating: true,
+};
 
 const LoginPage = () => {
   const { Title, Text } = Typography;
@@ -27,6 +42,68 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const { setShowNotification } = useNotification();
+  const [conversationHistory, setConversationHistory] = useState([]);
+  const [orders, setOrders] = useState([]);
+
+  const formatterChat = (data: any) => {
+    const userChat = data?.filter((item: any) => item.type === "user");
+    const chartinformation = (userChat[0] as any)?.data?.filter(
+      (item: string) => item !== "Yes" && item !== "Appetizers"
+    );
+
+    console.log("*********** data for histuiruy:", data)
+    const cart: any = [];
+    for (let i = 1; i < chartinformation.length; i++) {
+      orders
+        ?.filter((item: any) => item.productName === chartinformation[1])
+        .map((food: any) => {
+          cart.push({
+            category: food.category,
+            id: food.id,
+            price: food.price,
+            productName: food.productName,
+            quantity: 1,
+            url: food.url,
+          });
+        });
+    }
+    localStorage.setItem("orders", JSON.stringify(cart));
+    navigate("/payment")
+  };
+
+  const handleEnd = ({ steps, values }: any) => {
+    if (!conversationHistory.length) {
+      const newConversationHistory = [
+        {
+          type: "user",
+          message: values.name,
+          data: values,
+        },
+      ];
+      steps.forEach((step: any) => {
+        if (step.message) {
+          newConversationHistory.push({
+            type: "bot",
+            message: step.message,
+            data: step as any,
+          });
+        }
+      });
+      setConversationHistory(newConversationHistory as any);
+      formatterChat(newConversationHistory);
+    }
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setOrders(response.data.items);
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
+  }, []);
 
   const getErroMessage = (message: string) => {
     if (message === "wrong-password") {
@@ -57,7 +134,10 @@ const LoginPage = () => {
             })
             .then((response) => {
               localStorage.setItem("isUserLoggedIn", "yes");
-              console.log("**************** user info:" ,response.data.userInfo[0])
+              console.log(
+                "**************** user info:",
+                response.data.userInfo[0]
+              );
               localStorage.setItem(
                 "userInfo",
                 JSON.stringify(response.data.userInfo[0])
@@ -88,56 +168,6 @@ const LoginPage = () => {
         showAlert: true,
       });
     }
-  };
-
-  const steps = [
-    {
-      id: 1,
-      content: "Hello, human!",
-      goTo: 2
-    }, 
-    {
-      id: 2,
-      content: "See ya...",
-      end: true
-    }
-  ];
-
-  const options = {
-    header: "Tutorial Bot",
-    endContent: "See ya 👋",
-    botAvatarSrc: "/img/bot.png",
-    hidden: false,
-    messageDelay: 1000,
-    open: true,
-    sendComponentFunction: (disabled: any) => (
-      <AiOutlineSend style={{ color: disabled ? "#DDDDDD" : "" }} />
-    ),
-    refreshComponent: <AiOutlineReload fontSize={18} color="#7b68ee" />,
-    closeComponent: <AiOutlineClose />,
-    chatButtonComponent: (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#333333",
-          color: "#FFFFFF",
-          borderRadius: "50%",
-          height: 50,
-          width: 50,
-          cursor: "pointer"
-        }}
-      >
-        <AiOutlineReload />
-      </div>
-    ),
-    loadingComponent: <AiOutlineReload size={16} 
-      style={{ color: "#7b68ee" }} />,
-    openingCallback: () => console.log("Opening..."),
-    // sendingMessageCallback: (_answers) => console.log("Sending message..."),
-    // endingCallback: (answers, toggleOpen, refresh) => console.log("Ending..."),
-    closingCallback: () => console.log("Closing..."),
   };
 
   return (
@@ -211,8 +241,33 @@ const LoginPage = () => {
         </Form>
       </div>
 
-      <Chatbot steps={steps}  options={options}/>
-
+      <TPC theme={theme}>
+        <ChatBot
+          headerTitle="Nosh-Bot"
+          steps={steps_for_chat}
+          {...config}
+          botAvatar={botAvatar}
+          headerAvatar={botAvatar}
+          handleEnd={handleEnd}
+        />
+        {/* <div className="conversation-container">
+          {conversationHistory.map((message: any, index) => {
+            if (message.type === "user") {
+              return (
+                <div key={index} className="user-message">
+                  <span>{message.message}</span>
+                </div>
+              );
+            } else {
+              return (
+                <div key={index} className="bot-message">
+                  <span>{message.message}</span>
+                </div>
+              );
+            }
+          })}
+        </div> */}
+      </TPC>
     </div>
   );
 };
