@@ -200,7 +200,7 @@ const Inventory = () => {
       {isLoading && <Loader />}
       <Flex justifyContent={"space-between"}>
         <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
-          Offers and Rewards
+          List of Items
         </Text>
       </Flex>
       <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm">
@@ -215,6 +215,7 @@ const Inventory = () => {
           style={{ width: "100%" }}
           scroll={{ x: 400 }}
           size="large"
+          pagination={{ pageSize: 6 }}
           rowSelection={rowSelection as any}
           columns={columns}
           dataSource={inventoryData}

@@ -129,6 +129,22 @@ const EmployeeDashboard = () => {
       });
   };
 
+  const onCancelClicked = () => {
+    const status = "cancel";
+    const payload = { ...selectedOrder, orderStatus: status };
+    setIsLoading(true);
+    axios
+      .put("http://localhost:5000/api/admin/v1/update-order-status", payload)
+      .then((response) => {
+        setEOrdersData(response.data.items);
+        setTableData(prepareData(response.data.items));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <React.Fragment>
       <Flex bg="white" rounded={"xl"} my="4" mx="6" px="6" py="6">
@@ -160,6 +176,7 @@ const EmployeeDashboard = () => {
                 { label: "New", value: "processing" },
                 { label: "Preparing", value: "preparing" },
                 { label: "Ready", value: "ready" },
+                { label: "Cancelled", value: "cancel" },
               ]}
               onChange={(value) => {
                 setSegmentValue(value as string);
@@ -259,7 +276,12 @@ const EmployeeDashboard = () => {
                   <VStack width={"100%"} py="2">
                     <Flex justifyContent={"space-between"} width={"100%"}>
                       <Flex alignItems={"center"}>
-                        <Image src={item.url} width={"12"} h={"12"} borderRadius={"xl"}/>
+                        <Image
+                          src={item.url}
+                          width={"12"}
+                          h={"12"}
+                          borderRadius={"xl"}
+                        />
                         <Text fontSize={"large"} fontWeight={"semibold"} ml="4">
                           {item.productName}
                         </Text>
@@ -281,14 +303,26 @@ const EmployeeDashboard = () => {
                   Total Price: $
                   {((selectedOrder?.totalAmount || 0) / 100).toFixed(2)}
                 </Text>
-                <Button
-                  colorScheme="orange"
-                  mt="6"
-                  maxW={"40"}
-                  onClick={onStatusUpdateClicked}
-                >
-                  Accept Order
-                </Button>
+
+                <Flex mt="6" alignItems="center">
+                  <Button
+                    colorScheme="red"
+                    mt="6"
+                    maxW={"40"}
+                    onClick={onCancelClicked}
+                  >
+                    Cancel Order
+                  </Button>
+                  <Button
+                    colorScheme="green"
+                    mt="6"
+                    ml="4"
+                    maxW={"40"}
+                    onClick={onStatusUpdateClicked}
+                  >
+                    Accept Order
+                  </Button>
+                </Flex>
               </Flex>
             </Flex>
           </GridItem>

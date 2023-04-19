@@ -79,7 +79,7 @@ const Payments = () => {
     formState: { errors },
   } = useForm();
   useEffect(() => {
-    const userinfo = JSON.parse(localStorage.getItem("userInfo") || "")
+    const userinfo = JSON.parse(localStorage.getItem("userInfo") || "");
     const user = {
       firstName: userinfo?.firstName,
       lastName: userinfo?.lastName,
@@ -163,9 +163,19 @@ const Payments = () => {
                 <Flex alignItems="center">
                   <BsPersonCircle style={{ fontSize: "30px" }} />
                   <VStack justifyContent="start" alignItems="start" ml="4">
-                    <Text fontWeight="semibold">LOGIN</Text>
+                    <Text fontWeight="semibold">PERSONAL DETAILS</Text>
                     <Text fontSize="sm">
-                      {`${orderInfo?.lastName}  ${orderInfo?.firstName}, ${orderInfo?.email}`}
+                      {`${
+                        orderInfo?.lastName === undefined
+                          ? ""
+                          : orderInfo?.lastName
+                      }  ${
+                        orderInfo?.firstName === undefined
+                          ? ""
+                          : orderInfo?.firstName
+                      }, ${
+                        orderInfo?.email === undefined ? "" : orderInfo?.email
+                      }`}
                     </Text>
                   </VStack>
                 </Flex>
@@ -187,7 +197,25 @@ const Payments = () => {
                     <Text fontWeight="semibold">ADDRESS</Text>
                     <Box>
                       <Text fontSize="sm">
-                        {`${orderInfo?.address?.addressLine1} ${orderInfo?.address?.addressLine2}, ${orderInfo?.address?.city}, ${orderInfo?.address?.state}, 12208`}
+                        {`${
+                          orderInfo?.address?.addressLine1 === undefined
+                            ? ""
+                            : orderInfo?.address?.addressLine1
+                        } ${
+                          orderInfo?.address?.addressLine2 === undefined
+                            ? ""
+                            : orderInfo?.address?.addressLine2
+                        }, ${
+                          orderInfo?.address?.city === undefined
+                            ? ""
+                            : orderInfo?.address?.city
+                        }, ${
+                          orderInfo?.address?.state === undefined
+                            ? ""
+                            : orderInfo?.address?.state
+                        }, ${
+                          orderInfo?.address?.state === undefined ? "" : "12208"
+                        }`}
                       </Text>
                       <Text fontSize="sm">United States</Text>
                     </Box>
@@ -544,7 +572,7 @@ const Payments = () => {
                   Sub Total
                 </Text>
                 <Text fontSize={"lg"} fontWeight="semibold">
-                  ${finalAmount ? (finalAmount).toFixed(2) : 0}
+                  ${finalAmount ? finalAmount.toFixed(2) : 0}
                 </Text>
               </Flex>
               <Flex width={"100%"} justifyContent="space-between" my="2">
@@ -596,7 +624,7 @@ const Payments = () => {
               gap={4}
             >
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl >
+                <FormControl>
                   <FormLabel
                     id="firstName"
                     fontSize={"xs"}
@@ -624,7 +652,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl >
+                <FormControl>
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -676,7 +704,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
-                <FormControl >
+                <FormControl>
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -729,7 +757,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl >
+                <FormControl>
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
@@ -758,7 +786,7 @@ const Payments = () => {
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <FormControl >
+                <FormControl>
                   <FormLabel
                     fontSize={"xs"}
                     textColor="gray.600"
