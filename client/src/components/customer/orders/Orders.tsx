@@ -3,6 +3,7 @@ import {
   Grid,
   GridItem,
   Image,
+  Input,
   Tab,
   TabList,
   TabPanel,
@@ -20,6 +21,7 @@ import axios from "axios";
 
 const Orders = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [seachfood, setSearchFood] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [data, setData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
@@ -45,6 +47,8 @@ const Orders = () => {
         console.log("Error while retreiveing items: ", error);
       });
   }, []);
+
+  console.log("*********** searched food",seachfood)
 
   return (
     <div>
@@ -100,15 +104,26 @@ const Orders = () => {
             {Orders_Catergory.map((index, item) => {
               return (
                 <TabPanel bg={"white"} key={index}>
-                  <Text
-                    fontSize={"2xl"}
-                    fontWeight="semibold"
-                    textColor={"orange.500"}
-                    mx="4"
-                    my="4"
-                  >
-                    Menu
-                  </Text>
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text
+                      fontSize={"2xl"}
+                      fontWeight="semibold"
+                      textColor={"orange.500"}
+                      mx="4"
+                      my="4"
+                    >
+                      Menu
+                    </Text>
+                    <Input
+                      type="text"
+                      placeholder="search food"
+                      width="48"
+                      onChange={(e) => {
+                        setSearchFood(e.target.value);
+                      }}
+                    />
+                  </Flex>
+
                   <Grid
                     mt="4"
                     templateRows={{
@@ -122,20 +137,22 @@ const Orders = () => {
                     gap={{ base: 3, lg: 8 }}
                   >
                     {data &&
-                      data.map((orders, index) => {
-                        return (
-                          <GridItem
-                            colSpan={1}
-                            rowSpan={1}
-                            display="flex"
-                            alignItems={"center"}
-                            justifyContent="end"
-                            key={index}
-                          >
-                            <OrderItem {...(orders as any)} />
-                          </GridItem>
-                        );
-                      })}
+                      data
+                        ?.filter((item: any) => item.isAvailable === true)
+                        .map((orders, index) => {
+                          return (
+                            <GridItem
+                              colSpan={1}
+                              rowSpan={1}
+                              display="flex"
+                              alignItems={"center"}
+                              justifyContent="end"
+                              key={index}
+                            >
+                              <OrderItem {...(orders as any)} />
+                            </GridItem>
+                          );
+                        })}
                   </Grid>
                 </TabPanel>
               );

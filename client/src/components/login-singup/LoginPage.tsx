@@ -1,20 +1,35 @@
 import "./login.css";
 import { Button, Divider, Form, Input, Typography } from "antd";
-import { FC, useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   AlertMessageProps,
   AlertStatus,
   NotificationStatus,
+  steps_for_chat,
 } from "../common/utils";
 import lgn from "../../assets/loginPage.jpg";
-import Header from "../header/Header";
+import botAvatar from "../../assets/nosh.jpg"; 
 import { useNotification } from "../../contexts/Notification";
 import axios from "axios";
-import { useUser } from "../../contexts/UserContext";
-import Chatbot from 'react-best-chatbot';
-import { AiOutlineClose, AiOutlineReload, AiOutlineSend } from "react-icons/ai";
+import ChatBot from "react-simple-chatbot";
+import { ThemeProvider as TPC } from "styled-components";
+
+const theme = {
+  background: "white",
+  headerBgColor: "#ed872d",
+  headerFontSize: "20px",
+  botBubbleColor: "#F5F5F5",
+  headerFontColor: "white",
+  botFontColor: "black",
+  userBubbleColor: "#ed872d",
+  userFontColor: "white",
+  headerImage: "none",
+};
+const config = {
+  floating: true,
+};
 
 const LoginPage = () => {
   const { Title, Text } = Typography;
@@ -27,24 +42,28 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const { setShowNotification } = useNotification();
-  useEffect(() => {
-    (function (d, m) {
-      var kommunicateSettings = {
-        appId: "31e86c3017597b6413fbbe3cf554d500e",
-        popupWidget: true,
-        automaticChatOpenOnNavigation: true,
-      };
-      var s = document.createElement("script");
-      s.type = "text/javascript";
-      s.async = true;
-      s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-      var h = document.getElementsByTagName("head")[0];
-      h.appendChild(s);
-      (window as any).kommunicate = m;
-      m._globals = kommunicateSettings;
-    })(document, (window as any).kommunicate || {});
-  }, []);
 
+  const [conversationHistory, setConversationHistory] = useState([]);
+
+  const handleEnd = ({ steps, values }: any) => {
+    if (!conversationHistory.length) {
+      const newConversationHistory = [
+        {
+          type: "user",
+          message: values.name,
+        },
+      ];
+      steps.forEach((step: any) => {
+        if (step.message) {
+          newConversationHistory.push({
+            type: "bot",
+            message: step.message,
+          });
+        }
+      });
+      setConversationHistory(newConversationHistory as any);
+    }
+  };
 
   const getErroMessage = (message: string) => {
     if (message === "wrong-password") {
@@ -75,7 +94,10 @@ const LoginPage = () => {
             })
             .then((response) => {
               localStorage.setItem("isUserLoggedIn", "yes");
-              console.log("**************** user info:" ,response.data.userInfo[0])
+              console.log(
+                "**************** user info:",
+                response.data.userInfo[0]
+              );
               localStorage.setItem(
                 "userInfo",
                 JSON.stringify(response.data.userInfo[0])
@@ -106,56 +128,6 @@ const LoginPage = () => {
         showAlert: true,
       });
     }
-  };
-
-  const steps = [
-    {
-      id: 1,
-      content: "Hello, human!",
-      goTo: 2
-    }, 
-    {
-      id: 2,
-      content: "See ya...",
-      end: true
-    }
-  ];
-
-  const options = {
-    header: "Tutorial Bot",
-    endContent: "See ya 👋",
-    botAvatarSrc: "/img/bot.png",
-    hidden: false,
-    messageDelay: 1000,
-    open: true,
-    sendComponentFunction: (disabled: any) => (
-      <AiOutlineSend style={{ color: disabled ? "#DDDDDD" : "" }} />
-    ),
-    refreshComponent: <AiOutlineReload fontSize={18} color="#7b68ee" />,
-    closeComponent: <AiOutlineClose />,
-    chatButtonComponent: (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#333333",
-          color: "#FFFFFF",
-          borderRadius: "50%",
-          height: 50,
-          width: 50,
-          cursor: "pointer"
-        }}
-      >
-        <AiOutlineReload />
-      </div>
-    ),
-    loadingComponent: <AiOutlineReload size={16} 
-      style={{ color: "#7b68ee" }} />,
-    openingCallback: () => console.log("Opening..."),
-    // sendingMessageCallback: (_answers) => console.log("Sending message..."),
-    // endingCallback: (answers, toggleOpen, refresh) => console.log("Ending..."),
-    closingCallback: () => console.log("Closing..."),
   };
 
   return (
@@ -229,8 +201,33 @@ const LoginPage = () => {
         </Form>
       </div>
 
-      {/* <Chatbot steps={steps}  options={options}/> */}
-
+      <TPC theme={theme}>
+        <ChatBot
+          headerTitle="Nosh-Bot"
+          steps={steps_for_chat}
+          {...config}
+          botAvatar={botAvatar}
+          headerAvatar={botAvatar}
+          handleEnd={handleEnd}
+        />
+        {/* <div className="conversation-container">
+          {conversationHistory.map((message: any, index) => {
+            if (message.type === "user") {
+              return (
+                <div key={index} className="user-message">
+                  <span>{message.message}</span>
+                </div>
+              );
+            } else {
+              return (
+                <div key={index} className="bot-message">
+                  <span>{message.message}</span>
+                </div>
+              );
+            }
+          })}
+        </div> */}
+      </TPC>
     </div>
   );
 };

@@ -19,16 +19,17 @@ import banner from "../assets/banner.jpg";
 import usersFood from "../test-data/customer/user-specific.json";
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import _ from "lodash";
+import axios from "axios";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedCat, setSelectedCat] = useState(0);
+  const [data, setData] = useState([]);
+  const [dataforDashboard, setdataforDashboard] = useState([]);
+  const [dashboardCart, setDashboardCart] = useState();
+  const [presentdata, setPresentation] = useState([]);
 
   const catergoryLabels = [
-    {
-      label: "Recent Orders",
-      count: 13,
-    },
     {
       label: "Budget Friendly",
       count: 12,
@@ -45,6 +46,10 @@ const Dashboard = () => {
       label: "Trending Menu",
       count: 18,
     },
+    {
+      label: "Recent Orders",
+      count: 13,
+    },
   ];
 
   useEffect(() => {
@@ -53,6 +58,67 @@ const Dashboard = () => {
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  const getRandomItem = (arr: any) => {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    const item = arr[randomIndex];
+    return item;
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setData(response.data.items);
+        const makedata = response.data.items;
+        const budget = makedata?.filter((item: any) => Number(item.price) < 10);
+        const trendings: any = [];
+        for (let i = 0; i < 10; i++) {
+          trendings.push(getRandomItem(makedata));
+        }
+        const trending = trendings.filter(
+          (item: any, index: any) => trendings.indexOf(item) === index
+        );
+        const readyfor = makedata
+          ?.filter(
+            (item: any) =>
+              item.category === "appetizers" || item.category === "main-course"
+          )
+          .slice(0, 8);
+        const restu: any = [];
+        for (let i = 0; i < 10; i++) {
+          restu.push(getRandomItem(makedata));
+        }
+        const fav = restu.filter(
+          (item: any, index: any) => restu.indexOf(item) === index
+        );
+        const finalData = {
+          recent: trending.slice(0, 8),
+          trending: trending.slice(0, 8),
+          favorite: fav.slice(0, 8),
+          budget: budget.slice(0, 8),
+          ready: readyfor.slice(0, 8),
+        };
+        setDashboardCart(finalData as any);
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedCat === 0) {
+      setPresentation((dashboardCart as any)?.budget);
+    } else if (selectedCat === 1) {
+      setPresentation((dashboardCart as any)?.favorite);
+    } else if (selectedCat === 2) {
+      setPresentation((dashboardCart as any)?.ready);
+    } else if (selectedCat === 3) {
+      setPresentation((dashboardCart as any)?.trending);
+    } else {
+      setPresentation((dashboardCart as any)?.recent);
+    }
+  }, [selectedCat]);
 
   const getCategoriesItem = (index: number) => {
     return (
@@ -82,12 +148,12 @@ const Dashboard = () => {
             >
               {catergoryLabels[index].label}
             </Text>
-            <Text
+            {/* <Text
               fontSize="md"
               textColor={selectedCat === index ? "white" : "gray.600"}
             >
               {catergoryLabels[index].count} foods
-            </Text>
+            </Text> */}
           </Flex>
         </Flex>
         <Icon
@@ -100,7 +166,7 @@ const Dashboard = () => {
     );
   };
 
-  const getOrderItem = () => {
+  const getOrderItem = (item: any) => {
     return (
       <Flex>
         <Flex
@@ -110,18 +176,18 @@ const Dashboard = () => {
           maxW={"250px"}
         >
           <Image
-            src={biryani}
+            src={item.url}
             width={"250px"}
             height={"150px"}
             borderRadius={"xl"}
           />
           <Flex mt="1" mb="2" mx="4" direction={"column"}>
             <Text fontSize={"lg"} fontWeight={"semibold"} my="2">
-              {_.capitalize("Biryani")}
+              {_.capitalize(item.productName)}
             </Text>
             <Flex justifyContent={"space-between"} alignItems={"center"}>
               <Text fontSize={"xl"} fontWeight={"bold"}>
-                ${"10"}
+                ${item.price}
               </Text>
               {/* {item.quantity === 0 ? ( */}
               <Button
@@ -186,6 +252,7 @@ const Dashboard = () => {
       </>
     );
   };
+
   return (
     <Flex direction={"column"}>
       {!isLoading && <Loader />}
@@ -202,7 +269,6 @@ const Dashboard = () => {
             py="4"
             shadow="base"
             direction="column"
-            
           >
             <Flex justifyContent="space-between" alignItems="center" w="100%">
               <Text textColor="black" fontWeight="semibold" fontSize="2xl">
@@ -235,8 +301,8 @@ const Dashboard = () => {
               width={"100%"}
               mb="6"
             >
-              {[1, 2, 3, 4, 5, 6, 7, 8]?.map((item) => {
-                return <GridItem>{getOrderItem()}</GridItem>;
+              {presentdata?.map((item) => {
+                return <GridItem>{getOrderItem(item)}</GridItem>;
               })}
             </Grid>
           </Flex>
@@ -254,11 +320,13 @@ const Dashboard = () => {
             </Text>
 
             <Flex direction="column" mt="4">
-              {usersFood["test@gmail.com"]?.map((item) => {
+              {((dashboardCart as any).trending).slice(0,5)?.map((item: any) => {
                 return getTrendingItem(item);
               })}
             </Flex>
-            <Text mt="2" textColor="orange.500" fontWeight="semibold" ml="24">View More +</Text>
+            <Text mt="2" textColor="orange.500" fontWeight="semibold" ml="24">
+              View More +
+            </Text>
           </Flex>
         </HStack>
       </Flex>
