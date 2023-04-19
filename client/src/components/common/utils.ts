@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-
+const validator = require("email-validator");
 export const resetLocalStorage = () => {
   localStorage.setItem("userInfo", JSON.stringify({}));
   localStorage.setItem("isUserLoggedIn", "no");
@@ -110,89 +110,89 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
-// export const CLIENT_NAV_ITEMS: Array<NavItem> = [
-//   {
-//     label: "Dashboard",
-//     href: "/dashboard",
-//   },
-//   {
-//     label: "Admin",
-//     children: [
-//       {
-//         label: "Create Employee",
-//         subLabel: "you can create and manage employees",
-//         href: "/employee",
-//       },
-//       {
-//         label: "Add Inventory",
-//         subLabel: "Create inventory",
-//         href: "/add-inventory",
-//       },
-//       {
-//         label: "Inventory",
-//         subLabel: "Manage inventory",
-//         href: "/inventory",
-//       },
-//       {
-//         label: "Offers",
-//         subLabel: "Create Offers and Rewards",
-//         href: "/rewards",
-//       },
-//       {
-//         label: "Sales",
-//         subLabel: "View the sales details.",
-//         href: "/sales",
-//       },
-//     ],
-//   },
+export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Admin",
+    children: [
+      {
+        label: "Create Employee",
+        subLabel: "you can create and manage employees",
+        href: "/employee",
+      },
+      {
+        label: "Add Inventory",
+        subLabel: "Create inventory",
+        href: "/add-inventory",
+      },
+      {
+        label: "Inventory",
+        subLabel: "Manage inventory",
+        href: "/inventory",
+      },
+      {
+        label: "Offers",
+        subLabel: "Create Offers and Rewards",
+        href: "/rewards",
+      },
+      {
+        label: "Sales",
+        subLabel: "View the sales details.",
+        href: "/sales",
+      },
+    ],
+  },
 
-//   {
-//     label: "Employee",
-//     children: [
-//       {
-//         label: "Orders",
-//         subLabel: "Find your orders",
-//         href: "/employee-orders",
-//       },
-//       {
-//         label: "Orders Now",
-//         subLabel: "Find your orders",
-//         href: "/create-order",
-//       },
-//       {
-//         label: "Update Orders",
-//         subLabel: "Update inventory items status",
-//         href: "/employee-update-orders",
-//       },
-//     ],
-//   },
+  {
+    label: "Employee",
+    children: [
+      {
+        label: "Orders",
+        subLabel: "Find your orders",
+        href: "/employee-orders",
+      },
+      {
+        label: "Orders Now",
+        subLabel: "Find your orders",
+        href: "/create-order",
+      },
+      {
+        label: "Update Orders",
+        subLabel: "Update inventory items status",
+        href: "/employee-update-orders",
+      },
+    ],
+  },
 
-//   {
-//     label: "Customer",
-//     children: [
-//       {
-//         label: "Orders Now",
-//         subLabel: "Find items to order",
-//         href: "/orders",
-//       },
-//       {
-//         label: "Purchase History",
-//         subLabel: "Check your purchase history",
-//         href: "/purchase-history",
-//       },
-//       {
-//         label: "Payment",
-//         subLabel: "Check your payment section",
-//         href: "/payment",
-//       },
-//       {
-//         label: "Restaurant Tour",
-//         subLabel: "Check your payment section",
-//         href: "/tour",
-//       },
-//     ],
-//   },
-// ];
+  {
+    label: "Customer",
+    children: [
+      {
+        label: "Orders Now",
+        subLabel: "Find items to order",
+        href: "/orders",
+      },
+      {
+        label: "Purchase History",
+        subLabel: "Check your purchase history",
+        href: "/purchase-history",
+      },
+      {
+        label: "Payment",
+        subLabel: "Check your payment section",
+        href: "/payment",
+      },
+      {
+        label: "Restaurant Tour",
+        subLabel: "Check your payment section",
+        href: "/tour",
+      },
+    ],
+  },
+];
 
 export const EMPLOYEE_NAV: Array<NavItem> = [
   {
@@ -245,24 +245,24 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
-export const CLIENT_NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-  },
-  {
-    label: "Order Now",
-    href: "/orders",
-  },
-  {
-    label: "Purchase History",
-    href: "/purchase-history",
-  },
-  {
-    label: "Restaurant Tour",
-    href: "/tour",
-  },
-];
+// export const CLIENT_NAV_ITEMS: Array<NavItem> = [
+//   {
+//     label: "Dashboard",
+//     href: "/dashboard",
+//   },
+//   {
+//     label: "Order Now",
+//     href: "/orders",
+//   },
+//   {
+//     label: "Purchase History",
+//     href: "/purchase-history",
+//   },
+//   {
+//     label: "Restaurant Tour",
+//     href: "/tour",
+//   },
+// ];
 
 /**  Api response structures */
 export interface EmployeeRequestPayload {
@@ -388,6 +388,13 @@ export const steps_for_chat = [
       value: '{{{raw}}}'
     },
     trigger: '14',
+    validator: (value: any) =>{
+      if(validator.validate(value)){
+        return true
+      }else{
+        return false
+      }
+    }
   },
   {
     id: '14',
@@ -505,6 +512,13 @@ export const steps_for_chat = [
       value: '{{{raw}}}'
     },
     trigger: '6',
+    validator: (value: any) =>{
+      if(validator.validate(value)){
+        return true
+      }else{
+        return false
+      }
+    }
   },
   {
     id: '6',

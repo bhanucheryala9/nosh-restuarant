@@ -67,7 +67,7 @@ const CartItem = (props: CartItemProps) => {
             {item.productName}
           </Text>
           <Text fontSize={"lg"} textColor="orange.600" fontWeight={"semibold"}>
-            ${item.price}
+            ${(item.price * item.quantity).toFixed(2)}
           </Text>
         </HStack>
         <HStack justifyContent={"space-between"}>
