@@ -79,7 +79,7 @@ const Payments = () => {
     formState: { errors },
   } = useForm();
   useEffect(() => {
-    const userinfo = JSON.parse(localStorage.getItem("userInfo") || "");
+    const userinfo = JSON.parse(localStorage.getItem("userInfo") || "")
     const user = {
       firstName: userinfo?.firstName,
       lastName: userinfo?.lastName,
@@ -87,7 +87,9 @@ const Payments = () => {
       email: userinfo?.email,
     };
     setOrdersInfo({ ...orderInfo, ...(user as any) });
-    const cartinfo = JSON.parse(localStorage.getItem("orders") || "");
+    const cartinfo = JSON.parse(localStorage.getItem("orders") || "")?.filter(
+      (item: any) => item.quantity !== 0
+    );
     setCartItems(cartinfo);
     const amount = cartinfo?.reduce((acc: any, item: OrderInfo) => {
       return acc + item?.quantity * item?.price;
@@ -542,7 +544,7 @@ const Payments = () => {
                   Sub Total
                 </Text>
                 <Text fontSize={"lg"} fontWeight="semibold">
-                  ${finalAmount ? finalAmount : 0}
+                  ${finalAmount ? (finalAmount).toFixed(2) : 0}
                 </Text>
               </Flex>
               <Flex width={"100%"} justifyContent="space-between" my="2">
