@@ -5,6 +5,7 @@ const usersService = require("../services/users-services.js");
 const inventoryService = require("../services/inventory-services.js");
 const rewardsService = require("../services/rewards-services.js");
 const orderService = require("../services/orders-services.js");
+const MailService = require("../mail-service");
 
 router.post("/add-employee", function (req, res, next) {
   const payload = req.body;
@@ -39,6 +40,21 @@ router.post("/v1/add-employee", async function (req, res, next) {
   const payload = req.body;
   try {
     const users = await usersService.createUsers(payload);
+    if (users) {
+      const mailBody = {
+        name: payload.firstName + " " + payload.lastName,
+        email: payload.email,
+        subject: "Nosh - Users Account Created Successfully..!",
+        message: `Dear,\n
+        Welcome to Nosh, the ultimate platform for food lovers! We are excited to have you on board and thank you for creating an account with us.\n
+        With Nosh, you can explore a variety of cuisines, discover new recipes, and connect with a community of food enthusiasts. Our user-friendly interface allows you to easily navigate through our features and find exactly what you are looking for.\n
+        We are committed to providing you with the best experience possible, so please don't hesitate to contact us if you have any questions or feedback.\n
+        Thank you again for choosing Nosh, and we hope you enjoy your culinary journey with us!\n
+        \nBest regards,
+        The Nosh Team`,
+      };
+      MailService.sendEmail(mailBody);
+    }
     res.json({ users: users, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -267,11 +283,10 @@ router.put("/v1/update-reward", async function (req, res, next) {
   }
 });
 
-
 /**
- * 
+ *
  *   Order details
- * 
+ *
  */
 
 router.get("/v1/get-orders", async function (req, res, next) {
@@ -292,7 +307,6 @@ router.put("/v1/update-order-status", async function (req, res, next) {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 router.get("/v1/get-employee-items", async function (req, res, next) {
   try {

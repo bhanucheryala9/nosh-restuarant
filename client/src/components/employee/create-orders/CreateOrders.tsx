@@ -13,7 +13,7 @@ import {
   Tabs,
   Text,
   VStack,
-  Textarea
+  Textarea,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Orders_Catergory, cartData } from "../../common/utils";
@@ -32,7 +32,6 @@ const CreateOrders = () => {
   });
 
   const navigate = useNavigate();
-
 
   const handleCart = (data: any, operation: string) => {
     const updatedData = orders?.map((item: any) => {
@@ -73,7 +72,6 @@ const CreateOrders = () => {
     });
     return data1;
   };
-
 
   useEffect(() => {
     axios
@@ -168,7 +166,7 @@ const CreateOrders = () => {
       });
 
     localStorage.setItem("orders", JSON.stringify(payload));
-    navigate("/payment")
+    navigate("/payment");
   };
 
   return (
@@ -275,22 +273,32 @@ const CreateOrders = () => {
                         mt="3"
                         w="100%"
                       >
-                        <Flex>
-                          <Image
-                            src={data.url}
-                            width={"80px"}
-                            height={"80px"}
-                            borderRadius={"lg"}
-                          />
-                          <Flex direction={"column"} ml="6">
-                            <Text
-                              fontSize={"lg"}
-                              fontWeight={"semibold"}
-                              my="2"
-                            >
-                              {_.capitalize(data.productName)}
+                        <Flex
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Flex>
+                            <Image
+                              src={data.url}
+                              width={"80px"}
+                              height={"80px"}
+                              borderRadius={"lg"}
+                            />
+                            <Flex direction={"column"} ml="6">
+                              <Text
+                                fontSize={"lg"}
+                                fontWeight={"semibold"}
+                                my="2"
+                              >
+                                {_.capitalize(data.productName)}
+                              </Text>
+                              <Text>Quantity: {data.quantity}</Text>
+                            </Flex>
+                          </Flex>
+                          <Flex>
+                            <Text textColor="orange.500" fontWeight="semibold" fontSize="xl">
+                              ${(data.quantity * data.price).toFixed(2)}
                             </Text>
-                            <Text>Quantity: {data.quantity}</Text>
                           </Flex>
                         </Flex>
                       </Flex>

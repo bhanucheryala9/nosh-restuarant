@@ -51,7 +51,7 @@ const LoginPage = () => {
       (item: string) => item !== "Yes" && item !== "Appetizers"
     );
 
-    console.log("*********** data for histuiruy:", data)
+    console.log("*********** data for histuiruy:", data);
     const cart: any = [];
     for (let i = 1; i < chartinformation.length; i++) {
       orders
@@ -68,7 +68,7 @@ const LoginPage = () => {
         });
     }
     localStorage.setItem("orders", JSON.stringify(cart));
-    navigate("/payment")
+    navigate("/payment");
   };
 
   const handleEnd = ({ steps, values }: any) => {
@@ -95,6 +95,9 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
+    localStorage.setItem("userInfo", JSON.stringify({}));
+    localStorage.setItem("orders", JSON.stringify([]));
+    localStorage.setItem("isUserLoggedIn", "no");
     axios
       .get("http://localhost:5000/api/admin/v1/get-items")
       .then((response) => {
