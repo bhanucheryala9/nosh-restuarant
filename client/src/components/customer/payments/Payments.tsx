@@ -99,6 +99,36 @@ const Payments = () => {
 
   const navigate = useNavigate();
 
+  const handleCart = (data: any, operation: string) => {
+    const updatedData = cartItems?.map((item: any) => {
+      if (operation === "add") {
+        if (item.productName === data.productName) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        } else {
+          return item;
+        }
+      } else {
+        if (item.productName === data.productName) {
+          return {
+            ...item,
+            quantity: item.quantity - 1,
+          };
+        } else {
+          return item;
+        }
+      }
+    });
+    const amount = updatedData?.reduce((acc, curr) => {
+      return acc + curr.quantity * curr.price;
+    }, 0);
+
+    setCartItems(updatedData as any);
+    setFinalAmount(amount);
+  };
+
   const prepareData = () => {
     const orders = JSON.parse(localStorage.getItem("orders") as any);
     const payload = {
@@ -112,7 +142,6 @@ const Payments = () => {
     axios
       .post("http://localhost:5000/api/customer/v1/place-order", payload)
       .then((response) => {
-        console.log("********** response of order", response.data.orders);
         setShowNotification({
           status: NotificationStatus.SUCCESS,
           alertMessage: "Orders Placed successfully..!",
@@ -125,6 +154,7 @@ const Payments = () => {
       });
   };
 
+  console.log("*************** card details", getCardDetails)
   return (
     <Flex direction={"column"} justifyContent="center">
       <form>
@@ -273,6 +303,7 @@ const Payments = () => {
                     colorScheme={"orange"}
                     mt="3"
                     // type="submit"
+                    isDisabled={getCardDetails === ""}
                     onClick={prepareData}
                     w="56"
                     float="right"
@@ -517,18 +548,47 @@ const Payments = () => {
                             mt="3"
                             w="100%"
                           >
-                            <Flex>
-                              <Image
-                                src={data.url}
-                                width={"50px"}
-                                height={"50px"}
-                                borderRadius={"lg"}
-                              />
-                              <Flex direction={"column"} ml="6">
-                                <Text fontSize={"md"} fontWeight={"semibold"}>
-                                  {_.capitalize(data.productName)}
-                                </Text>
-                                <Text>Quantity: {data.quantity}</Text>
+                            <Flex
+                              alignItems="center"
+                              justifyContent="space-between"
+                            >
+                              <Flex>
+                                <Image
+                                  src={data.url}
+                                  width={"50px"}
+                                  height={"50px"}
+                                  borderRadius={"lg"}
+                                />
+                                <Flex direction={"column"} ml="6">
+                                  <Text fontSize={"md"} fontWeight={"semibold"}>
+                                    {_.capitalize(data.productName)}
+                                  </Text>
+                                  <Text>Quantity: {data.quantity}</Text>
+                                </Flex>
+                              </Flex>
+
+                              <Flex>
+                                <HStack>
+                                  <Button
+                                    colorScheme="orange"
+                                    rounded={"full"}
+                                    size={"sm"}
+                                    onClick={() => handleCart(data, "minus")}
+                                  >
+                                    -
+                                  </Button>
+                                  <Text fontSize={"md"} fontWeight={"semibold"}>
+                                    {data.quantity}
+                                  </Text>
+                                  <Button
+                                    colorScheme="orange"
+                                    rounded={"full"}
+                                    size={"sm"}
+                                    onClick={() => handleCart(data, "add")}
+                                  >
+                                    +
+                                  </Button>
+                                </HStack>
                               </Flex>
                             </Flex>
                           </Flex>
