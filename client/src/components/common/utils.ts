@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-
+const validator = require("email-validator");
 export const resetLocalStorage = () => {
   localStorage.setItem("userInfo", JSON.stringify({}));
   localStorage.setItem("isUserLoggedIn", "no");
@@ -388,6 +388,13 @@ export const steps_for_chat = [
       value: '{{{raw}}}'
     },
     trigger: '14',
+    validator: (value: any) =>{
+      if(validator.validate(value)){
+        return true
+      }else{
+        return false
+      }
+    }
   },
   {
     id: '14',
@@ -505,6 +512,13 @@ export const steps_for_chat = [
       value: '{{{raw}}}'
     },
     trigger: '6',
+    validator: (value: any) =>{
+      if(validator.validate(value)){
+        return true
+      }else{
+        return false
+      }
+    }
   },
   {
     id: '6',
