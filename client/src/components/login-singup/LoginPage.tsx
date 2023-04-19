@@ -1,6 +1,6 @@
 import "./login.css";
 import { Button, Divider, Form, Input, Typography } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
@@ -10,7 +10,7 @@ import {
   steps_for_chat,
 } from "../common/utils";
 import lgn from "../../assets/loginPage.jpg";
-import botAvatar from "../../assets/nosh.jpg"; 
+import botAvatar from "../../assets/nosh.jpg";
 import { useNotification } from "../../contexts/Notification";
 import axios from "axios";
 import ChatBot from "react-simple-chatbot";
@@ -43,8 +43,33 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { setShowNotification } = useNotification();
   const [conversationHistory, setConversationHistory] = useState([]);
+  const [orders, setOrders] = useState([]);
 
-  
+  const formatterChat = (data: any) => {
+    const userChat = data?.filter((item: any) => item.type === "user");
+    const chartinformation = (userChat[0] as any)?.data?.filter(
+      (item: string) => item !== "Yes" && item !== "Appetizers"
+    );
+
+    console.log("*********** data for histuiruy:", data)
+    const cart: any = [];
+    for (let i = 1; i < chartinformation.length; i++) {
+      orders
+        ?.filter((item: any) => item.productName === chartinformation[1])
+        .map((food: any) => {
+          cart.push({
+            category: food.category,
+            id: food.id,
+            price: food.price,
+            productName: food.productName,
+            quantity: 1,
+            url: food.url,
+          });
+        });
+    }
+    localStorage.setItem("orders", JSON.stringify(cart));
+    navigate("/payment")
+  };
 
   const handleEnd = ({ steps, values }: any) => {
     if (!conversationHistory.length) {
@@ -52,6 +77,7 @@ const LoginPage = () => {
         {
           type: "user",
           message: values.name,
+          data: values,
         },
       ];
       steps.forEach((step: any) => {
@@ -59,12 +85,25 @@ const LoginPage = () => {
           newConversationHistory.push({
             type: "bot",
             message: step.message,
+            data: step as any,
           });
         }
       });
       setConversationHistory(newConversationHistory as any);
+      formatterChat(newConversationHistory);
     }
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/v1/get-items")
+      .then((response) => {
+        setOrders(response.data.items);
+      })
+      .catch((error) => {
+        console.log("Error while retreiveing items: ", error);
+      });
+  }, []);
 
   const getErroMessage = (message: string) => {
     if (message === "wrong-password") {

@@ -360,7 +360,7 @@ export const cartData = [
 export const steps_for_chat = [
   {
     id: '0',
-    message: 'Welcome Order & Enjoy the food in NOSH! Is this your first order?',
+    message: 'Welcome Order & Enjoy the food in NOSH!',
     trigger: '1',
   },
   {

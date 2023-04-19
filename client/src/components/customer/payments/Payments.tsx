@@ -688,7 +688,7 @@ const Payments = () => {
                     {...register("addressLine1", {
                       // required: "Address Line1 is required",
                     })}
-                    defaultValue={(orderInfo as any)?.address.addressLine1}
+                    defaultValue={(orderInfo as any)?.address?.addressLine1}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
@@ -715,7 +715,7 @@ const Payments = () => {
                   </FormLabel>
                   <Input
                     {...register("addressLine2")}
-                    defaultValue={(orderInfo as any)?.address.addressLine2}
+                    defaultValue={(orderInfo as any)?.address?.addressLine2}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
@@ -741,7 +741,7 @@ const Payments = () => {
                     {...register("city", {
                       // required: "City is required",
                     })}
-                    defaultValue={(orderInfo as any)?.address.city}
+                    defaultValue={(orderInfo as any)?.address?.city}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
@@ -770,7 +770,7 @@ const Payments = () => {
                     {...register("state", {
                       required: "State is required",
                     })}
-                    defaultValue={(orderInfo as any)?.address.state}
+                    defaultValue={(orderInfo as any)?.address?.state}
                     onChange={(e) =>
                       setOrdersInfo({
                         ...orderInfo,
