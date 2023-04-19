@@ -1,5 +1,5 @@
 const UsersModel = require("../models/users-models.js");
-
+const MailService =  require("../mail-service")
 exports.createUsers = async (users) => {
   return await UsersModel.create(users);
 };
@@ -9,7 +9,6 @@ exports.getsUsers = async (users) => {
 };
 
 exports.getUsersByID = async (id) => {
-  console.log("************* id:", id)
   return await UsersModel.find({ email: id });
 };
 
