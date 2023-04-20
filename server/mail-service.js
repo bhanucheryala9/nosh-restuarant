@@ -10,9 +10,10 @@ const accountCreateTemplate = handlebars.compile(accountCreateHtml);
 const paymentHtml = fs.readFileSync("./payment.handlebars", "utf-8");
 const paymentTemplate = handlebars.compile(paymentHtml);
 function GetTemplates(purpose, data) {
+  console.log("************ purpose:", purpose)
   if (purpose === "add-user") {
     return paymentTemplate({
-      name: "John Doe",
+      name: data?.name,
       orderItems: data?.orders,
       total: `${data?.totalAmount}`,
     });
