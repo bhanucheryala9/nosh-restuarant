@@ -94,7 +94,7 @@ const AddInventory = (props: AddInventoryProps) => {
         .then((response) => {
           setShowNotification({
             status: NotificationStatus.SUCCESS,
-            alertMessage: "Successfully Item added to invetory..!",
+            alertMessage: "Successfully Item added to inventory..!",
             showAlert: true,
           });
           navigate("/inventory");
@@ -102,7 +102,7 @@ const AddInventory = (props: AddInventoryProps) => {
         .catch((error) => {
           setShowNotification({
             status: NotificationStatus.SUCCESS,
-            alertMessage: "Failed to added Item to invetory..!",
+            alertMessage: "Failed to added Item to inventory..!",
             showAlert: true,
           });
         });
