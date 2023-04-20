@@ -61,7 +61,7 @@ const DesktopHeader = () => {
                   color: linkHoverColor,
                 }}
               >
-                <Text fontWeight="semibold" fontSize="md">{navItem.label}</Text>
+                <Text fontWeight="semibold" fontSize="md" mr="6">{navItem.label}</Text>
               </Link>
             </PopoverTrigger>
 

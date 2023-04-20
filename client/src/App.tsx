@@ -34,6 +34,7 @@ import Profile from "./components/common/Profile";
 import CreateOrders from "./components/employee/create-orders/CreateOrders";
 import EmployeeDashboard from "./components/employee/dashboard/EmployeeDashboard";
 import Refund from "./components/admin/refund/Refund";
+import Tracking from "./components/customer/tracking/Tracking";
 
 interface CartContextProp {
   isCartOpen: boolean;
@@ -85,7 +86,8 @@ function App() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/create-order" element={<CreateOrders />} />
                     <Route path="/refund" element={<Refund />} />
-
+                    <Route path="/tracking" element={<Tracking />} />
+                    {/* Tracking */}
                     <Route
                       path="/purchase-history"
                       element={<PurchaseHistory />}

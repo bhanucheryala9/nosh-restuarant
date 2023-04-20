@@ -38,7 +38,7 @@ exports.getOrdersItems = async () => {
 };
 
 exports.getOrdersItemByID = async (id) => {
-  return await OrdersModel.find({ id: id });
+  return await OrdersModel.findOne({ orderId: id });
 };
 
 exports.deleteOrdersItemByID = async (id) => {

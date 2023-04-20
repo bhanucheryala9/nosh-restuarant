@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChatIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -19,9 +19,13 @@ import {
   Link,
   Tag,
   TagLabel,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Menu,
 } from "@chakra-ui/react";
-import { Table } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { Input, InputRef, Space, Table } from "antd";
+import { ColumnsType, ColumnType } from "antd/es/table";
 import {
   Area,
   AreaChart,
@@ -34,8 +38,13 @@ import { admin_orders } from "../../../test-data/admin/aorder";
 import { getStatusColors } from "../../common/utils";
 import _ from "lodash";
 import axios from "axios";
-import { AiOutlineCheckCircle } from "react-icons/ai";
-
+import {
+  AiOutlineCheckCircle,
+  AiOutlineMore,
+  AiOutlineSearch,
+} from "react-icons/ai";
+import { HiOutlineReceiptRefund } from "react-icons/hi";
+import { FilterConfirmProps } from "antd/es/table/interface";
 export interface DataType {
   key: React.Key;
   orderID: string;
@@ -80,6 +89,7 @@ interface EorderTableColumns {
     price: number;
     quantity: number;
   }>;
+  isPaid: boolean;
   noOfItems: number;
   totalAmount: number;
   orderStatus: string;
@@ -101,6 +111,90 @@ const Refund = () => {
   const [showCreateRewardModal, setShowCreateRewardModal] = useState<boolean>(
     false
   );
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
+
+  type DataIndex = keyof EorderTableColumns;
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<EorderTableColumns> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            colorScheme="orange"
+            size="sm"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+          >
+            Search
+          </Button>
+          <Button
+            colorScheme="gray"
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+            size="sm"
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <AiOutlineSearch style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record: any) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
   const prepareData = (data: EOrdersColumns[]) => {
     const stats = data.reduce(
       (accumulator: any, currentValue) => {
@@ -141,10 +235,32 @@ const Refund = () => {
     }, []);
     return formattedData;
   };
+
+  const onOrderStatusChange = (orderID: string, status: string) => {
+    let itemData = eordersData?.filter((item) => item.orderId === orderID);
+    const itemNeedtoUpdate = { ...itemData[0], isPaid: false };
+    console.log("************* data for rufundL", itemNeedtoUpdate);
+    setIsLoading(true);
+    axios
+      .put(
+        "http://localhost:5000/api/admin/v1/update-order-status",
+        itemNeedtoUpdate
+      )
+      .then((response) => {
+        setEOrdersData(response.data.items);
+        setTableData(prepareData(response.data.items));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  };
   const columns: ColumnsType<EorderTableColumns> = [
     {
       title: "Id",
       dataIndex: "orderId",
+      ...getColumnSearchProps("orderId"),
+
       render: (text) => (
         <>
           <Text>#{(text as string).toUpperCase()}</Text>
@@ -160,22 +276,68 @@ const Refund = () => {
       title: "Amount",
       dataIndex: "totalAmount",
       render: (text) => <>${text / 100}</>,
+      sorter: (a, b) => a.totalAmount - b.totalAmount,
     },
     {
       title: "Status",
       dataIndex: "isPaid",
+      filters: [
+        {
+          text: "PAID",
+          value: true,
+        },
+        {
+          text: "REFUND INITIATED",
+          value: false,
+        },
+      ],
+      onFilter: (value: any, record) => record.isPaid === value,
       render: (text) => (
         <>
           <HStack>
-            <AiOutlineCheckCircle color="green" fontSize="20px" />
+            {text ? (
+              <AiOutlineCheckCircle color="green" fontSize="20px" />
+            ) : (
+              <HiOutlineReceiptRefund color="#975A16" fontSize="20px" />
+            )}
             <Text
-              textColor={text ? "green.500" : "red.500"}
+              textColor={text ? "green.500" : "yellow.700"}
               fontWeight="semibold"
             >
-              {text ? "PAID" : "NOT PAID"}
+              {text ? "PAID" : "REFUND INITIATED"}
             </Text>
           </HStack>
         </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "45px",
+      render: (_, record) => (
+        <HStack>
+          <Menu>
+            {({ isOpen }) => (
+              <>
+                <MenuButton
+                  isActive={isOpen}
+                  as={IconButton}
+                  icon={<AiOutlineMore />}
+                  size="sm"
+                ></MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={() =>
+                      onOrderStatusChange(record.orderId, "accepted")
+                    }
+                  >
+                    Refund
+                  </MenuItem>
+                </MenuList>
+              </>
+            )}
+          </Menu>
+        </HStack>
       ),
     },
   ];
@@ -208,13 +370,13 @@ const Refund = () => {
     setRewardsData(formattedData);
   }, []);
   return (
-    <Flex my="10" mx="4" w="100%" minW="80%">
-      <VStack justifyContent={"start"} alignItems="start">
-        <Text fontSize={"xl"} fontWeight="semibold" mb="4" mx="2">
-          {" "}
-          Orders
+    <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
+      <Flex justifyContent={"space-between"}>
+        <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
+          List of Items
         </Text>
-        <Divider mb="2" />
+      </Flex>
+      <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm">
         <Table
           onRow={(record, rowIndex) => {
             return {
@@ -225,11 +387,11 @@ const Refund = () => {
           }}
           style={{ width: "100%" }}
           size="large"
-          scroll={{ x: 400 }}
+          pagination={{ pageSize: 6 }}
           columns={columns}
           dataSource={tableData}
         />
-      </VStack>
+      </Flex>
     </Flex>
   );
 };

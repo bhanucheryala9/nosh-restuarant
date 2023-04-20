@@ -245,7 +245,7 @@ export const ADMIN_NAV_ITEMS: Array<NavItem> = [
     href: "/sales",
   },
   {
-    label: "Payment and Rewards",
+    label: "Payment and Refunds",
     href: "/refund",
   },
 ];
