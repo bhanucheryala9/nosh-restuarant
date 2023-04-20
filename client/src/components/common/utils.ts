@@ -324,6 +324,8 @@ export const getStatusColors = (status: string | boolean) => {
     return "orange";
   } else if (status === "preparing") {
     return "blue";
+  }else if (status === "cancel") {
+    return "red";
   } else if (status === true) {
     return "green";
   } else if (status === false) {

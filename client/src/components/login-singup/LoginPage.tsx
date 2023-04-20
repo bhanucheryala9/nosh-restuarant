@@ -175,15 +175,19 @@ const LoginPage = () => {
             })
             .then((response) => {
               localStorage.setItem("isUserLoggedIn", "yes");
-              console.log(
-                "**************** user info:",
-                response.data.userInfo[0]
-              );
+             
               localStorage.setItem(
                 "userInfo",
                 JSON.stringify(response.data.userInfo[0])
               );
-              navigate("/dashboard");
+              if (
+                response.data.userInfo[0]?.type === "customer" ||
+                response.data.userInfo[0] === "employee"
+              ) {
+                navigate("/dashboard");
+              }else{
+                navigate("/employee");
+              }
             })
             .catch((error) => {
               setShowNotification({

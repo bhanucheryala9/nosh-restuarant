@@ -390,6 +390,7 @@ const SalesDashboard = () => {
               }}
               style={{ width: "100%" }}
               size="large"
+              pagination={{ pageSize: 6 }}
               scroll={{ x: 400 }}
               columns={columns}
               dataSource={tableData}
