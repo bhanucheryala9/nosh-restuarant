@@ -286,7 +286,6 @@ const EOrders = () => {
     },
   ];
 
-  console.log("***************** dataq need to update", orderChangeDetails);
 
   useEffect(() => {
     setIsLoading(true);

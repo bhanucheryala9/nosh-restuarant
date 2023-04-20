@@ -147,13 +147,15 @@ const Payments = () => {
           alertMessage: "Orders Placed successfully..!",
           showAlert: true,
         });
-        const userinfo = JSON.parse(localStorage.getItem("userInfo") ||"")
-        if(userinfo?.type === "employee"){
-          navigate("/employee-orders");
-        }else{
-          navigate("/dashboard");
-
-        }
+        localStorage.setItem("orderID", payload.orderId);
+        localStorage.setItem("orders", JSON.stringify([]));
+        navigate("/tracking");
+        const userinfo = JSON.parse(localStorage.getItem("userInfo") || "");
+        // if (userinfo?.type === "employee") {
+        //   navigate("/employee-orders");
+        // } else {
+        //   navigate("/dashboard");
+        // }
       })
       .catch((error) => {
         console.log("************** error", error);
@@ -573,11 +575,9 @@ const Payments = () => {
                               </Flex>
 
                               <Flex alignItems="center">
-                                <Text
-                                  fontWeight="semibold"
-                                  fontSize="md"
-                                >
-                                  Price: ${(data?.price * data.quantity).toFixed(2)}
+                                <Text fontWeight="semibold" fontSize="md">
+                                  Price: $
+                                  {(data?.price * data.quantity).toFixed(2)}
                                 </Text>
                                 <HStack ml="6">
                                   <Button
