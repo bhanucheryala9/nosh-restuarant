@@ -269,6 +269,12 @@ export const CLIENT_NAV_ITEMS: Array<NavItem> = [
   },
 ];
 
+export const TOUR_NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Restaurant Tour",
+    href: "/tour",
+  },
+];
 /**  Api response structures */
 export interface EmployeeRequestPayload {
   id: string;
