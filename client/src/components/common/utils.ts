@@ -143,6 +143,11 @@ export const CLIENT_NAV_ITEMS: Array<NavItem> = [
         subLabel: "View the sales details.",
         href: "/sales",
       },
+      {
+        label: "Payment and Rewards",
+        subLabel: "Manage payments and refunds.",
+        href: "/refund",
+      },
     ],
   },
 
@@ -206,7 +211,7 @@ export const EMPLOYEE_NAV: Array<NavItem> = [
     href: "/create-order",
   },
   {
-    label: "Update Orders",
+    label: "Items Availability",
     subLabel: "Update inventory items status",
     href: "/employee-update-orders",
   },

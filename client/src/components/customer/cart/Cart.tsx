@@ -38,16 +38,14 @@ const Cart = () => {
   useEffect(()=>{
     const cartdata = JSON.parse(localStorage.getItem("orders") ||"")
     setCartInfo(cartdata)
-
   },[localStorage.getItem("orders")])
   // useEffect(() => {
   //   setCartInfo(cartData);
   // }, [cartData]);
 
   const onSubmitClicked = () => {
-    // setCartInfo(cartData);
-    // localStorage.setItem("orders", JSON.stringify({}));
     localStorage.setItem("orders", JSON.stringify(cartInfo));
+    setIsCartOpen(false);
     // setAppStoreData({ ...AppStoreData, finalCartData: cartData });
     navigate("/payment");
   };

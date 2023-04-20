@@ -477,7 +477,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
                       textColor="gray.600"
                       fontWeight={"semibold"}
                     >
-                      About You:
+                      About :
                     </FormLabel>
                     <Textarea
                       placeholder="write short discription about you.."

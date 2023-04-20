@@ -148,10 +148,6 @@ const Inventory = () => {
       ),
     },
     {
-      title: "Tax",
-      dataIndex: "tax",
-    },
-    {
       title: "Action",
       key: "action",
       width: "45px",
@@ -188,13 +184,7 @@ const Inventory = () => {
         setIsLoading(false);
       });
   }, []);
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+
   return (
     <Flex mx={{ base: "4", lg: "10" }} my="6" direction={"column"}>
       {isLoading && <Loader />}
@@ -216,7 +206,6 @@ const Inventory = () => {
           scroll={{ x: 400 }}
           size="large"
           pagination={{ pageSize: 6 }}
-          rowSelection={rowSelection as any}
           columns={columns}
           dataSource={inventoryData}
         />
