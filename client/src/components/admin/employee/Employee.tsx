@@ -212,8 +212,9 @@ const Employee = () => {
           <HStack>
             <Avatar
               size={"sm"}
-              name="Ryan Florence"
-              src={faker.image.avatar()}
+              bg='orange.400'
+              textColor="white"
+              name={text}
             />
             <Text textColor="gray.600" fontWeight={"semibold"}>
               {text}
@@ -379,8 +380,8 @@ const Employee = () => {
             <Flex p="4">
               <Avatar
                 size="xl"
-                name="Christian Nwamba"
-                src="https://bit.ly/code-beast"
+                name={userProfile?.name}
+               
               />
               <Flex mx="4" direction={"column"}>
                 <Text

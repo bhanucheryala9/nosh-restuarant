@@ -30,7 +30,7 @@ exports.createOrders = async (orders) => {
 };
 
 exports.getUserSpecificOrder = async (email) =>{
-    return await OrdersModel.find({email:email })
+    return await OrdersModel.find({email:email }).sort ( { createdAt: -1 } )
 }
 
 exports.getOrdersItems = async () => {

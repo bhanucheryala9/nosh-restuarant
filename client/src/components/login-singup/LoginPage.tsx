@@ -92,7 +92,7 @@ const LoginPage = () => {
       const cart: any = [];
       for (let i = 1; i < chartinformation.length; i++) {
         orders
-          ?.filter((item: any) => item.productName === chartinformation[1])
+          ?.filter((item: any) => item.productName === chartinformation[i])
           .map((food: any) => {
             cart.push({
               category: food.category,
@@ -216,6 +216,8 @@ const LoginPage = () => {
       });
     }
   };
+
+  console.log("************** history:", conversationHistory)
 
   return (
     <div className="login-page">
