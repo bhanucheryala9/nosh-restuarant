@@ -147,6 +147,9 @@ const Payments = () => {
           alertMessage: "Orders Placed successfully..!",
           showAlert: true,
         });
+        localStorage.setItem("orders", JSON.stringify([]))
+        // const userinfo = JSON.parse(localStorage.getItem("userInfo") ||"");
+        // if(userinfo?.type==="")
         navigate("/dashboard");
       })
       .catch((error) => {
@@ -560,14 +563,20 @@ const Payments = () => {
                                 />
                                 <Flex direction={"column"} ml="6">
                                   <Text fontSize={"md"} fontWeight={"semibold"}>
-                                    {_.capitalize(data.productName)}
+                                    {_.capitalize(data?.productName)}
                                   </Text>
-                                  <Text>Quantity: {data.quantity}</Text>
+                                  <Text>Quantity: {data?.quantity}</Text>
                                 </Flex>
                               </Flex>
 
-                              <Flex>
-                                <HStack>
+                              <Flex alignItems="center">
+                                <Text
+                                  fontWeight="semibold"
+                                  fontSize="md"
+                                >
+                                  Price: ${(data?.price * data.quantity).toFixed(2)}
+                                </Text>
+                                <HStack ml="6">
                                   <Button
                                     colorScheme="orange"
                                     rounded={"full"}

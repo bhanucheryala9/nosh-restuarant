@@ -26,7 +26,6 @@ import MobileHeader from "./MobileNav";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import React, { useState, useEffect } from "react";
 import { useCart } from "../../contexts/CartContext";
-import { faker } from "@faker-js/faker";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -34,6 +33,7 @@ const Header = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { setIsCartOpen } = useCart();
   const [userType, setUserType] = useState<string>("");
+  const [userData, setUserData] = useState();
   const { logOut } = useAuth();
   const navigate = useNavigate();
 
@@ -48,6 +48,7 @@ const Header = () => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userInfo") as string);
+    setUserData(userData);
     setUserType(userData.type);
   }, []);
 
@@ -109,7 +110,8 @@ const Header = () => {
             alignItems="center"
             spacing={6}
           >
-            {JSON.parse(localStorage.getItem("userInfo") as string)?.type === "customer" && (
+            {JSON.parse(localStorage.getItem("userInfo") as string)?.type ===
+              "customer" && (
               <>
                 <Icon
                   as={AiOutlineShoppingCart}
@@ -133,14 +135,32 @@ const Header = () => {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar size="sm" bg="gray.200" src={faker.image.avatar()}>
+                <Avatar
+                  size="sm"
+                  bg="orange.400"
+                  textColor="white"
+                  name={
+                    (userData as any)?.firstName +
+                    " " +
+                    (userData as any)?.lastName
+                  }
+                >
                   <AvatarBadge boxSize="1.25em" bg="green.500" />
                 </Avatar>
               </MenuButton>
               <MenuList alignItems={"center"}>
                 <br />
                 <Center>
-                  <Avatar size={"lg"} name="Bhanu Cheryala" bg="orange.50" />
+                  <Avatar
+                    size={"lg"}
+                    name={
+                      (userData as any)?.firstName +
+                      " " +
+                      (userData as any)?.lastName
+                    }
+                    bg="orange.500"
+                    textColor="white"
+                  />
                 </Center>
                 <br />
                 <Center>
