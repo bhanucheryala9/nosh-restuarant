@@ -7,7 +7,8 @@ const accountCreateHtml = fs.readFileSync(
   "utf-8"
 );
 const accountCreateTemplate = handlebars.compile(accountCreateHtml);
-
+const paymentHtml = fs.readFileSync("./payment.handlebars", "utf-8");
+const paymentTemplate = handlebars.compile(paymentHtml);
 function GetTemplates(purpose, data) {
   if (purpose === "add-user") {
     return paymentTemplate({
