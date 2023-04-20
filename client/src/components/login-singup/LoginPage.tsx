@@ -183,10 +183,12 @@ const LoginPage = () => {
               if (
                 response.data.userInfo[0]?.type === "customer" ||
                 response.data.userInfo[0] === "employee"
-              ) {
+              ){
                 navigate("/dashboard");
-              }else{
+              }else if(response.data.userInfo[0]?.type === "admin") {
                 navigate("/employee");
+              }else{
+                navigate("/employee-orders");
               }
             })
             .catch((error) => {

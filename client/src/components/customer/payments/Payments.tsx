@@ -147,7 +147,13 @@ const Payments = () => {
           alertMessage: "Orders Placed successfully..!",
           showAlert: true,
         });
-        navigate("/dashboard");
+        const userinfo = JSON.parse(localStorage.getItem("userInfo") ||"")
+        if(userinfo?.type === "employee"){
+          navigate("/employee-orders");
+        }else{
+          navigate("/dashboard");
+
+        }
       })
       .catch((error) => {
         console.log("************** error", error);

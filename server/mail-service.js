@@ -31,14 +31,29 @@ exports.sendEmail = async (payload, purpose, data) => {
       pass: "xhwcrapzqoanbadu",
     },
   });
+  let mailDetails;
 
-  let mailDetails = {
-    from: "noshapplication1228@gmail.com",
-    to: email,
-    subject: subject,
-    text: message,
-    html: GetTemplates(purpose, data),
-  };
+  if(purpose==="add-user"){
+    mailDetails = {
+      from: "noshapplication1228@gmail.com",
+      to: email,
+      subject: subject,
+      text: message,
+      html: accountCreateTemplate(),
+    };
+  }else{
+    mailDetails = {
+      from: "noshapplication1228@gmail.com",
+      to: email,
+      subject: "Order Confirmation",
+      text: message,
+      html: paymentTemplate({
+        name: data?.name,
+        orderItems: data?.orders,
+        total: `${data?.totalAmount}`,
+      }),
+  }
+}
 
   mailTransporter.sendMail(mailDetails, (error) => {
     if (error) {
