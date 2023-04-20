@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
   Stack,
   useColorModeValue,
+  Text
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
@@ -60,7 +61,7 @@ const DesktopHeader = () => {
                   color: linkHoverColor,
                 }}
               >
-                {navItem.label}
+                <Text fontWeight="semibold" fontSize="md">{navItem.label}</Text>
               </Link>
             </PopoverTrigger>
 
