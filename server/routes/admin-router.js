@@ -53,7 +53,7 @@ router.post("/v1/add-employee", async function (req, res, next) {
         \nBest regards,
         The Nosh Team`,
       };
-      MailService.sendEmail(mailBody);
+      MailService.sendEmail(mailBody, "add-user", "");
     }
     res.json({ users: users, status: "success" });
   } catch (err) {

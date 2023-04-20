@@ -1,5 +1,6 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Flex,
   HStack,
   IconButton,
@@ -7,16 +8,18 @@ import {
   TagLabel,
   Text,
 } from "@chakra-ui/react";
-import { Table } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { Input, InputRef, Space, Table } from "antd";
+import { ColumnsType, ColumnType } from "antd/es/table";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNotification } from "../../../contexts/Notification";
 import Loader from "../../common/Loader";
 import { NotificationStatus } from "../../common/utils";
 import AddInventory from "./AddInventory";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../../../contexts/AppStoreContext";
+import { AiOutlineSearch } from "react-icons/ai";
+import { FilterConfirmProps } from "antd/es/table/interface";
 
 interface InventoryColumns {
   id: string;
@@ -38,6 +41,90 @@ const Inventory = () => {
   const { setShowNotification } = useNotification();
   const navigate = useNavigate();
   const { AppStoreData, setAppStoreData } = useAppStore();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
+
+  type DataIndex = keyof InventoryColumns;
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<InventoryColumns> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            colorScheme="orange"
+            size="sm"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+          >
+            Search
+          </Button>
+          <Button
+            colorScheme="gray"
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+            size="sm"
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <AiOutlineSearch style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record: any) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
 
   const prepareData = (data: InventoryColumns[]) => {
     const formattedData = data.reduce((accumulator: any, currentValue) => {
@@ -103,6 +190,7 @@ const Inventory = () => {
     {
       title: "Product Name",
       dataIndex: "productName",
+      ...getColumnSearchProps("productName"),
     },
     {
       title: "Description",
@@ -111,14 +199,28 @@ const Inventory = () => {
     {
       title: "Price",
       dataIndex: "price",
+      sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Discount %",
       dataIndex: "discount",
+      sorter: (a, b) => a.discount - b.discount,
     },
     {
       title: "Is Available",
       dataIndex: "isAvailable",
+      filters: [
+        {
+          text: "Yes",
+          value: true,
+        },
+        {
+          text: "No",
+          value: false,
+        },
+      ],
+      onFilter: (value: any, record) =>
+        record.isAvailable === value,
       render: (text) => (
         <>
           {text ? (

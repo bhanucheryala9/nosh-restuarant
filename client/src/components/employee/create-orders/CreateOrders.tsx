@@ -26,6 +26,7 @@ const CreateOrders = () => {
   const [ecart, setECart] = useState(cartData);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [orders, setOrders] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
   const [amount, setAmount] = useState({
     total: 0,
     tax: 0,
@@ -78,6 +79,7 @@ const CreateOrders = () => {
       .get("http://localhost:5000/api/admin/v1/get-items")
       .then((response) => {
         setOrders(prepareData(response.data.items));
+        setItemsData(prepareData(response.data.items))
       })
       .catch((error) => {
         console.log("Error while retreiveing items: ", error);
@@ -198,14 +200,14 @@ const CreateOrders = () => {
             mb="4"
             onChange={(index) => {
               setSelectedCategory(Orders_Catergory[index]);
-              // const redata = itemsData.filter(
-              //   (item: any) => item.category === Orders_Catergory[index]
-              // );
-              // setData(
-              //   Orders_Catergory[index] === "all"
-              //     ? itemsData.slice(0, 8)
-              //     : redata.slice(0, 8)
-              // );
+              const redata = itemsData.filter(
+                (item: any) => item.category === Orders_Catergory[index]
+              );
+              setOrders(
+                Orders_Catergory[index] === "all"
+                  ? itemsData.slice(0, 8)
+                  : redata.slice(0, 8)
+              );
             }}
           >
             <TabList mb="4">
@@ -215,28 +217,26 @@ const CreateOrders = () => {
             </TabList>
 
             <TabPanels>
-              <TabPanel>
-                <Grid
-                  templateRows="repeat(3, 1fr)"
-                  templateColumns="repeat(4, 1fr)"
-                  gap={6}
-                  width={"100%"}
-                >
-                  {orders.slice(0, 8).map((item) => {
-                    return (
-                      <GridItem rowSpan={1} colSpan={1}>
-                        {orderItem(item)}
-                      </GridItem>
-                    );
-                  })}
-                </Grid>
-              </TabPanel>
-              <TabPanel>
-                <p>two!</p>
-              </TabPanel>
-              <TabPanel>
-                <p>three!</p>
-              </TabPanel>
+              {Orders_Catergory.map((item, index) => {
+                return (
+                  <TabPanel>
+                    <Grid
+                      templateRows="repeat(2, 1fr)"
+                      templateColumns="repeat(4, 1fr)"
+                      gap={6}
+                      width={"100%"}
+                    >
+                      {orders?.map((item) => {
+                        return (
+                          <GridItem rowSpan={1} colSpan={1}>
+                            {orderItem(item)}
+                          </GridItem>
+                        );
+                      })}
+                    </Grid>
+                  </TabPanel>
+                );
+              })}
             </TabPanels>
           </Tabs>
         </GridItem>
@@ -296,7 +296,11 @@ const CreateOrders = () => {
                             </Flex>
                           </Flex>
                           <Flex>
-                            <Text textColor="orange.500" fontWeight="semibold" fontSize="xl">
+                            <Text
+                              textColor="orange.500"
+                              fontWeight="semibold"
+                              fontSize="xl"
+                            >
                               ${(data.quantity * data.price).toFixed(2)}
                             </Text>
                           </Flex>
