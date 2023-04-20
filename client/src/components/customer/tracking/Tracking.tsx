@@ -7,11 +7,13 @@ import accepted from "../../..//assets/accepted.jpg";
 import preparing from "../../..//assets/preparing.jpg";
 import ready from "../../..//assets/ready.jpg";
 import { ImCancelCircle } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
 const Tracking = () => {
   const [trackorder, setTrackOrder] = useState();
   const [stepDetails, setStepDetails] = useState(0);
 
   const statuses = ["processing", "preparing", "ready"];
+  const navigate = useNavigate();
 
   const getCurrentStep = (status: string) => {
     const num = statuses.indexOf(status);
@@ -93,6 +95,18 @@ const Tracking = () => {
     };
   }, []);
 
+  const onDaskClicked = () =>{
+    const user = JSON.parse(localStorage.getItem("userInfo")||"");
+    if(user.type==="admin"){
+      navigate("/employee")
+    }else if(user.type ==="employee"){
+      navigate("/employee-orders")
+    }else{
+        navigate("/dashboard")
+    }
+
+  }
+
   return (
     <React.Fragment>
       <Flex w="100%" justifyContent="center" alignItems="center">
@@ -146,7 +160,7 @@ const Tracking = () => {
               </Flex>
             )}
           </Flex>
-          <Button colorScheme="orange" mt="10" mb="6">
+          <Button colorScheme="orange" mt="10" mb="6" onClick={onDaskClicked}>
             Back to Home Page
           </Button>
         </Flex>

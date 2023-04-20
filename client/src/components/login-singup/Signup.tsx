@@ -55,7 +55,7 @@ const SignUp = () => {
               .then((response) => {
                 setShowNotification({
                   status: NotificationStatus.SUCCESS,
-                  alertMessage: "employee account successfully created..!",
+                  alertMessage: "Account successfully created..!",
                   showAlert: true,
                 });
                 navigate("/")

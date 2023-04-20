@@ -32,7 +32,7 @@ const AppLayout = (props: AppLayoutProp) => {
 
   return (
     <React.Fragment>
-      {showHeader ? <Header /> : null}
+       <Header />
       {/* <Header /> */}
       <Box minH={"85vh"}>{children}</Box>
       {<>{reload}</>}
