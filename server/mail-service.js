@@ -1,6 +1,6 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
-const fs = require('fs')
+const fs = require("fs");
 const handlebars = require("handlebars");
 const accountCreateHtml = fs.readFileSync(
   "./accountCreation.handlebars",
@@ -13,14 +13,11 @@ function GetTemplates(purpose, data) {
   if (purpose === "add-user") {
     return paymentTemplate({
       name: "John Doe",
-      orderItems: [
-        { name: "Pizza", price: "$10.99" },
-        { name: "Salad", price: "$5.99" },
-      ],
-      total: "$16.98",
+      orderItems: data?.orders,
+      total: `${data?.totalAmount}`,
     });
-  }else{
-    return accountCreateTemplate()
+  } else {
+    return accountCreateTemplate();
   }
 }
 

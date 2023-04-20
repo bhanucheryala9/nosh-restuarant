@@ -18,7 +18,10 @@ router.post("/v1/place-order", async function (req, res, next) {
   try {
     const orders = await orderService.createOrders(payload);
     if (orders) {
-      MailService.sendEmail(mailBody, "order", orderspayload);
+      MailService.sendEmail(mailBody, "order", {
+        orders: orderspayload,
+        totalAmount: req.body?.totalAmount 
+      });
     }
     res.json({ orders: orders, status: "success" });
   } catch (err) {
