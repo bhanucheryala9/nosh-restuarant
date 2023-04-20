@@ -259,7 +259,7 @@ const EInventory = () => {
       {isLoading ? <Loader /> : null}
       <Flex justifyContent={"space-between"}>
         <Text fontSize={{ base: "lg", lg: "xl" }} fontWeight="bold">
-          Items Dashboard
+          Items Availability Dashboard
         </Text>
       </Flex>
       <Flex bg="white" p="6" mt="4" shadow={"sm"} rounded="sm">
@@ -272,6 +272,7 @@ const EInventory = () => {
             };
           }}
           style={{ width: "100%" }}
+          pagination={{ pageSize: 8 }}
           //   scroll={{ x: 400 }}
           size="large"
           columns={columns}

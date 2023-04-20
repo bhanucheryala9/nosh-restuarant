@@ -63,7 +63,6 @@ const Dashboard = () => {
           });
       });
       localStorage.setItem("orders", JSON.stringify(items))
-      console.log("************ final cart data:", items);
       //   category: food.category,
       //         id: food.id,
       //         price: food.price,
@@ -89,7 +88,7 @@ const Dashboard = () => {
       count: 22,
     },
     {
-      label: "Trending Menu",
+      label: "Recommended Items",
       count: 18,
     },
     {

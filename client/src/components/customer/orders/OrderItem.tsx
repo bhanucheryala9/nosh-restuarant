@@ -103,7 +103,7 @@ const OrderItem = (props: OrderItemsProps) => {
     // setCartData(filterData);
   };
   return (
-    <Card maxW={{ base: "full", lg: "sm" }} key={id}>
+    <Card maxW={"72"} key={id}>
       {!isAvailable && (
         <CornerRibbon
           position="top-right" // OPTIONAL, default as "top-right"
@@ -121,7 +121,8 @@ const OrderItem = (props: OrderItemsProps) => {
           filter="auto"
           brightness="70%"
           maxHeight={"56"}
-          minW={{ base: "full", lg: "xs" }}
+          maxW={"100%"}
+          minW="100%"
           src={url}
           alt="Green double couch with wooden legs"
           borderRadius="lg"

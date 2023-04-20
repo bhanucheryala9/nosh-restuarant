@@ -154,7 +154,12 @@ const EmployeeDashboard = () => {
     axios
       .put("http://localhost:5000/api/admin/v1/update-order-status", payload)
       .then((response) => {
-        setEOrdersData(response.data.items);
+        const item = response.data?.items?.filter(
+          (item: any) => item.orderStatus === segmentValue
+        );
+        setEOrdersData(item);
+        setOrdersData(response.data.items);
+        setSelectedOrder(item[0]);
         setTableData(prepareData(response.data.items));
         setIsLoading(false);
       })

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -154,7 +154,6 @@ const Payments = () => {
       });
   };
 
-  console.log("*************** card details", getCardDetails)
   return (
     <Flex direction={"column"} justifyContent="center">
       <form>

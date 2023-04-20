@@ -42,13 +42,13 @@ const Orders = () => {
       .then((response) => {
         setData(response.data.items);
         setItemsData(response.data.items);
+        localStorage.setItem("orders",JSON.stringify([]))
       })
       .catch((error) => {
         console.log("Error while retreiveing items: ", error);
       });
   }, []);
 
-  console.log("*********** searched food",seachfood)
 
   return (
     <div>
@@ -114,14 +114,14 @@ const Orders = () => {
                     >
                       Menu
                     </Text>
-                    <Input
+                    {/* <Input
                       type="text"
                       placeholder="search food"
                       width="48"
                       onChange={(e) => {
                         setSearchFood(e.target.value);
                       }}
-                    />
+                    /> */}
                   </Flex>
 
                   <Grid
@@ -134,7 +134,7 @@ const Orders = () => {
                       base: "repeat(1, 1fr)",
                       lg: "repeat(4, 1fr)",
                     }}
-                    gap={{ base: 3, lg: 8 }}
+                    gap={{ base: 3, lg: 5 }}
                   >
                     {data &&
                       data

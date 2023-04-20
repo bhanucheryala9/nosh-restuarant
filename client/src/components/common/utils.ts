@@ -211,7 +211,7 @@ export const EMPLOYEE_NAV: Array<NavItem> = [
     href: "/create-order",
   },
   {
-    label: "Update Orders",
+    label: "Items Availability",
     subLabel: "Update inventory items status",
     href: "/employee-update-orders",
   },
