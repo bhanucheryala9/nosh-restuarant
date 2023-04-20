@@ -11,18 +11,20 @@ router.post("/v1/place-order", async function (req, res, next) {
   const orderspayload = orders?.map((item) => {
     return {
       name: item.productName,
-      price: item.price,
+      price: `$${item.price}`,
     };
   });
 
   try {
     const orders = await orderService.createOrders(payload);
     if (orders) {
-      const mailBody= ""
+      const mailBody= {
+        email: payload.email,
+      }
       MailService.sendEmail(mailBody, "order", {
         orders: orderspayload,
         name: req.body?.firstName + " "+ req.body?.lastName,
-        totalAmount: req.body?.totalAmount 
+        totalAmount: `$${(req.body?.totalAmount /100).toFixed(2)}`
       });
     }
     res.json({ orders: orders, status: "success" });

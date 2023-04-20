@@ -147,10 +147,20 @@ const Payments = () => {
           alertMessage: "Orders Placed successfully..!",
           showAlert: true,
         });
+<<<<<<< HEAD
         localStorage.setItem("orders", JSON.stringify([]))
         // const userinfo = JSON.parse(localStorage.getItem("userInfo") ||"");
         // if(userinfo?.type==="")
         navigate("/dashboard");
+=======
+        const userinfo = JSON.parse(localStorage.getItem("userInfo") ||"")
+        if(userinfo?.type === "employee"){
+          navigate("/employee-orders");
+        }else{
+          navigate("/dashboard");
+
+        }
+>>>>>>> main
       })
       .catch((error) => {
         console.log("************** error", error);
