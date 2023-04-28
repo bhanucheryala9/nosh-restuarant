@@ -1,0 +1,26 @@
+{
+  "name": "my-restaurant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cbhanu12dec/my-restuarant.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cbhanu12dec/my-restuarant/issues"
+  },
+  "homepage": "https://github.com/Cbhanu12dec/my-restuarant#readme",
+  "dependencies": {
+    "@stripe/react-stripe-js": "^1.16.5",
+    "@stripe/stripe-js": "^1.47.0",
+    "firebase": "^9.17.1",
+    "react-corner-ribbon": "^0.0.5"
+  }
+}
