@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 body {
-    margin: 0;
-    background-color: #f5f6f8 !important;
-  }
+  margin: 0;
+  background-color: #f5f6f8 !important;
+}
 
-#model-title{
-  display: none!important;
+#model-title {
+  display: none !important;
 }

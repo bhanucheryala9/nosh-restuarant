@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+<<<<<<< HEAD
 var cors = require('cors')
 var bodyParser = require("body-parser")
 
@@ -34,23 +35,39 @@ db.once("open", function () {
 });
 
 
+=======
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+
+var app = express();
+
+>>>>>>> repo-b/main
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+<<<<<<< HEAD
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors())
+=======
+app.use(logger('dev'));
+app.use(express.json());
+>>>>>>> repo-b/main
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+<<<<<<< HEAD
 app.use('/api/admin', adminRouter);
 app.use('/api/customer', customerRouter);
+=======
+>>>>>>> repo-b/main
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
