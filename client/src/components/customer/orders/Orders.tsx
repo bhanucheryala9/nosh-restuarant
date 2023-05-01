@@ -57,7 +57,7 @@ const Orders = () => {
           justifyContent={"center"}
           direction="column"
           alignItems={"center"}
-        >
+         >
           <Image src={order} filter="auto" brightness={"50%"} />
           <Flex
             bg={"white"}

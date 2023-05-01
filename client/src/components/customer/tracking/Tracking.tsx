@@ -17,10 +17,10 @@ const Tracking = () => {
 
   const getCurrentStep = (status: string) => {
     const num = statuses.indexOf(status);
-    if (num === -1) {
-      return -1;
-    } else {
-      return num + 1;
+    if(num===-1){
+      return -1
+    }else{
+      return num+1;
     }
   };
 
@@ -74,14 +74,11 @@ const Tracking = () => {
   const getData = () => {
     const orderID = localStorage.getItem("orderID");
     axios
-      .get(
-        "http://34.235.166.147:5000/api/customer/v1/get-order-details-by-id",
-        {
-          params: {
-            id: orderID,
-          },
-        }
-      )
+      .get("http://34.235.166.147:5000/api/customer/v1/get-order-details-by-id", {
+        params: {
+          id: orderID,
+        },
+      })
       .then((response) => {
         setTrackOrder(response.data.orders);
         const status = response.data?.orders?.orderStatus;
@@ -91,7 +88,7 @@ const Tracking = () => {
         console.log("************** error", error);
       });
   };
-  console.log("******* canlled", stepDetails);
+
 
   useEffect(() => {
     const intervalCall = setInterval(() => {

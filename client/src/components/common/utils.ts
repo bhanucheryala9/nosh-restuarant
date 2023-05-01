@@ -566,3 +566,9 @@ export const steps_for_chat = [
     end: true,
   },
 ];
+
+export interface NotificationProps {
+    status?: NotificationStatus;
+    alertMessage?: string;
+    showAlert?: boolean;
+  }

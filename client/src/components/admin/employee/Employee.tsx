@@ -163,7 +163,7 @@ const Employee = () => {
   };
   const onDeleteClicked = (data: EmployeeDatatype) => {
     axios
-      .delete("http://localhost:5000/api/admin/v1/delete-employee/", {
+      .delete("http://34.235.166.147:5000/api/admin/v1/delete-employee/", {
         params: {
           id: data.id.toLowerCase(),
         },
@@ -305,7 +305,7 @@ const Employee = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/admin/v1/get-employee-details")
+      .get("http://34.235.166.147:5000/api/admin/v1/get-employee-details")
       .then((response: any) => {
         setunformattedEmployeeData(response.data.employees);
         setEmployeeData(prepareData(response.data.employees));

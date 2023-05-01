@@ -27,7 +27,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { useNotification } from "../../../contexts/Notification";
 import { EmployeeRequestPayload, NotificationStatus } from "../../common/utils";
 
-interface AddEmployeeProps {
+interface AddEmployeeProps {2
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
   children?: ReactNode;
@@ -97,7 +97,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
         },
       } as any;
       axios
-        .post("http://localhost:5000/api/admin/v1/add-employee", formattedData)
+        .post("http://34.235.166.147:5000/api/admin/v1/add-employee", formattedData)
         .then((response) => {
           try {
             signUp(formattedData?.email, "Nosh@123")
@@ -138,7 +138,7 @@ const AddEmployee = (props: AddEmployeeProps) => {
       } as any;
       axios
         .put(
-          "http://localhost:5000/api/admin/v1/update-employee",
+          "http://34.235.166.147:5000/api/admin/v1/update-employee",
           formattedData
         )
         .then((response) => {
