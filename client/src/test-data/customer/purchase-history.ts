@@ -121,4 +121,3 @@ export const purchase_history=[
 		price:"$27"
 	},
 ]
-

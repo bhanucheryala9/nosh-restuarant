@@ -3,7 +3,6 @@ import React, {
   Dispatch,
   SetStateAction,
   useState,
-  useEffect,
 } from "react";
 import "./App.css";
 import LoginPage from "./components/login-singup/LoginPage";
@@ -24,18 +23,6 @@ import Payments from "./components/customer/payments/Payments";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 import NotificationProvider from "./contexts/Notification";
 import Inventory from "./components/admin/inventory/Inventory";
-import Test from "./components/Test";
-import UserProvider, { useUser } from "./contexts/UserContext";
-import AppStoreProvider from "./contexts/AppStoreContext";
-import Tour from "./components/customer/tour/Tour";
-import EOrders from "./components/employee/orders/EOrders";
-import EInventory from "./components/employee/Inventory/EInventory";
-import Profile from "./components/common/Profile";
-import CreateOrders from "./components/employee/create-orders/CreateOrders";
-import EmployeeDashboard from "./components/employee/dashboard/EmployeeDashboard";
-import Refund from "./components/admin/refund/Refund";
-import Tracking from "./components/customer/tracking/Tracking";
-
 interface CartContextProp {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
@@ -43,68 +30,37 @@ interface CartContextProp {
 
 function App() {
   return (
-    // <React.StrictMode>
-    <Router>
-      <AuthProvider>
-        <AppStoreProvider>
-          <UserProvider>
-            <CartProvider>
-              <NotificationProvider>
-                {/* <Loader> */}
-                <AppLayout>
-                  {/* <ErrorBoundary> */}
-                  <Routes>
-                    <Route path="/" element={<LoginPage />} />
-                    <Route
-                      path="/dashboard"
-                      element={
-                        JSON.parse(localStorage.getItem("userInfo") as string)
-                          ?.type === "employee" ? (
-                          <EOrders />
-                        ) : (
-                          <Dashboard />
-                        )
-                      }
-                    />
-                    <Route path="/test" element={<Test />} />
-                    <Route path="/employee" element={<Employee />} />
-                    <Route path="/rewards" element={<Rewards />} />
-                    <Route path="/inventory" element={<Inventory />} />
-                    <Route path="/add-inventory" element={<AddInventory />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/orders" element={<Orders />} />
-                    <Route path="/sales" element={<SalesDashboard />} />
-                    <Route
-                      path="/employee-orders"
-                      element={<EmployeeDashboard />}
-                    />
-                    <Route
-                      path="/employee-update-orders"
-                      element={<EInventory />}
-                    />
-                    <Route path="/tour" element={<Tour />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/create-order" element={<CreateOrders />} />
-                    <Route path="/refund" element={<Refund />} />
-                    <Route path="/tracking" element={<Tracking />} />
-                    {/* Tracking */}
-                    <Route
-                      path="/purchase-history"
-                      element={<PurchaseHistory />}
-                    />
-                    <Route path="/payment" element={<Payments />} />
-                    <Route path="/resetPassword" element={<ForgotPassword />} />
-                  </Routes>
-                  {/* </ErrorBoundary> */}
-                </AppLayout>
-                {/* </Loader> */}
-              </NotificationProvider>
-            </CartProvider>
-          </UserProvider>
-        </AppStoreProvider>
-      </AuthProvider>
-    </Router>
-    /* </React.StrictMode> */
+    <React.StrictMode>
+      <Router>
+        <AuthProvider>
+          <CartProvider>
+            <NotificationProvider>
+            {/* <Loader> */}
+            <AppLayout>
+              {/* <ErrorBoundary> */}
+              <Routes>
+                //inventory
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/employee" element={<Employee />} />
+                <Route path="/rewards" element={<Rewards />} />
+                <Route path="/inventory" element={<Inventory />} />
+                <Route path="/add-inventory" element={<AddInventory />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/sales" element={<SalesDashboard />} />
+                <Route path="/purchase-history" element={<PurchaseHistory />} />
+                <Route path="/payment" element={<Payments />} />
+                <Route path="/resetPassword" element={<ForgotPassword />} />
+              </Routes>
+              {/* </ErrorBoundary> */}
+            </AppLayout>
+            {/* </Loader> */}
+            </NotificationProvider>
+          </CartProvider>
+        </AuthProvider>
+      </Router>
+    </React.StrictMode>
   );
 }
 
