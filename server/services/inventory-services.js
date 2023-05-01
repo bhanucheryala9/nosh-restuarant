@@ -15,7 +15,7 @@ exports.getInventoryItemByID = async (id) => {
 exports.deleteInventoryItemByID = async (id) => {
   return await InventoryModel.findOneAndDelete({ id: id })
     .then(() => {
-      return InventoryModel.find({ });
+      return InventoryModel.find({});
     })
     .catch(() => {
       return "Failed to retreive updated employee data";
@@ -38,7 +38,7 @@ exports.updateInventoryItemID = async (payload) => {
     }
   )
     .then(() => {
-      return InventoryModel.find({ });
+      return InventoryModel.find({});
     })
     .catch(() => {
       return "Failed to retreive updated employee data";

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { ReactNode } from "react";
 const validator = require("email-validator");
 export const resetLocalStorage = () => {
@@ -567,17 +566,9 @@ export const steps_for_chat = [
     end: true,
   },
 ];
-=======
-export enum NotificationStatus {
-    SUCCESS = "success",
-    ERROR = "error",
-    WARNING = "warning",
-    DEFAULT ="default"
-  
-}
+
 export interface NotificationProps {
     status?: NotificationStatus;
     alertMessage?: string;
     showAlert?: boolean;
   }
->>>>>>> repo-b/main

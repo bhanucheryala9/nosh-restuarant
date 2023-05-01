@@ -10,7 +10,7 @@ const accountCreateTemplate = handlebars.compile(accountCreateHtml);
 const paymentHtml = fs.readFileSync("./payment.handlebars", "utf-8");
 const paymentTemplate = handlebars.compile(paymentHtml);
 function GetTemplates(purpose, data) {
-  console.log("************ purpose:", purpose)
+  console.log("************ purpose:", purpose);
   if (purpose === "add-user") {
     return paymentTemplate({
       name: data?.name,
@@ -33,7 +33,7 @@ exports.sendEmail = async (payload, purpose, data) => {
   });
   let mailDetails;
 
-  if(purpose==="add-user"){
+  if (purpose === "add-user") {
     mailDetails = {
       from: "noshapplication1228@gmail.com",
       to: email,
@@ -41,7 +41,7 @@ exports.sendEmail = async (payload, purpose, data) => {
       text: message,
       html: accountCreateTemplate(),
     };
-  }else{
+  } else {
     mailDetails = {
       from: "noshapplication1228@gmail.com",
       to: email,
@@ -52,8 +52,8 @@ exports.sendEmail = async (payload, purpose, data) => {
         orderItems: data?.orders,
         total: `${data?.totalAmount}`,
       }),
+    };
   }
-}
 
   mailTransporter.sendMail(mailDetails, (error) => {
     if (error) {

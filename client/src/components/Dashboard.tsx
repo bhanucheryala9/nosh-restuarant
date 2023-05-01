@@ -62,7 +62,7 @@ const Dashboard = () => {
             });
           });
       });
-      localStorage.setItem("orders", JSON.stringify(items))
+      localStorage.setItem("orders", JSON.stringify(items));
       //   category: food.category,
       //         id: food.id,
       //         price: food.price,
@@ -90,10 +90,6 @@ const Dashboard = () => {
     {
       label: "Recommended Items",
       count: 18,
-    },
-    {
-      label: "Recent Orders",
-      count: 13,
     },
   ];
 
@@ -146,7 +142,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/admin/v1/get-items")
+      .get("http://34.235.166.147:5000/api/admin/v1/get-items")
       .then((response) => {
         setData(prepareData(response.data.items));
         prepareCart(prepareData(response.data.items));
@@ -203,10 +199,8 @@ const Dashboard = () => {
       setPresentation((dashboardCart as any)?.favorite);
     } else if (selectedCat === 2) {
       setPresentation((dashboardCart as any)?.ready);
-    } else if (selectedCat === 3) {
-      setPresentation((dashboardCart as any)?.trending);
     } else {
-      setPresentation((dashboardCart as any)?.recent);
+      setPresentation((dashboardCart as any)?.trending);
     }
   }, [dashboardCart, selectedCat]);
 
@@ -381,7 +375,7 @@ const Dashboard = () => {
               </Text>
             </Flex>
             <Flex direction="column" mt="4">
-              {[1, 2, 3, 4, 5]?.map((item, index) => {
+              {[1, 2, 3, 4]?.map((item, index) => {
                 return getCategoriesItem(index);
               })}
             </Flex>

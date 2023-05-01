@@ -48,7 +48,7 @@ const CartItem = (props: CartItemProps) => {
         }
       });
     }
-    localStorage.setItem("orders", JSON.stringify(updatedData))
+    localStorage.setItem("orders", JSON.stringify(updatedData));
     setCartInfo(updatedData);
   };
 

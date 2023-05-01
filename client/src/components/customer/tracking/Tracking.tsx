@@ -88,7 +88,7 @@ const Tracking = () => {
         console.log("************** error", error);
       });
   };
-  console.log("******* canlled", stepDetails)
+
 
   useEffect(() => {
     const intervalCall = setInterval(() => {
@@ -100,17 +100,16 @@ const Tracking = () => {
     };
   }, []);
 
-  const onDaskClicked = () =>{
-    const user = JSON.parse(localStorage.getItem("userInfo")||"");
-    if(user.type==="admin"){
-      navigate("/employee")
-    }else if(user.type ==="employee"){
-      navigate("/employee-orders")
-    }else{
-        navigate("/dashboard")
+  const onDaskClicked = () => {
+    const user = JSON.parse(localStorage.getItem("userInfo") || "");
+    if (user.type === "admin") {
+      navigate("/employee");
+    } else if (user.type === "employee") {
+      navigate("/employee-orders");
+    } else {
+      navigate("/dashboard");
     }
-
-  }
+  };
 
   return (
     <React.Fragment>

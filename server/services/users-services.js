@@ -1,5 +1,5 @@
 const UsersModel = require("../models/users-models.js");
-const MailService =  require("../mail-service")
+const MailService = require("../mail-service");
 exports.createUsers = async (users) => {
   return await UsersModel.create(users);
 };

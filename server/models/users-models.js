@@ -5,20 +5,20 @@ const usersSchema = new Schema({
   id: String,
   firstName: {
     type: String,
-    required: false
+    required: false,
   },
   lastName: {
     type: String,
-    required: false
+    required: false,
   },
   email: String,
-  phoneNumber:{
+  phoneNumber: {
     type: String,
-    required: false
+    required: false,
   },
-  credits:{
+  credits: {
     type: Number,
-    required: false
+    required: false,
   },
   address: {
     addressLine1: String,
@@ -34,11 +34,11 @@ const usersSchema = new Schema({
   },
   salary: {
     type: Number,
-    required: false
+    required: false,
   },
   about: {
-    type:String,
-    required: false
+    type: String,
+    required: false,
   },
   createdAt: {
     type: Date,

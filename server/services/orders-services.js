@@ -6,15 +6,14 @@ const stripe = require("stripe")(
 exports.createOrders = async (orders) => {
   let { totalAmount, paymentId } = orders;
   try {
-    const payment = await stripe.paymentIntents
-      .create({
-        amount: totalAmount,
-        currency: "USD",
-        description: "Cafe Testing",
-        payment_method: paymentId,
-        confirm: true,
-        // receipt_email:"cheryalabhanu99@gmail.com"
-      })
+    const payment = await stripe.paymentIntents.create({
+      amount: totalAmount,
+      currency: "USD",
+      description: "Cafe Testing",
+      payment_method: paymentId,
+      confirm: true,
+      // receipt_email:"cheryalabhanu99@gmail.com"
+    });
     const payload = {
       ...orders,
       isPaid: payment?.status === "succeeded" ? true : false,
@@ -29,9 +28,9 @@ exports.createOrders = async (orders) => {
   }
 };
 
-exports.getUserSpecificOrder = async (email) =>{
-    return await OrdersModel.find({email:email }).sort ( { createdAt: -1 } )
-}
+exports.getUserSpecificOrder = async (email) => {
+  return await OrdersModel.find({ email: email }).sort({ createdAt: -1 });
+};
 
 exports.getOrdersItems = async () => {
   return await OrdersModel.find({});
@@ -74,7 +73,7 @@ exports.updateOrdersItemID = async (payload) => {
     });
 };
 
-exports.updateOrderStatus = async (payload) =>{
+exports.updateOrderStatus = async (payload) => {
   return await OrdersModel.findOneAndUpdate(
     { orderId: payload.orderId },
     {
@@ -98,4 +97,4 @@ exports.updateOrderStatus = async (payload) =>{
     .catch(() => {
       return "Failed to retreive updated employee data";
     });
-}
+};

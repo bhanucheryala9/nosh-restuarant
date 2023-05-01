@@ -1,7 +1,7 @@
 import react, { createContext, useContext, useEffect, useState } from "react";
 interface CartContexProps {
- isCartOpen: boolean,
- setIsCartOpen: ()=> void
+  isCartOpen: boolean;
+  setIsCartOpen: () => void;
 }
 const CartContex = createContext<any>(null);
 
@@ -21,13 +21,13 @@ const CartProvider = (props: {
     | undefined;
 }) => {
   const [isCartOpen, setIsCartOpen] = useState();
-  const [cartData, setCartData] = useState([])
+  const [cartData, setCartData] = useState([]);
 
   const value = {
     isCartOpen: isCartOpen,
     setIsCartOpen: setIsCartOpen,
-    cartData:cartData,
-    setCartData:setCartData
+    cartData: cartData,
+    setCartData: setCartData,
   };
 
   return (

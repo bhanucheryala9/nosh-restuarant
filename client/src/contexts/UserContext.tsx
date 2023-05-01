@@ -24,7 +24,7 @@ const UserProvider = (props: {
     userData: userData,
     setUserData: setUserData,
     setUserLoggedIn: setUserLoggedIn,
-    isUserLoggedIn:isUserLoggedIn
+    isUserLoggedIn: isUserLoggedIn,
   };
 
   return (
