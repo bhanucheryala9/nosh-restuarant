@@ -54,7 +54,7 @@ const Rewards = () => {
 
   const onDeleteClicked = (data: any) => {
     axios
-      .delete("http://localhost:5000/api/admin/v1/delete-reward", {
+      .delete("http://34.235.166.147:5000/api/admin/v1/delete-reward", {
         params: {
           id: data.id,
         },
@@ -183,7 +183,7 @@ const Rewards = () => {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/admin/v1/get-rewards")
+      .get("http://34.235.166.147:5000/api/admin/v1/get-rewards")
       .then((response) => {
         setRewardsData(prepareData(response.data.rewards));
         prepareStatsData(prepareData(response.data.rewards));
