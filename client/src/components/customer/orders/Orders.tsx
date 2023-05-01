@@ -38,7 +38,7 @@ const Orders = () => {
   useEffect(() => {
     setData(data.slice(0, 8));
     axios
-      .get("http://localhost:5000/api/admin/v1/get-items")
+      .get("http://34.235.166.147:5000/api/admin/v1/get-items")
       .then((response) => {
         setData(response.data.items);
         setItemsData(response.data.items);
@@ -57,7 +57,7 @@ const Orders = () => {
           justifyContent={"center"}
           direction="column"
           alignItems={"center"}
-        >
+         >
           <Image src={order} filter="auto" brightness={"50%"} />
           <Flex
             bg={"white"}

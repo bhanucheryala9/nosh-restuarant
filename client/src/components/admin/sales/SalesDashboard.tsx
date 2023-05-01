@@ -200,7 +200,7 @@ const SalesDashboard = () => {
 
     setIsLoading(true);
     axios
-      .get("http://localhost:5000/api/admin/v1/get-orders")
+      .get("http://34.235.166.147:5000/api/admin/v1/get-orders")
       .then((response) => {
         setEOrdersData(response.data.items);
         setTableData(prepareData(response.data.items));
